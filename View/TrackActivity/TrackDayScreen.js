@@ -40,6 +40,7 @@ class TrackDayScreen extends Component {
       name: 'Poop',
     }
 
+    console.log(`Adding new activity: ${newActivity}`);
     activities.push(newActivity);
   }
 
