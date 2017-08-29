@@ -10,17 +10,25 @@ class ActivitySubmitButton extends Component {
   // --------------------------------------------------
   static propTypes = {
     onSubmit: PropTypes.func.isRequired,
+    activity: PropTypes.object.isRequired,
+  }
+
+  // --------------------------------------------------
+  // Callbacks
+  // --------------------------------------------------
+  handleSubmit = () => {
+    const {onSubmit, activity} = this.props;
+
+    onSubmit(activity);
   }
 
   // --------------------------------------------------
   // Render
   // --------------------------------------------------
   render() {
-    const {onSubmit} = this.props;
-
     return (
       <TouchableHighlight
-        onPress={onSubmit}>
+        onPress={this.handleSubmit}>
         <View>
           <Text>
             {'Submit'}

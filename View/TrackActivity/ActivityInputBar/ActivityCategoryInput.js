@@ -9,17 +9,24 @@ class ActivityCategoryInput extends Component {
   // Props
   // --------------------------------------------------
   static propTypes = {
+    onCategoryChange: PropTypes.func.isRequired,
+    activityCategory: PropTypes.string.isRequired,
   }
 
   // --------------------------------------------------
   // Render
   // --------------------------------------------------
   render() {
+    const {onCategoryChange, activityCategory} = this.props;
+
     return (
       <View style={styles.container}>
-        <Text>
-          {'Category'}
-        </Text>
+        <TextInput
+          onChange={onCategoryChange}
+          value={activityCategory}
+          keyboardType={'default'}
+          style={styles.input}
+        />
       </View>
     );
   }
@@ -37,6 +44,10 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'black',
   },
+
+  input: {
+    flex: 1,
+  }
 });
 
 

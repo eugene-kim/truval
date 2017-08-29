@@ -9,17 +9,23 @@ class ActivityNameInput extends Component {
   // Props
   // --------------------------------------------------
   static propTypes = {
+    onNameChange: PropTypes.func.isRequired,
+    activityName: PropTypes.string.isRequired,
   }
 
   // --------------------------------------------------
   // Render
   // --------------------------------------------------
   render() {
+    const {onNameChange, activityName} = this.props;
     return (
       <View style={styles.container}>
-        <Text>
-          {'Name'}
-        </Text>
+        <TextInput
+          onChange={onNameChange}
+          value={activityName}
+          keyboardType={'default'}
+          style={styles.input}
+        />
       </View>
     );
   }
@@ -35,6 +41,10 @@ const styles = StyleSheet.create({
 
     borderWidth: 1,
     borderColor: 'black',
+  },
+
+  input: {
+    flex: 1,
   },
 });
 

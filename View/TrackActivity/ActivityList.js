@@ -30,12 +30,12 @@ class ActivityList extends Component {
   renderActivities(activities) {
     return activities.map((activity, index) =>
       <ActivityRow
-        name={activity.name}
-        category={activity.category}
-        time={activity.time}
+        name={activity.activityName}
+        category={activity.activityCategory}
+        time={activity.activityStartTime}
         key={index}
       />
-    )
+    );
   }
 };
 

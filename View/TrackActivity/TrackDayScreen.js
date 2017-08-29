@@ -8,46 +8,44 @@ import {StyleSheet, View} from 'react-native';
 import ActivityInputBar from './ActivityInputBar/ActivityInputBar';
 import ActivityList from './ActivityList';
 
-// TODO: Find out if this is an appropriate location for temp data.
-const activities = [
-  {
-    time: '10:00AM',
-    category: 'FOOD',
-    name: 'Eat Lunch',
-  },
-  {
-    time: '11:00AM',
-    category: 'POTTY',
-    name: 'Poop',
-  },
-  {
-    time: '12:00PM',
-    category: 'WORK',
-    name: 'React Native',
-  },
-];
-
 class TrackDayScreen extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      activities: [
+        {
+          activityStartTime: '10:00AM',
+          activityCategory: 'FOOD',
+          activityName: 'Eat Lunch',
+        },
+        {
+          activityStartTime: '11:00AM',
+          activityCategory: 'POTTY',
+          activityName: 'Poop',
+        },
+        {
+          activityStartTime: '12:00PM',
+          activityCategory: 'WORK',
+          activityName: 'React Native',
+        },
+      ],
+    };
+  }
 
   // --------------------------------------------------
   // Handlers
   // --------------------------------------------------
 
-  handleSubmit(activity) {
-    const newActivity = {
-      time: '1:00PM',
-      category: 'POTTY',
-      name: 'Poop',
-    }
-
-    console.log(`Adding new activity: ${newActivity}`);
-    activities.push(newActivity);
+  handleSubmit = (activity) => {
+    this.setState({activities: this.state.activities.concat([activity])});
   }
 
   // --------------------------------------------------
   // Render
   // --------------------------------------------------
   render() {
+    const {activities} = this.state;
 
     return (
       <View style={styles.container}>
