@@ -40,9 +40,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
 
-    // Why do I have to do this for the placeholder?
-    justifyContent: 'center',
-
     // TEST
     borderWidth: 1,
     borderColor: 'black',

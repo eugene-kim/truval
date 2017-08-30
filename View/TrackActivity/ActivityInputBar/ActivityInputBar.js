@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {Button, StyleSheet, Text, TextInput, View} from 'react-native';
+import Datetime from '../../../js/util/Datetime';
 
 // Components
 import ActivityTimeInput from './ActivityTimeInput';
@@ -15,9 +16,9 @@ class ActivityInputBar extends Component {
     super(props);
 
     this.state = {
-      activityStartTime: 'Default start time',
-      activityCategory: 'work',
-      activityName: 'Default activity name',
+      activityStartTime: new Datetime().getHoursAndMinutes(),
+      activityCategory: 'Work',
+      activityName: 'Activity Name',
     };
   }
 
@@ -26,6 +27,28 @@ class ActivityInputBar extends Component {
   // --------------------------------------------------
   static propTypes = {
     onSubmit: PropTypes.func.isRequired,
+  }
+
+  // --------------------------------------------------
+  // Lifecycle Methods
+  // --------------------------------------------------
+  componentDidMount() {
+    this.timerId = setInterval(() => this.tick(), 300);
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.timerId);
+  }
+
+  // --------------------------------------------------
+  // Methods
+  // --------------------------------------------------
+  tick() {
+    const datetime = new Datetime();
+
+    if (datetime.isNewMinute()) {
+      this.setState({activityStartTime: datetime.getHoursAndMinutes()});
+    }
   }
 
   // --------------------------------------------------
