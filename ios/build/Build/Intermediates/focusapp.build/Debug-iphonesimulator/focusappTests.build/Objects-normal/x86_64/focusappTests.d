@@ -1,5 +1,5 @@
 dependencies: \
-  /Users/eugene.kim/Projects/personal/focus-app/ios/focusappTests/focusappTests.m \
+  /Users/eugene.kim/Projects/personal/focus/ios/focusappTests/focusappTests.m \
   /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/Library/Frameworks/XCTest.framework/Modules/module.modulemap \
   /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/Library/Frameworks/XCTest.framework/Headers/XCUIRemote.h \
   /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/Library/Frameworks/XCTest.framework/Headers/XCUIKeyboardKeys.h \
@@ -29,14 +29,14 @@ dependencies: \
   /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/Library/Frameworks/XCTest.framework/Headers/XCTestErrors.h \
   /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/Library/Frameworks/XCTest.framework/Headers/XCTestDefines.h \
   /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/Library/Frameworks/XCTest.framework/Headers/XCTest.h \
-  /Users/eugene.kim/Projects/personal/focus-app/ios/build/Build/Products/Debug-iphonesimulator/include/React/RCTLog.h \
-  /Users/eugene.kim/Projects/personal/focus-app/ios/build/Build/Products/Debug-iphonesimulator/include/React/RCTAssert.h \
-  /Users/eugene.kim/Projects/personal/focus-app/ios/build/Build/Products/Debug-iphonesimulator/include/React/RCTDefines.h \
-  /Users/eugene.kim/Projects/personal/focus-app/ios/build/Build/Products/Debug-iphonesimulator/include/React/RCTUtils.h \
-  /Users/eugene.kim/Projects/personal/focus-app/ios/build/Build/Products/Debug-iphonesimulator/include/React/RCTRootView.h \
-  /Users/eugene.kim/Projects/personal/focus-app/ios/build/Build/Products/Debug-iphonesimulator/include/React/RCTBridge.h \
-  /Users/eugene.kim/Projects/personal/focus-app/ios/build/Build/Products/Debug-iphonesimulator/include/React/RCTBridgeDelegate.h \
-  /Users/eugene.kim/Projects/personal/focus-app/ios/build/Build/Products/Debug-iphonesimulator/include/React/RCTJavaScriptLoader.h \
-  /Users/eugene.kim/Projects/personal/focus-app/ios/build/Build/Products/Debug-iphonesimulator/include/React/RCTBridgeModule.h \
-  /Users/eugene.kim/Projects/personal/focus-app/ios/build/Build/Products/Debug-iphonesimulator/include/React/RCTFrameUpdate.h \
-  /Users/eugene.kim/Projects/personal/focus-app/ios/build/Build/Products/Debug-iphonesimulator/include/React/RCTInvalidating.h
+  /Users/eugene.kim/Projects/personal/focus/ios/build/Build/Products/Debug-iphonesimulator/include/React/RCTLog.h \
+  /Users/eugene.kim/Projects/personal/focus/ios/build/Build/Products/Debug-iphonesimulator/include/React/RCTAssert.h \
+  /Users/eugene.kim/Projects/personal/focus/ios/build/Build/Products/Debug-iphonesimulator/include/React/RCTDefines.h \
+  /Users/eugene.kim/Projects/personal/focus/ios/build/Build/Products/Debug-iphonesimulator/include/React/RCTUtils.h \
+  /Users/eugene.kim/Projects/personal/focus/ios/build/Build/Products/Debug-iphonesimulator/include/React/RCTRootView.h \
+  /Users/eugene.kim/Projects/personal/focus/ios/build/Build/Products/Debug-iphonesimulator/include/React/RCTBridge.h \
+  /Users/eugene.kim/Projects/personal/focus/ios/build/Build/Products/Debug-iphonesimulator/include/React/RCTBridgeDelegate.h \
+  /Users/eugene.kim/Projects/personal/focus/ios/build/Build/Products/Debug-iphonesimulator/include/React/RCTJavaScriptLoader.h \
+  /Users/eugene.kim/Projects/personal/focus/ios/build/Build/Products/Debug-iphonesimulator/include/React/RCTBridgeModule.h \
+  /Users/eugene.kim/Projects/personal/focus/ios/build/Build/Products/Debug-iphonesimulator/include/React/RCTFrameUpdate.h \
+  /Users/eugene.kim/Projects/personal/focus/ios/build/Build/Products/Debug-iphonesimulator/include/React/RCTInvalidating.h
