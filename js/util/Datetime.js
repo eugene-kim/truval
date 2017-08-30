@@ -11,8 +11,8 @@ class Datetime {
   // Print
   // --------------------------------------------------
   getHoursAndMinutes() {
-    const hours = this.formatTime(this.date.getHours());
-    const minutes = this.formatTime(this.date.getMinutes());
+    const hours = this.formatTimeDigits(this.date.getHours());
+    const minutes = this.formatTimeDigits(this.date.getMinutes());
 
     return `${hours}:${minutes}`;
   }
@@ -27,7 +27,7 @@ class Datetime {
   // --------------------------------------------------
   // Formatting
   // --------------------------------------------------
-  formatTime(number) {
+  formatTimeDigits(number) {
     return (number).toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping: false});
   }
 
