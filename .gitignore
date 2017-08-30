@@ -37,7 +37,7 @@ buck-out
 /ReactAndroid/src/main/gen
 
 #iOS
-ios/build/Logs
+ios/build
 
 # Android
 .idea
