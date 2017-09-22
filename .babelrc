@@ -1,0 +1,10 @@
+{
+  "plugins": [
+    "transform-decorators",
+    "babel-plugin-root-import"
+  ],
+
+  // For more details:
+  // https://github.com/facebook/react-native/blob/master/babel-preset/configs/main.js#L21
+  "presets": ["react-native"]
+}
