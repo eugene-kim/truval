@@ -5,14 +5,15 @@
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-plugin-root-import": "^5.1.0",
+    "babel-plugin-transform-decorators": "^6.24.1",
     "babel-preset-react-native": "^4.0.0",
     "jest-expo": "~18.0.0",
     "react-test-renderer": "16.0.0-alpha.12"
   },
   "scripts": {
-    "build": "babel src -d lib",
     "start": "react-native start",
-    "node": "node --harmony api/app.js",
+    "debug": "node --inspect-brk src/api/app.js",
+    "node": "npm run build; node lib/api/app.js",
     "android": "react-native run-android",
     "ios": "react-native run-ios",
     "test": "node node_modules/jest/bin/jest.js --watch"

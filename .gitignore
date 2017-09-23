@@ -30,6 +30,9 @@ build/
 local.properties
 *.iml
 
+# Compiled Javascript from Babel
+lib/
+
 # node.js
 #
 node_modules/
