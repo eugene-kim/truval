@@ -1,16 +1,17 @@
-// Libraries
+'use strict';
+
 const express = require('express');
 const bodyParser = require('body-parser');
 
+const routes = require('./routes');
 const app = express();
 const server = {
   create: (config) => {
-    // TODO: Add routes
     app.set('env', config.env);
     app.set('port', config.port);
     app.set('hostname', config.hostname);
 
-    app.use(bodyParser.json());
+    routes.intializeRoutes(app);
   },
 
   start: () => {
@@ -22,5 +23,6 @@ const server = {
     });
   },
 }
+
 
 module.exports = server;

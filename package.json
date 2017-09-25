@@ -12,8 +12,8 @@
   },
   "scripts": {
     "start": "react-native start",
-    "debug": "node --inspect-brk src/api/app.js",
-    "node": "npm run build; node lib/api/app.js",
+    "debug": "node --inspect-brk server/start.js",
+    "node": "nodemon server/start.js",
     "android": "react-native run-android",
     "ios": "react-native run-ios",
     "test": "node node_modules/jest/bin/jest.js --watch"

@@ -1,9 +1,8 @@
 // Libraries
 const _ = require('lodash');
 
-const env = process.env.NODE_ENV || 'local';
 
-console.log(`Environment:  ${env}`);
+const env = process.env.NODE_ENV || 'local';
 
 // TODO: Figure out how to do this with the import statement.
 const envConfig = require(`./${env}.js`);
