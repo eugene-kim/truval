@@ -26,7 +26,10 @@
     "express": "^4.15.4",
     "lodash": "^4.17.4",
     "morgan": "^1.8.2",
+    "pg": "^7.3.0",
+    "pg-hstore": "^2.3.2",
     "react": "16.0.0-alpha.12",
-    "react-native": "^0.45.1"
+    "react-native": "^0.45.1",
+    "sequelize": "^4.11.0"
   }
 }

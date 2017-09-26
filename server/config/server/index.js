@@ -3,12 +3,11 @@ const _ = require('lodash');
 
 
 const env = process.env.NODE_ENV || 'local';
-
-// TODO: Figure out how to do this with the import statement.
 const envConfig = require(`./${env}.js`);
 const defaultConfig = {
   env,
 };
+const config = _.merge(defaultConfig, envConfig);
 
 
-module.exports = _.merge(defaultConfig, envConfig);
+module.exports = config;

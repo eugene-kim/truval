@@ -1,7 +1,7 @@
 'use strict';
 
 const server = require('./index.js');
-const config = require('./configs/config');
+const serverConfig = require('./config/server');
 
-server.create(config);
+server.create(serverConfig);
 server.start();
