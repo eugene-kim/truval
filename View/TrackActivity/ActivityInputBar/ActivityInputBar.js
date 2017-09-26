@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {Button, StyleSheet, Text, TextInput, View} from 'react-native';
-import Datetime from '../../../js/util/Datetime';
+import Datetime from '~/lib/src/js/util/Datetime';
 
 // Components
 import ActivityTimeInput from './ActivityTimeInput';
