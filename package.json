@@ -28,10 +28,10 @@
     "express-graphql": "^0.6.11",
     "graphql": "^0.11.6",
     "graphql-tools": "^2.0.0",
+    "knex": "^0.13.0",
     "lodash": "^4.17.4",
     "morgan": "^1.8.2",
     "pg": "^7.3.0",
-    "pg-hstore": "^2.3.2",
     "react": "16.0.0",
     "react-native": "^0.48.4"
   }
