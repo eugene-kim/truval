@@ -1,10 +1,8 @@
 const config = {
   directory: 'server/database/migrations',
   development: {
-    client: 'postgresql',
-    connection: {
-      database: 'focus-dev'
-    }
+    client: 'pg',
+    connection: 'postgres://localhost/focus-dev',
   }
 }
 

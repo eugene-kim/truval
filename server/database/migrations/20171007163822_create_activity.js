@@ -5,7 +5,7 @@ exports.up = function(knex, Promise) {
     table.string('name').notNullable();
     table.datetime('start').notNullable();
     table.datetime('end');
-    table.boolean('is_complete').notNullable().defaulTo(false);
+    table.boolean('is_complete').notNullable().defaultTo(false);
     table.integer('duration');
     table.timestamps(true, true);
 
