@@ -4,14 +4,9 @@ const resolvers = require('./resolvers');
 const typeDefs = `
   scalar Date
 
-  interface Entity {
+  type User{
     id: ID!
-    name: String!
-  }
-
-  type User implements Entity{
-    id: ID!
-    name: String!
+    username: String!
     email: String!
     password: String!
     sessions: [Session]!
@@ -27,7 +22,7 @@ const typeDefs = `
     activities: [Activity]!
   }
 
-  type Activity implements Entity {
+  type Activity {
     id: ID!
     name: String!
     start: Date!
@@ -38,7 +33,7 @@ const typeDefs = `
     session: Session!
   }
 
-  type Category implements Entity {
+  type Category {
     id: ID!
     name: String!
     color: String!
@@ -47,14 +42,14 @@ const typeDefs = `
   }
 
   type Query {
-    allUsers: [User]!
-    allSessions: [Session]!
-    allActivities: [Activity]!
-    allCategories: [Category]!
+    allUsers: [User]
+    allSessions: [Session]
+    allActivities: [Activity]
+    allCategories: [Category]
   }
 
   type Mutation {
-    createUser(name: String!, email: String!, password: String!): User
+    createUser(username: String!, email: String!, password: String!): User
   }
 `;
 

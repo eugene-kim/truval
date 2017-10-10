@@ -1,48 +1,44 @@
+const _ = require('lodash');
+
+const knex = require('../database');
 const Date = require('./customScalars/Date');
-
-const users = [
-  {
-    id: 1,
-    name: 'Eugene Kim',
-    email: 'eugenekim.3.21@gmail.com',
-    password: 'password',
-    sessions: [],
-  },
-  {
-    id: 2,
-    name: 'Mark Miyashita',
-    email: 'mark@gmail.com',
-    password: 'password',
-    sessions: [],
-  },
-  {
-    id: 3,
-    name: 'Sagar Shah',
-    email: 'sagar@gmail.com',
-    password: 'password',
-    sessions: [],
-  },
-];
-
-const sessions = [
-];
 
 const resolvers = {
   Date,
   Query: {
-    allUsers: () => users,
+    allUsers: () => {
+      return knex('user').select()
+      .then((rows) => {
+        const result = rows.map(row => ({
+          id: row.id,
+          username: row.username,
+          email: row.email,
+          password: row.password,
+        }));
+
+        console.log(result);
+
+        return result;
+      })
+      .catch(error => console.log(error));
+    },
     allSessions: () => [],
     allActivities: () => [],
     allCategories: () => [],
   },
 
   Mutation: {
-    createUser: (_, data) => {
-      const newUser = Object.assign({id: users.length + 1}, data);
+    createUser: (obj, args) => {
+      return knex('user').insert(args).returning('id')
+      .then(idArray => {
+        const id = idArray[0];
+        const user = _.merge(args, {id})
 
-      users.push(newUser);
+        console.log(user);
 
-      return newUser;
+        return user;
+      })
+      .catch(error => console.log(error));
     }
   }
 }
