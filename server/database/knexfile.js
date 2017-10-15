@@ -3,7 +3,8 @@ const config = {
   development: {
     client: 'pg',
     connection: 'postgres://localhost/focus-dev',
-  }
+    // debug: true,
+  },
 }
 
 
