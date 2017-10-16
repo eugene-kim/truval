@@ -1,13 +1,17 @@
 'use strict';
 
 const _ = require('lodash');
-
 const knex = require('../database');
+
+const USER_TABLE = 'user';
+const ACTIVITY_TABLE = 'activity';
+const SESSION_TABLE = 'session';
+const CATEGORY_TABLE = 'category';
 
 const resolvers = {
   Query: {
     allUsers: () => {
-      return knex('user').select()
+      return knex(USER_TABLE).select()
       .then(rows => {
         console.log(rows);
 
@@ -21,7 +25,7 @@ const resolvers = {
       .catch(error => console.log(error));
     },
     user: (obj, {userId}) => {
-      return knex('user').first().where('id', '=', userId)
+      return knex(USER_TABLE).first().where('id', '=', userId)
       .then(row => {
         console.log(row);
 
@@ -35,7 +39,7 @@ const resolvers = {
       .catch(error => console.log(error));
     },
     allSessions: (obj, {userId}) => {
-      return knex('session').select().where('user_id', '=', userId)
+      return knex(SESSION_TABLE).select().where('user_id', '=', userId)
       .then(rows => {
         console.log(rows);
 
@@ -50,7 +54,7 @@ const resolvers = {
       .catch(error => console.log(error));
     },
     session: (obj, {sessionId}) => {
-      return knex('session').first().where('id', '=', sessionId)
+      return knex(SESSION_TABLE).first().where('id', '=', sessionId)
       .then(session => {
         console.log(session);
 
@@ -65,7 +69,7 @@ const resolvers = {
       .catch(error => console.log(error));
     },
     allActivities: (obj, {sessionId}) => {
-      return knex('activity').select().where('session_id', '=', sessionId)
+      return knex(ACTIVITY_TABLE).select().where('session_id', '=', sessionId)
       .then(activities => {
         console.log(activities);
 
@@ -87,7 +91,7 @@ const resolvers = {
 
   Mutation: {
     createUser: (obj, args) => {
-      return knex('user').insert(args).returning('id')
+      return knex(USER_TABLE).insert(args).returning('id')
       .then((idArray) => {
         const id = idArray[0];
         const user = _.merge(args, {id});
@@ -105,7 +109,7 @@ const resolvers = {
         user_id: userId,
       };
 
-      return knex('session').insert(dbColumns).returning(['id', 'end', 'is_complete'])
+      return knex(SESSION_TABLE).insert(dbColumns).returning(['id', 'end', 'is_complete'])
       .then(sessionArray => {
         const dbResponse = sessionArray[0];
 
@@ -119,36 +123,33 @@ const resolvers = {
       })
       .catch(error => console.log(error));
     },
-    createActivity: (obj, {name, start, end, isComplete, categoryId, duration}) => {
-      const requiredParams = {name, start, category_id: categoryId};
-      const optionalParams = cleanOptionalParams({end, is_complete: isComplete, duration});
-      const dbColumns = _.merge(requiredParams, optionalParams);
+    createActivity: (obj, {name, start, categoryId, sessionId, end, isComplete, duration}) => {
+      const requiredParams = {
+        name,
+        start,
+        category_id: categoryId,
+        session_id: sessionId,
+      };
 
-      console.log(dbColumns);
+      const optionalParams = removeUndefinedProperties({
+        end,
+        is_complete: isComplete,
+        duration,
+      });
 
-      // Return optional params from the db result since they might not be provided in the GraphQL query.
-      return knex('activity').insert(dbColumns).returning(['id', 'is_complete', 'start', 'end', 'duration'])
-      .then(activityArray => {
+      const newActivity = _.merge(requiredParams, optionalParams);
+      const activityColumns = ['id', 'name', 'is_complete', 'start', 'end', 'duration', 'category_id', 'session_id'];
 
-        // .insert() returns an array of values based on what .returning() has specified.
+      return knex(ACTIVITY_TABLE).insert(newActivity).returning(activityColumns)
+      .then(activities => {
+
+        // .insert() returns an array of objects based on what is passed to .returning()
+        // and how many objects we're inserting.
         // We're inserting one object with createActivity(), so we retrieve from index 0.
-        const activityFromDB = activityArray[0];
-        const {id, start, end, duration} = activityFromDB;
+        const activity = activities[0];
+        const response = toCamelCaseKeys(activity);
 
-        console.log(`start from the DB: ${start}`);
-        console.log(`end from the DB: ${end}`);
-        const isComplete = activityFromDB.is_complete;
-        const activity = {
-          id,
-          name,
-          start,
-          end,
-          duration,
-          isComplete,
-          categoryId,
-        };
-
-        return activity;
+        return response;
       })
       .catch(error => console.log(error))
     },
@@ -160,7 +161,7 @@ const resolvers = {
         user_id: userId,
       }
 
-      return knex('category').insert(dbColumns).returning('id')
+      return knex(CATEGORY_TABLE).insert(dbColumns).returning('id')
       .then(idArray => {
         const id = idArray[0];
         const category = {
@@ -175,20 +176,34 @@ const resolvers = {
 }
 
 /**
- * Takes in an object of optional GraphQL params and removes any params
- * that have undefined values. This allows for more flexible GraphQL
- * that can take in optional params while not overwriting our database
- * will undefined values if the optional params aren't provided.
+ * Removes object properties that have undefined values.
+ *
+ * Useful when handling GraphQL queries that contain optional parameters.
+ * When inserting or updating into the database, the resolver functions create an
+ * object to be put into the database that include optional parameters, whether they
+ * contain values or not. This results in undefined optional parameter values if
+ * they haven't been provided. If they aren't removed prior to insertion / an update,
+ * the database row will be updated with a `null` value instead of utilizing the table default.
  *
  * TODO: Find a home for this method.
  * TODO: Utilize immutable.js constructs.
+ * TODO: Add tests.
  */
-const cleanOptionalParams = optionalParams => {
-  Object.keys(optionalParams).forEach(
-    key => _.isUndefined(optionalParams[key]) && delete optionalParams[key]
+const removeUndefinedProperties = object => {
+  Object.keys(object).forEach(
+    key => _.isUndefined(object[key]) && delete object[key]
   );
 
-  return optionalParams;
+  return object;
 };
+
+/**
+ * Returns an object whose keys are in camel case.
+ *
+ * Useful when returning an object returned by Postgres that's in snake_case
+ * into a properly formatted GraphQL response.
+ */
+const toCamelCaseKeys = object => _.mapKeys(object, (value, key) => _.camelCase(key));
+
 
 module.exports = resolvers;

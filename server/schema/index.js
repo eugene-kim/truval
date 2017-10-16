@@ -78,6 +78,7 @@ const typeDefs = `
       name: String!,
       start: String!,
       categoryId: ID!,
+      sessionId: ID!,
 
       # Optional
       end: String,
