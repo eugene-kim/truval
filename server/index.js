@@ -1,28 +1,25 @@
-'use strict';
-
 const express = require('express');
+
+// This package automatically parses JSON requests.
 const bodyParser = require('body-parser');
 
-const routes = require('./routes');
-const app = express();
-const server = {
-  create: (config) => {
-    app.set('env', config.env);
-    app.set('port', config.port);
-    app.set('hostname', config.hostname);
+// This package will handle GraphQL server requests and responses
+// for you, based on your schema.
+const {graphqlExpress, graphiqlExpress} = require('apollo-server-express');
 
-    routes.intializeRoutes(app);
-  },
+const configurePostgresDriver = require('./database/configurePostgresDriver');
+configurePostgresDriver();
+const db = require('./database');
+const schema = require('./schema');
 
-  start: () => {
-    const hostname = app.get('hostname');
-    const port = app.get('port');
+var app = express();
 
-    app.listen(port, () => {
-      console.log(`Express server listening on - http://${hostname}:${port}`);
-    });
-  },
-}
+app.use('/graphql', bodyParser.json(), graphqlExpress({schema}));
+app.use('/graphiql', graphiqlExpress({
+  endpointURL: '/graphql',
+}));
 
-
-module.exports = server;
+const PORT = 3000
+app.listen(PORT, () => {
+  console.log(`Focus app running on: ${PORT}.`)
+});
