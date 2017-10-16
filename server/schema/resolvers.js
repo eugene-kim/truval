@@ -126,11 +126,17 @@ const resolvers = {
 
       console.log(dbColumns);
 
-      // We return optional params from the db result since they might not be provided in the GraphQL query.
-      return knex('activity').insert(dbColumns).returning(['id', 'is_complete', 'end', 'duration'])
+      // Return optional params from the db result since they might not be provided in the GraphQL query.
+      return knex('activity').insert(dbColumns).returning(['id', 'is_complete', 'start', 'end', 'duration'])
       .then(activityArray => {
+
+        // .insert() returns an array of values based on what .returning() has specified.
+        // We're inserting one object with createActivity(), so we retrieve from index 0.
         const activityFromDB = activityArray[0];
-        const {id, end, duration} = activityFromDB;
+        const {id, start, end, duration} = activityFromDB;
+
+        console.log(`start from the DB: ${start}`);
+        console.log(`end from the DB: ${end}`);
         const isComplete = activityFromDB.is_complete;
         const activity = {
           id,
@@ -179,7 +185,7 @@ const resolvers = {
  */
 const cleanOptionalParams = optionalParams => {
   Object.keys(optionalParams).forEach(
-    key => _.isUndefined(optionalParams.key) && delete optionalParams[key]
+    key => _.isUndefined(optionalParams[key]) && delete optionalParams[key]
   );
 
   return optionalParams;

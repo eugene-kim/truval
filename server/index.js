@@ -7,6 +7,8 @@ const bodyParser = require('body-parser');
 // for you, based on your schema.
 const {graphqlExpress, graphiqlExpress} = require('apollo-server-express');
 
+const configurePostgresDriver = require('./database/configurePostgresDriver');
+configurePostgresDriver();
 const db = require('./database');
 const schema = require('./schema');
 
