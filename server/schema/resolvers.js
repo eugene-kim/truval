@@ -90,38 +90,26 @@ const resolvers = {
   },
 
   Mutation: {
-    createUser: (obj, args) => {
-      return knex(USER_TABLE).insert(args).returning('id')
-      .then((idArray) => {
-        const id = idArray[0];
-        const user = _.merge(args, {id});
+    createUser: (obj, {username, email, password}) => {
+      const requiredParams = {username, email, password};
+      const optionalParams = {};
+      const userColumns = ['id', 'username', 'email', 'password'];
 
-        return user;
-      })
-      .catch(error => console.log(error));
+      return createModelInstance(requiredParams, optionalParams, USER_TABLE, userColumns);
     },
     createSession: (obj, {name, start, end, isComplete, userId}) => {
-      const dbColumns = {
-        name,
-        start,
-        end,
-        is_complete: isComplete,
-        user_id: userId,
-      };
+      const requiredParams = {name, start, user_id: userId};
+      const optionalParams = {end, is_complete: isComplete};
+      const sessionColumns = [
+        'id',
+        'name',
+        'start',
+        'end',
+        'is_complete',
+        'user_id',
+      ];
 
-      return knex(SESSION_TABLE).insert(dbColumns).returning(['id', 'end', 'is_complete'])
-      .then(sessionArray => {
-        const dbResponse = sessionArray[0];
-
-        // Grab these values from the DB because they might not be provided in the GraphQL query.
-        const {id, end, is_complete} = dbResponse;
-        const response = {id, name, start, end, isComplete, userId};
-
-        console.log(response);
-
-        return response;
-      })
-      .catch(error => console.log(error));
+      return createModelInstance(requiredParams, optionalParams, SESSION_TABLE, sessionColumns);
     },
     createActivity: (obj, {name, start, categoryId, sessionId, end, isComplete, duration}) => {
       const requiredParams = {
@@ -130,49 +118,49 @@ const resolvers = {
         category_id: categoryId,
         session_id: sessionId,
       };
+      const optionalParams = {end, is_complete: isComplete, duration};
+      const activityColumns = [
+        'id',
+        'name',
+        'is_complete',
+        'start',
+        'end',
+        'duration',
+        'category_id',
+        'session_id',
+      ];
 
-      const optionalParams = removeUndefinedProperties({
-        end,
-        is_complete: isComplete,
-        duration,
-      });
-
-      const newActivity = _.merge(requiredParams, optionalParams);
-      const activityColumns = ['id', 'name', 'is_complete', 'start', 'end', 'duration', 'category_id', 'session_id'];
-
-      return knex(ACTIVITY_TABLE).insert(newActivity).returning(activityColumns)
-      .then(activities => {
-
-        // .insert() returns an array of objects based on what is passed to .returning()
-        // and how many objects we're inserting.
-        // We're inserting one object with createActivity(), so we retrieve from index 0.
-        const activity = activities[0];
-        const response = toCamelCaseKeys(activity);
-
-        return response;
-      })
-      .catch(error => console.log(error))
+      return createModelInstance(requiredParams, optionalParams, ACTIVITY_TABLE, activityColumns);
     },
     createCategory: (obj, {name, color, isPrimary, userId}) => {
-      const dbColumns = {
-        name,
-        color,
-        is_primary: isPrimary,
-        user_id: userId,
-      }
+      const requiredParams = {name, color, user_id: userId};
+      const optionalParams = {is_primary: isPrimary};
+      const categoryColumnNames = ['id', 'name', 'color', 'is_primary', 'user_id'];
 
-      return knex(CATEGORY_TABLE).insert(dbColumns).returning('id')
-      .then(idArray => {
-        const id = idArray[0];
-        const category = {
-          id, name, color, isPrimary, userId
-        };
-
-        return category;
-      })
-      .catch(error => console.log(error));
+      return createModelInstance(requiredParams, optionalParams, CATEGORY_TABLE, categoryColumnNames);
     },
   }
+}
+
+/**
+ * Creates an instance of a GraphQL Type in Postgres and returns the newly created object.
+ */
+const createModelInstance = (requiredParams, optionalParams, tableName, columnNames) => {
+  optionalParams = removeUndefinedProperties(optionalParams);
+  const newModelInstance = _.merge(requiredParams, optionalParams);
+
+  return knex(tableName).insert(newModelInstance).returning(columnNames)
+  .then(dbResults => {
+
+      // .insert() returns an array of objects based on what is passed to .returning()
+      // and how many objects we're inserting.
+      // We're inserting one object with createModelInstance(), so we retrieve from index 0.
+      const dbResult = dbResults[0];
+      const response = toCamelCaseKeys(dbResult);
+
+      return response;
+  })
+  .catch(error => console.log(error));
 }
 
 /**
@@ -205,5 +193,11 @@ const removeUndefinedProperties = object => {
  */
 const toCamelCaseKeys = object => _.mapKeys(object, (value, key) => _.camelCase(key));
 
+/**
+ * Returns an object whose keys are in snake case.
+ *
+ * Useful when formatting an object to be put into Postgres.
+ */
+const toSnakeCaseKeys = object => _.mapKeys(object, (value, key) => _.snakeCase(key));
 
 module.exports = resolvers;
