@@ -7,6 +7,26 @@ const USER_TABLE = 'user';
 const ACTIVITY_TABLE = 'activity';
 const SESSION_TABLE = 'session';
 const CATEGORY_TABLE = 'category';
+const userColumns = ['id', 'username', 'email', 'password'];
+const activityColumns = [
+  'id',
+  'name',
+  'is_complete',
+  'start',
+  'end',
+  'duration',
+  'category_id',
+  'session_id',
+];
+const sessionColumns = [
+  'id',
+  'name',
+  'start',
+  'end',
+  'is_complete',
+  'user_id',
+];
+const categoryColumns = ['id', 'name', 'color', 'is_primary', 'user_id'];
 
 const resolvers = {
   Query: {
@@ -53,8 +73,8 @@ const resolvers = {
       })
       .catch(error => console.log(error));
     },
-    session: (obj, {sessionId}) => {
-      return knex(SESSION_TABLE).first().where('id', '=', sessionId)
+    session: (obj, {id}) => {
+      return knex(SESSION_TABLE).first().where('id', '=', id)
       .then(session => {
         console.log(session);
 
@@ -73,7 +93,7 @@ const resolvers = {
       .then(activities => {
         console.log(activities);
 
-        return activities.map(({id, name, start, end, is_complete, duration, category}) => ({
+        return activities.map(({id, name, start, end, is_complete, duration, category_id}) => ({
           id,
           name,
           start,
@@ -85,6 +105,23 @@ const resolvers = {
       })
       .catch(error => console.log(error));
     },
+    activity: (obj, {id}) => {
+      return knex(ACTIVITY_TABLE).first().where('id', '=', id)
+      .then(activity => {
+        console.log(activity);
+
+        return {
+          id: activity.id,
+          name: activity.name,
+          start: activity.start,
+          end: activity.end,
+          isComplete: activity.is_complete,
+          duration: activity.duration,
+          categoryId: activity.category_id,
+        };
+      })
+      .catch(error => console.log(error));
+    },
     allCategories: (obj, {userId}) => {
     },
   },
@@ -93,40 +130,20 @@ const resolvers = {
     createUser: (obj, {username, email, password}) => {
       const requiredParams = {username, email, password};
       const optionalParams = {};
-      const userColumns = ['id', 'username', 'email', 'password'];
 
       return createModelInstance(requiredParams, optionalParams, USER_TABLE, userColumns);
     },
     updateUser: (obj, args) => {
-      const userColumns = ['id', 'username', 'email', 'password'];
-      const propertiesToUpdate = removeUndefinedProperties(args);
-      const dbColumnsToUpdate = toSnakeCaseKeys(propertiesToUpdate);
-
-      return knex(USER_TABLE)
-      .update(dbColumnsToUpdate).where('id', '=', args.id)
-      .returning(userColumns)
-      .then(users => {
-        const user = users[0];
-
-        console.log(user);
-
-        return toCamelCaseKeys(user);
-      })
-      .catch(error => console.log(error));
+      return updateModelInstance(args, USER_TABLE, userColumns);
     },
     createSession: (obj, {name, start, end, isComplete, userId}) => {
       const requiredParams = {name, start, user_id: userId};
       const optionalParams = {end, is_complete: isComplete};
-      const sessionColumns = [
-        'id',
-        'name',
-        'start',
-        'end',
-        'is_complete',
-        'user_id',
-      ];
 
       return createModelInstance(requiredParams, optionalParams, SESSION_TABLE, sessionColumns);
+    },
+    updateSession: (obj, args) => {
+      return updateModelInstance(args, SESSION_TABLE, sessionColumns);
     },
     createActivity: (obj, {name, start, categoryId, sessionId, end, isComplete, duration}) => {
       const requiredParams = {
@@ -136,31 +153,27 @@ const resolvers = {
         session_id: sessionId,
       };
       const optionalParams = {end, is_complete: isComplete, duration};
-      const activityColumns = [
-        'id',
-        'name',
-        'is_complete',
-        'start',
-        'end',
-        'duration',
-        'category_id',
-        'session_id',
-      ];
 
       return createModelInstance(requiredParams, optionalParams, ACTIVITY_TABLE, activityColumns);
+    },
+    updateActivity: (obj, args) => {
+      return updateModelInstance(args, ACTIVITY_TABLE, activityColumns);
     },
     createCategory: (obj, {name, color, isPrimary, userId}) => {
       const requiredParams = {name, color, user_id: userId};
       const optionalParams = {is_primary: isPrimary};
-      const categoryColumnNames = ['id', 'name', 'color', 'is_primary', 'user_id'];
 
-      return createModelInstance(requiredParams, optionalParams, CATEGORY_TABLE, categoryColumnNames);
+      return createModelInstance(requiredParams, optionalParams, CATEGORY_TABLE, categoryColumns);
     },
+    updateCategory: (obj, args) => {
+      return updateModelInstance(args, CATEGORY_TABLE, categoryColumns);
+    }
   }
 }
 
 /**
- * Creates an instance of a GraphQL Type in Postgres and returns the newly created object.
+ * Creates an instance of a GraphQL Type in Postgres and returns the newly
+ * created object.
  */
 const createModelInstance = (requiredParams, optionalParams, tableName, columnNames) => {
   optionalParams = removeUndefinedProperties(optionalParams);
@@ -178,6 +191,41 @@ const createModelInstance = (requiredParams, optionalParams, tableName, columnNa
       return response;
   })
   .catch(error => console.log(error));
+}
+
+/**
+ * Updates an already existing instance of a GraphQL type in Postgres and
+ * returns the updated object.
+ */
+const updateModelInstance = (mutationParams, tableName, columnNames) => {
+  const id = mutationParams.id;
+  const dbPropertiesToUpdate = makeDbCompatible(mutationParams);
+
+  return knex(tableName)
+  .update(dbPropertiesToUpdate).where('id', '=', id).returning(columnNames)
+  .then(dbResults => {
+    const dbResult = dbResults[0];
+
+    console.log(dbResult);
+
+    return toCamelCaseKeys(dbResult);
+  })
+  .catch(error => console.log(error));
+}
+
+/**
+ * This method outputs an object with snake_case property names and removes
+ * any properties that have undefined values.
+ */
+const makeDbCompatible = object => {
+
+  // Whenever inserting or updating into the database, we shouldn't be fiddling
+  // around with the object id.
+  delete object.id;
+
+  const objectWithDefinedValues = removeUndefinedProperties(object);
+
+  return toSnakeCaseKeys(objectWithDefinedValues);
 }
 
 /**

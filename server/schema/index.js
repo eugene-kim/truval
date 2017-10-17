@@ -52,13 +52,13 @@ const typeDefs = `
     user(id: ID!): User
 
     allSessions(userId: ID!): [Session]
-    session(sessionId: ID!): Session
+    session(id: ID!): Session
 
     allActivities(sessionId: ID!): [Activity]
-    activity(activityId: ID!): Activity
+    activity(id: ID!): Activity
 
     allCategories(userId: ID!): [Category]
-    category(categoryId: ID!): Category
+    category(id: ID!): Category
   }
 
   type Mutation {
