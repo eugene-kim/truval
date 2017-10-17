@@ -49,7 +49,7 @@ const typeDefs = `
 
   type Query {
     allUsers: [User]
-    user(userId: ID!): User
+    user(id: ID!): User
 
     allSessions(userId: ID!): [Session]
     session(sessionId: ID!): Session
@@ -63,6 +63,7 @@ const typeDefs = `
 
   type Mutation {
     createUser(username: String!, email: String!, password: String!): User
+    updateUser(id: ID!, username: String, email: String, password: String): User
 
     createSession(
       name: String!,

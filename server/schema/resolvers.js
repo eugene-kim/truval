@@ -24,8 +24,8 @@ const resolvers = {
       })
       .catch(error => console.log(error));
     },
-    user: (obj, {userId}) => {
-      return knex(USER_TABLE).first().where('id', '=', userId)
+    user: (obj, {id}) => {
+      return knex(USER_TABLE).first().where('id', '=', id)
       .then(row => {
         console.log(row);
 
@@ -96,6 +96,23 @@ const resolvers = {
       const userColumns = ['id', 'username', 'email', 'password'];
 
       return createModelInstance(requiredParams, optionalParams, USER_TABLE, userColumns);
+    },
+    updateUser: (obj, args) => {
+      const userColumns = ['id', 'username', 'email', 'password'];
+      const propertiesToUpdate = removeUndefinedProperties(args);
+      const dbColumnsToUpdate = toSnakeCaseKeys(propertiesToUpdate);
+
+      return knex(USER_TABLE)
+      .update(dbColumnsToUpdate).where('id', '=', args.id)
+      .returning(userColumns)
+      .then(users => {
+        const user = users[0];
+
+        console.log(user);
+
+        return toCamelCaseKeys(user);
+      })
+      .catch(error => console.log(error));
     },
     createSession: (obj, {name, start, end, isComplete, userId}) => {
       const requiredParams = {name, start, user_id: userId};
