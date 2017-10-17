@@ -75,6 +75,16 @@ const typeDefs = `
       isComplete: Boolean,
     ): Session
 
+    # You shouldn't be able to move a Session from one User to another, so
+    # userId is not included in the updateSession mutation.
+    updateSession(
+      id: ID!,
+      name: String,
+      start: String,
+      end: String,
+      isComplete: Boolean
+    ): Session
+
     createActivity(
       name: String!,
       start: String!,
@@ -87,12 +97,33 @@ const typeDefs = `
       duration: Int,
     ): Activity
 
+    # You shouldn't be able to move an Activity from one Session to another,
+    # so sessionId is not allowed in the updateActivity mutation.
+    updateActivity(
+      id: ID!,
+      name: String,
+      start: String,
+      categoryId: ID,
+      end: String,
+      isComplete: Boolean,
+      duration: Int,
+    ): Activity
+
     createCategory(
       name: String!,
       color: String!,
       userId: ID!,
 
       # Optional
+      isPrimary: Boolean,
+    ): Category
+
+    # You shouldn't be able to move a category from one User to another,
+    # so userId is not included in the updateCategory mutation.
+    updateCategory(
+      id: ID!,
+      name: String,
+      color: String,
       isPrimary: Boolean,
     ): Category
   }
