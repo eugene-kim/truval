@@ -45,18 +45,9 @@ const resolvers = {
       .catch(error => console.log(error));
     },
     user: (obj, {id}) => {
-      return knex(USER_TABLE).first().where('id', '=', id)
-      .then(row => {
-        console.log(row);
 
-        return {
-          id: row.id,
-          username: row.username,
-          email: row.email,
-          password: row.password,
-        }
-      })
-      .catch(error => console.log(error));
+      // TODO: Adjust retrieveModelInstance so that it never returns the user password!
+      return retrieveModelInstance(id, USER_TABLE);
     },
     allSessions: (obj, {userId}) => {
       return knex(SESSION_TABLE).select().where('user_id', '=', userId)
@@ -74,19 +65,7 @@ const resolvers = {
       .catch(error => console.log(error));
     },
     session: (obj, {id}) => {
-      return knex(SESSION_TABLE).first().where('id', '=', id)
-      .then(session => {
-        console.log(session);
-
-        return {
-          id: session.id,
-          name: session.name,
-          start: session.start,
-          end: session.end,
-          isComplete: session.is_complete,
-        };
-      })
-      .catch(error => console.log(error));
+      return retrieveModelInstance(id, SESSION_TABLE);
     },
     allActivities: (obj, {sessionId}) => {
       return knex(ACTIVITY_TABLE).select().where('session_id', '=', sessionId)
@@ -106,24 +85,18 @@ const resolvers = {
       .catch(error => console.log(error));
     },
     activity: (obj, {id}) => {
-      return knex(ACTIVITY_TABLE).first().where('id', '=', id)
-      .then(activity => {
-        console.log(activity);
-
-        return {
-          id: activity.id,
-          name: activity.name,
-          start: activity.start,
-          end: activity.end,
-          isComplete: activity.is_complete,
-          duration: activity.duration,
-          categoryId: activity.category_id,
-        };
+      return retrieveModelInstance(id, ACTIVITY_TABLE);
+    },
+    allCategories: (obj, {userId}) => {
+      return knex(CATEGORY_TABLE).select().where('user_id', '=', userId)
+      .then(categories => {
+        return categories.map(category => toCamelCaseKeys(category));
       })
       .catch(error => console.log(error));
     },
-    allCategories: (obj, {userId}) => {
-    },
+    category: (obj, {id}) => {
+      return retrieveModelInstance(id, CATEGORY_TABLE);
+    }
   },
 
   Mutation: {
@@ -209,6 +182,16 @@ const updateModelInstance = (mutationParams, tableName, columnNames) => {
     console.log(dbResult);
 
     return toCamelCaseKeys(dbResult);
+  })
+  .catch(error => console.log(error));
+}
+
+const retrieveModelInstance = (id, tableName) => {
+  return knex(tableName).first().where('id', '=', id)
+  .then(tableRow => {
+    const graphQLResponse = toCamelCaseKeys(tableRow);
+
+    return graphQLResponse;
   })
   .catch(error => console.log(error));
 }
