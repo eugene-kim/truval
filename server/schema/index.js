@@ -48,16 +48,16 @@ const typeDefs = `
   }
 
   type Query {
-    allUsers: [User]
+    users: [User]
     user(id: ID!): User
 
-    allSessions(userId: ID!): [Session]
+    sessions(userId: ID!): [Session]
     session(id: ID!): Session
 
-    allActivities(sessionId: ID!): [Activity]
+    activities(sessionId: ID!): [Activity]
     activity(id: ID!): Activity
 
-    allCategories(userId: ID!): [Category]
+    categories(userId: ID!): [Category]
     category(id: ID!): Category
   }
 

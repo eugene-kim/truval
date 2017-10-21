@@ -30,7 +30,7 @@ const categoryColumns = ['id', 'name', 'color', 'is_primary', 'user_id'];
 
 const resolvers = {
   Query: {
-    allUsers: () => {
+    users: () => {
       return knex(USER_TABLE).select()
       .then(rows => {
         console.log(rows);
@@ -49,7 +49,7 @@ const resolvers = {
       // TODO: Adjust retrieveModelInstance so that it never returns the user password!
       return retrieveModelInstance(id, USER_TABLE);
     },
-    allSessions: (obj, {userId}) => {
+    sessions: (obj, {userId}) => {
       return knex(SESSION_TABLE).select().where('user_id', '=', userId)
       .then(rows => {
         console.log(rows);
@@ -67,7 +67,7 @@ const resolvers = {
     session: (obj, {id}) => {
       return retrieveModelInstance(id, SESSION_TABLE);
     },
-    allActivities: (obj, {sessionId}) => {
+    activities: (obj, {sessionId}) => {
       return knex(ACTIVITY_TABLE).select().where('session_id', '=', sessionId)
       .then(activities => {
         console.log(activities);
@@ -87,7 +87,7 @@ const resolvers = {
     activity: (obj, {id}) => {
       return retrieveModelInstance(id, ACTIVITY_TABLE);
     },
-    allCategories: (obj, {userId}) => {
+    categories: (obj, {userId}) => {
       return knex(CATEGORY_TABLE).select().where('user_id', '=', userId)
       .then(categories => {
         return categories.map(category => toCamelCaseKeys(category));
