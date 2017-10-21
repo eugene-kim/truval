@@ -109,6 +109,17 @@ const resolvers = {
     updateUser: (obj, args) => {
       return updateModelInstance(args, USER_TABLE, userColumns);
     },
+    deleteUser: (obj, {id}) => {
+      return knex(USER_TABLE).del().where('id', '=', id)
+      .then(numberOfRowsDeleted => {
+        return `Successfully deleted user ${id}.`
+      })
+      .catch(error => {
+        console.log(error);
+
+        return `Error deleting user ${id}`
+      });
+    },
     createSession: (obj, {name, start, end, isComplete, userId}) => {
       const requiredParams = {name, start, user_id: userId};
       const optionalParams = {end, is_complete: isComplete};

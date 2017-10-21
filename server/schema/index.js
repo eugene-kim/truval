@@ -64,6 +64,7 @@ const typeDefs = `
   type Mutation {
     createUser(username: String!, email: String!, password: String!): User
     updateUser(id: ID!, username: String, email: String, password: String): User
+    deleteUser(id: ID!): String!
 
     createSession(
       name: String!,
@@ -84,6 +85,7 @@ const typeDefs = `
       end: String,
       isComplete: Boolean
     ): Session
+    deleteSession(id: ID!): String!
 
     createActivity(
       name: String!,
@@ -108,6 +110,7 @@ const typeDefs = `
       isComplete: Boolean,
       duration: Int,
     ): Activity
+    deleteActivity(id: ID!): String!
 
     createCategory(
       name: String!,
@@ -126,6 +129,7 @@ const typeDefs = `
       color: String,
       isPrimary: Boolean,
     ): Category
+    deleteCategory(id: ID!): String!
   }
 `;
 
