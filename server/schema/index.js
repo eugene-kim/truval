@@ -7,7 +7,7 @@ const typeDefs = `
     username: String!
     email: String!
     password: String!
-    sessions: [Session]!
+    sessions: [Session]
   }
 
   type Session {
@@ -19,7 +19,6 @@ const typeDefs = `
 
     # Datetime String in ISO 8601 format.
     end: String
-    user: User!
     isComplete: Boolean!
     activities: [Activity]!
   }
@@ -36,6 +35,7 @@ const typeDefs = `
     isComplete: Boolean!
     duration: Int
     category: Category
+    categoryId: Int!
     session: Session!
   }
 
@@ -48,13 +48,11 @@ const typeDefs = `
   }
 
   type Query {
-    users: [User]
     user(id: ID!): User
 
     sessions(userId: ID!): [Session]
     session(id: ID!): Session
 
-    activities(sessionId: ID!): [Activity]
     activity(id: ID!): Activity
 
     categories(userId: ID!): [Category]

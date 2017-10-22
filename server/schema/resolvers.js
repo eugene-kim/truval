@@ -30,20 +30,6 @@ const categoryColumns = ['id', 'name', 'color', 'is_primary', 'user_id'];
 
 const resolvers = {
   Query: {
-    users: () => {
-      return knex(USER_TABLE).select()
-      .then(rows => {
-        console.log(rows);
-
-        return rows.map(({id, username, email, password}) => ({
-          id,
-          username,
-          email,
-          password,
-        }));
-      })
-      .catch(error => console.log(error));
-    },
     user: (obj, {id}) => {
 
       // TODO: Adjust retrieveModelInstance so that it never returns the user password!
@@ -67,23 +53,6 @@ const resolvers = {
     session: (obj, {id}) => {
       return retrieveModelInstance(id, SESSION_TABLE);
     },
-    activities: (obj, {sessionId}) => {
-      return knex(ACTIVITY_TABLE).select().where('session_id', '=', sessionId)
-      .then(activities => {
-        console.log(activities);
-
-        return activities.map(({id, name, start, end, is_complete, duration, category_id}) => ({
-          id,
-          name,
-          start,
-          end,
-          isComplete: is_complete,
-          duration,
-          categoryId: category_id,
-        }))
-      })
-      .catch(error => console.log(error));
-    },
     activity: (obj, {id}) => {
       return retrieveModelInstance(id, ACTIVITY_TABLE);
     },
@@ -98,7 +67,6 @@ const resolvers = {
       return retrieveModelInstance(id, CATEGORY_TABLE);
     }
   },
-
   Mutation: {
     createUser: (obj, {username, email, password}) => {
       const requiredParams = {username, email, password};
@@ -152,7 +120,27 @@ const resolvers = {
     updateCategory: (obj, args) => {
       return updateModelInstance(args, CATEGORY_TABLE, categoryColumns);
     }
-  }
+  },
+
+  // GraphQL Type Resolvers
+  User: {
+    sessions: (user, args) => {
+      return knex(SESSION_TABLE).select().where('user_id', '=', user.id)
+      .then(sessions => sessions.map(session => toCamelCaseKeys(session)));
+    },
+  },
+  Session: {
+    activities: (session, args) => {
+      return knex(ACTIVITY_TABLE).select().where('session_id', '=', session.id)
+      .then(activities => activities.map(activity => toCamelCaseKeys(activity)));
+    },
+  },
+  Activity: {
+    category: (activity, args) => {
+      return knex(CATEGORY_TABLE).first().where('id', '=', activity.categoryId).
+      then(category => category);
+    }
+  },
 }
 
 /**
