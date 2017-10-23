@@ -5,7 +5,7 @@ const config = {
     connection: 'postgres://localhost/focus-dev',
     // debug: true,
     seeds: {
-      directory: 'server/database/seeds',
+      directory: './seeds',
     }
   },
 }

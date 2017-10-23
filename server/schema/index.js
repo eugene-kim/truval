@@ -8,6 +8,7 @@ const typeDefs = `
     email: String!
     password: String!
     sessions: [Session]
+    categories: [Category]
   }
 
   type Session {
@@ -34,7 +35,6 @@ const typeDefs = `
     end: String
     isComplete: Boolean!
     duration: Int
-    category: Category
     categoryId: Int!
     session: Session!
   }
