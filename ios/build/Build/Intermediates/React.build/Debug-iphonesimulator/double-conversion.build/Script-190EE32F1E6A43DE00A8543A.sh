@@ -1,3 +1,3 @@
 #!/bin/sh
 cd $SRCROOT/..
-./ios-install-third-party.sh
+exec ./scripts/ios-install-third-party.sh
