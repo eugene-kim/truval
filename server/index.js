@@ -10,7 +10,7 @@ const {graphqlExpress, graphiqlExpress} = require('apollo-server-express');
 const configurePostgresDriver = require('./database/configurePostgresDriver');
 configurePostgresDriver();
 const db = require('./database');
-const schema = require('./schema');
+const schema = require('./graphql');
 
 var app = express();
 
