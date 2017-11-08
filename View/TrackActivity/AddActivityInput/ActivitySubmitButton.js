@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {StyleSheet, Text, TextInput, TouchableHighlight, View} from 'react-native';
+import { Button } from 'react-native-elements';
 
 
 class ActivitySubmitButton extends Component {
@@ -27,14 +28,11 @@ class ActivitySubmitButton extends Component {
   // --------------------------------------------------
   render() {
     return (
-      <TouchableHighlight
-        onPress={this.handleSubmit}>
-        <View>
-          <Text>
-            {'Submit'}
-          </Text>
-        </View>
-      </TouchableHighlight>
+      <Button
+        raised
+        onPress={this.handleSubmit}
+        title='Add Activity'
+      />
     );
   }
 };

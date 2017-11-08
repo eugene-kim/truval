@@ -1,30 +1,31 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {StyleSheet, Text, TextInput, View} from 'react-native';
+import {FormLabel, FormInput} from 'react-native-elements';
 
 
-class ActivityTimeInput extends Component {
+class ActivityCategoryInput extends Component {
 
   // --------------------------------------------------
   // Props
   // --------------------------------------------------
   static propTypes = {
-    onTimeChange: PropTypes.func.isRequired,
-    activityStartTime: PropTypes.string.isRequired,
+    onCategoryChange: PropTypes.func.isRequired,
+    activityCategory: PropTypes.string.isRequired,
   }
 
   // --------------------------------------------------
   // Render
   // --------------------------------------------------
   render() {
-    const {onTimeChange, activityStartTime} = this.props;
+    const {onCategoryChange, activityCategory} = this.props;
 
     return (
       <View style={styles.container}>
-        <TextInput
-          onChange={onTimeChange}
+        <FormInput
+          onChange={onCategoryChange}
           keyboardType={'default'}
-          value={activityStartTime}
+          value={activityCategory}
           style={styles.input}
         />
       </View>
@@ -52,4 +53,4 @@ const styles = StyleSheet.create({
 });
 
 
-export default ActivityTimeInput;
+export default ActivityCategoryInput;
