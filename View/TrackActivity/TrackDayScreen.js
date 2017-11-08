@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import {StyleSheet, View} from 'react-native';
 
 // Components
-import ActivityInputBar from './ActivityInputBar/ActivityInputBar';
+import AddActivityInput from './AddActivityInput/AddActivityInput';
 import ActivityList from './ActivityList';
 
 class TrackDayScreen extends Component {
@@ -49,7 +49,7 @@ class TrackDayScreen extends Component {
 
     return (
       <View style={styles.container}>
-        <ActivityInputBar
+        <AddActivityInput
           onSubmit={this.handleSubmit}
         />
         <ActivityList

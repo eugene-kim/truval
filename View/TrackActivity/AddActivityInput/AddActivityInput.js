@@ -93,18 +93,20 @@ class ActivityInputBar extends Component {
 
     return (
       <View style={styles.container}>
-        <ActivityTimeInput
-          onTimeChange={this.handleTimeChange}
-          activityStartTime={activityStartTime}
-        />
-        <ActivityCategoryInput
-          onCategoryChange={this.handleCategoryChange}
-          activityCategory={activityCategory}
-        />
-        <ActivityNameInput
-          onNameChange={this.handleNameChange}
-          activityName={activityName}
-        />
+        <View style={styles.inputContainer}>
+          <ActivityTimeInput
+            onTimeChange={this.handleTimeChange}
+            activityStartTime={activityStartTime}
+          />
+          <ActivityCategoryInput
+            onCategoryChange={this.handleCategoryChange}
+            activityCategory={activityCategory}
+          />
+          <ActivityNameInput
+            onNameChange={this.handleNameChange}
+            activityName={activityName}
+          />
+        </View>
         <ActivitySubmitButton
           onSubmit={onSubmit}
           activity={activity}
@@ -119,6 +121,9 @@ class ActivityInputBar extends Component {
 // --------------------------------------------------
 const styles = StyleSheet.create({
   container: {
+  },
+
+  inputContainer: {
     flexDirection: 'row',
   },
 });
