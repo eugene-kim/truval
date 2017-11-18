@@ -1,12 +1,20 @@
 import React, {Component} from 'react';
-import {} from 'react-native';
+import { Provider } from 'react-redux';
+import { createStore } from 'redux';
+
 
 import TrackDayScreen from './View/TrackActivity/TrackDayScreen';
+
+
+// TODO: Insert reducer here.
+let store = createStore();
 
 class FocusApp extends Component {
   render() {
     return (
-      <TrackDayScreen />
+  		<Provider store={store}>
+        <TrackDayScreen />
+      </Provider>
     );
   }
 };
