@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import types from './types';
 
 
@@ -18,42 +19,30 @@ const initialState = {
   },
 };
 
-const reduceUser = function(state, action) {
+const userEntities = function(state, action) {
   switch(action.type) {
     case types.ADD_USER: {
       const {payload} = action;
 
       // Payload should include the new User id.
       const {user} = payload;
-      const wrapper = {
-        entities: {
-          [user.id]: user,
-        }
-      };
 
-      return _.merge({}, state, wrapper);
+      return _.merge({}, state, {[user.id]: user});
     }
     case types.EDIT_USER: {
       const {payload} = action;
       const {id, newProps} = payload;
       const user = state.entities[id];
       const updatedUser = _.merge({}, user, newProps);
-      const wrapper = {
-        entities: {
-          [id]: updatedUser,
-        },
-      };
 
-      return _.merge({}, state, wrapper);
+      return _.merge({}, state, updatedUser);
     }
     case types.DELETE_USER: {
       const {payload} = action;
       const {id} = payload;
-      const remainingEntities = {
-        entities: {},
-      };
+      const remainingEntities = {};
 
-      state.entities.map(userId => {
+      state.map(userId => {
         if (userId !== id) {
           const user = state.entities[id];
 
@@ -68,47 +57,122 @@ const reduceUser = function(state, action) {
   }
 };
 
-const 
-
-const reduceSession = function(state, action) {
+const sessionEntities = function(state, action) {
   switch(action.type) {
-    case types.ADD_SESSION:
-    case types.EDIT_SESSION:
-    case types.DELETE_SESSION:
+    case types.ADD_SESSION: {
+      const {session} = action.payload;
+
+      return _.merge({}, state, {[session.id]: session});
+    }
+    case types.EDIT_SESSION: {
+      const {id, newProps} = action.payload;
+      const session = state[id];
+      const updatedSession = _.merge({}, session, newProps);
+
+      return _.merge({}, state, {[id]: updatedSession});
+    }
+    case types.DELETE_SESSION: {
+      const {id} = action.payload;
+      const remainingEntities = {};
+
+      state.map(sessionId => {
+        if (id !== sessionId) {
+          const session = state[sessionId];
+
+          remainingEntities[sessionId] = session;
+        }
+      });
+
+      return remainingEntities;
+    }
     default:
       return state;
   }
 };
 
-const reduceActivity = function(state, action) {
+const activityEntities = function(state, action) {
   switch(action.type) {
-    case types.ADD_ACTIVITY:
-    case types.EDIT_ACTIVITY:
-    case types.DELETE_ACTIVITY:
+    case types.ADD_ACTIVITY: {
+      const {activity} = action.payload;
+
+      return _.merge({}, state, {[activity.id]: activity});
+    }
+    case types.EDIT_ACTIVITY: {
+      const {id, newProps} = action.payload;
+      const activity = state[id];
+      const updatedActivity = _.merge({}, activity, newProps);
+
+      return _.merge({}, state, {[id]: updatedActivity});
+    }
+    case types.DELETE_ACTIVITY: {
+      const {id} = action.payload;
+      const remainingEntities = {};
+
+      state.map(activityId => {
+        if (id !== activityId) {
+          const activity = state[activityId];
+
+          remainingEntities[activityId] = activity;
+        }
+      });
+
+      return remainingEntities;
+    }
     default:
       return state;
   }
 };
 
-const reduceCategory = function(state, action) {
+const categoryEntities = function(state, action) {
   switch(action.type) {
-    case types.ADD_CATEGORY:
-    case types.EDIT_CATEGORY:
-    case types.DELETE_CATEGORY:
+    case types.ADD_CATEGORY: {
+      const {category} = action.payload;
+
+      return _.merge({}, state, {[category.id]: category});
+    }
+    case types.EDIT_CATEGORY: {
+      const {id, newProps} = action.payload;
+      const category = state[id];
+      const updatedCategory = _.merge({}, category, newProps);
+
+      return _.merge({}, state, {[id]: updatedCategory});
+    }
+    case types.DELETE_CATEGORY: {
+      const {id} = action.payload;
+      const remainingEntities = {};
+
+      state.map(categoryId => {
+        if (id !== categoryId) {
+          const category = state[categoryId];
+
+          remainingEntities[categoryId] = category;
+        }
+      });
+
+      return remainingEntities;
+    }
     default:
       return state;
   }
 };
 
 function focusApp(state = initialState, action) {
-  const {user, session, activity, category} = state.entities;
+  const {users, sessions, activities, categories} = state.entities;
 
   return {
     entities: {
-      user: user(user),
-      session: session(session),
-      activity: activity(activity),
-      category: category(category),
+      user: {
+        entities: userEntities(users)
+      },
+      session: {
+        entities: sessionEntities(sessions), 
+      }
+      activity: {
+        entities: activityEntities(activities),
+      },
+      category: {
+        entities: categoryEntities(categories),
+      },
     }
   } 
 }
