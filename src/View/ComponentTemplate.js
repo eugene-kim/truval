@@ -15,8 +15,6 @@ class ComponentTemplate extends Component {
   // Render
   // --------------------------------------------------
   render() {
-    return (
-    );
   }
 };
 

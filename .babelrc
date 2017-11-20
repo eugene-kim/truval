@@ -6,5 +6,7 @@
 
   // For more details:
   // https://github.com/facebook/react-native/blob/master/babel-preset/configs/main.js#L21
-  "presets": ["react-native"]
+  "presets": ["react-native"],
+
+  "retainLines": true,
 }
