@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import types from './types';
+import types from '../actions/types';
 
 
 const initialState = {
@@ -7,12 +7,15 @@ const initialState = {
     user: {
       entities: {},
     },
+
     session: {
       entities: {},
     },
+
     activity: {
       entities: {},
     },
+
     category: {
       entities: {},
     },
@@ -156,23 +159,26 @@ const categoryEntities = function(state, action) {
   }
 };
 
-function focusApp(state = initialState, action) {
+const focusApp = function(state = initialState, action) {
   const {users, sessions, activities, categories} = state.entities;
 
   return {
     entities: {
       user: {
-        entities: userEntities(users)
+        entities: userEntities(users, action),
       },
       session: {
-        entities: sessionEntities(sessions), 
-      }
+        entities: sessionEntities(sessions, action), 
+      },
       activity: {
-        entities: activityEntities(activities),
+        entities: activityEntities(activities, action),
       },
       category: {
-        entities: categoryEntities(categories),
+        entities: categoryEntities(categories, action),
       },
     }
   } 
 }
+
+
+export default focusApp;

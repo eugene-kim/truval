@@ -19,7 +19,7 @@ const EDIT_CATEGORY = 'EDIT_CATEGORY';
 const DELETE_CATEGORY = 'DELETE_CATEGORY';
 
 
-export {
+export default {
   ADD_USER,
   EDIT_USER,
   DELETE_USER,

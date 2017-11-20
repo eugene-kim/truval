@@ -12,12 +12,14 @@
   },
   "scripts": {
     "start": "react-native start",
-    "debug": "node --inspect-brk server/index.js",
-    "node": "nodemon server/index.js",
+    "debug": "node --inspect-brk src/server/index.js",
+    "node": "nodemon src/server/index.js",
     "android": "react-native run-android",
     "ios": "react-native run-ios",
     "test": "node node_modules/jest/bin/jest.js --watch",
-    "seed": "knex --knexfile=server/database/knexfile.js seed:run"
+    "seed": "knex --knexfile=src/server/database/knexfile.js seed:run",
+    "compile": "npx babel src --out-dir lib --source-maps",
+    "redux": "npm run compile; node lib/redux/store.js"
   },
   "jest": {
     "preset": "jest-expo"
