@@ -4,6 +4,10 @@
 		"selected_items":
 		[
 			[
+				"cons",
+				"console"
+			],
+			[
 				"se",
 				"sessionId"
 			],
@@ -127,16 +131,16 @@
 			"file": "src/redux/store.js",
 			"settings":
 			{
-				"buffer_size": 140,
+				"buffer_size": 693,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "package.json",
+			"file": "src/redux/actions/actions.js",
 			"settings":
 			{
-				"buffer_size": 1374,
+				"buffer_size": 1627,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
@@ -145,7 +149,7 @@
 			"file": "src/redux/reducers/index.js",
 			"settings":
 			{
-				"buffer_size": 4124,
+				"buffer_size": 4127,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
@@ -201,29 +205,25 @@
 	"expanded_folders":
 	[
 		"/Users/eugene.kim/projects/personal/focus",
-		"/Users/eugene.kim/projects/personal/focus/lib",
-		"/Users/eugene.kim/projects/personal/focus/lib/libs",
-		"/Users/eugene.kim/projects/personal/focus/lib/libs/util",
-		"/Users/eugene.kim/projects/personal/focus/lib/View",
-		"/Users/eugene.kim/projects/personal/focus/lib/View/TrackActivity",
 		"/Users/eugene.kim/projects/personal/focus/src",
-		"/Users/eugene.kim/projects/personal/focus/src/libs",
 		"/Users/eugene.kim/projects/personal/focus/src/redux",
 		"/Users/eugene.kim/projects/personal/focus/src/redux/actions",
-		"/Users/eugene.kim/projects/personal/focus/src/redux/reducers",
-		"/Users/eugene.kim/projects/personal/focus/src/View",
-		"/Users/eugene.kim/projects/personal/focus/src/View/TrackActivity"
+		"/Users/eugene.kim/projects/personal/focus/src/redux/reducers"
 	],
 	"file_history":
 	[
-		"/Users/eugene.kim/projects/personal/focus/.babelrc",
-		"/Users/eugene.kim/projects/personal/focus/src/redux/store.js",
+		"/Users/eugene.kim/projects/personal/focus/.gitignore",
+		"/Users/eugene.kim/projects/personal/focus/src/redux/actions/types.js",
 		"/Users/eugene.kim/projects/personal/focus/src/redux/actions/actions.js",
+		"/Users/eugene.kim/projects/personal/focus/src/redux/reducers/index.js",
+		"/Users/eugene.kim/projects/personal/focus/package.json",
+		"/Users/eugene.kim/projects/personal/focus/src/redux/store.js",
+		"/Users/eugene.kim/projects/personal/focus/focus.sublime-project",
+		"/Users/eugene.kim/projects/personal/focus/.babelrc",
 		"/Users/eugene.kim/projects/personal/focus/src/redux/reducers/focusApp.js",
 		"/Users/eugene.kim/projects/personal/focus/nodemon.json",
 		"/Users/eugene.kim/projects/personal/focus/App.js",
 		"/Users/eugene.kim/projects/personal/focus/lib/server/models/User.js",
-		"/Users/eugene.kim/projects/personal/focus/package.json",
 		"/Users/eugene.kim/projects/personal/focus/lib/redux/store.js",
 		"/Users/eugene.kim/projects/personal/focus/src/View/ComponentTemplate.js",
 		"/Users/eugene.kim/projects/personal/focus/src/View/TrackActivity/AddActivityInput/AddActivityInput.js",
@@ -263,6 +263,12 @@
 		"case_sensitive": true,
 		"find_history":
 		[
+			"initialState",
+			"type:",
+			"type",
+			"addUser",
+			"store",
+			"const",
 			"Entities",
 			"type",
 			"./reducers",
@@ -335,7 +341,7 @@
 	"groups":
 	[
 		{
-			"selected": 2,
+			"selected": 0,
 			"sheets":
 			[
 				{
@@ -344,15 +350,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 140,
+						"buffer_size": 693,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								69,
-								69
+								547,
+								547
 							]
 						],
 						"settings":
@@ -363,29 +369,35 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 1,
+					"stack_index": 0,
 					"type": "text"
-				},
+				}
+			]
+		},
+		{
+			"selected": 1,
+			"sheets":
+			[
 				{
 					"buffer": 1,
-					"file": "package.json",
+					"file": "src/redux/actions/actions.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1374,
+						"buffer_size": 1627,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								794,
-								794
+								360,
+								360
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/JavaScript/JSON.sublime-syntax",
+							"syntax": "Packages/Babel/JavaScript (Babel).sublime-syntax",
 							"tab_size": 2,
 							"translate_tabs_to_spaces": true
 						},
@@ -402,15 +414,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 4124,
+						"buffer_size": 4127,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								347,
-								347
+								4127,
+								4127
 							]
 						],
 						"settings":
@@ -420,10 +432,10 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 2050.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 0,
+					"stack_index": 1,
 					"type": "text"
 				}
 			]
@@ -446,11 +458,18 @@
 				0,
 				1,
 				1
+			],
+			[
+				1,
+				0,
+				2,
+				1
 			]
 		],
 		"cols":
 		[
 			0.0,
+			0.5,
 			1.0
 		],
 		"rows":
@@ -477,6 +496,22 @@
 		"last_filter": "",
 		"selected_items":
 		[
+			[
+				"action.js",
+				"src/redux/actions/actions.js"
+			],
+			[
+				"gitig",
+				".gitignore"
+			],
+			[
+				"types.js",
+				"src/redux/actions/types.js"
+			],
+			[
+				"sublime",
+				"focus.sublime-project"
+			],
 			[
 				"pack",
 				"package.json"
@@ -666,7 +701,7 @@
 	"show_open_files": false,
 	"show_tabs": true,
 	"side_bar_visible": true,
-	"side_bar_width": 350.0,
+	"side_bar_width": 270.0,
 	"status_bar_visible": true,
 	"template_settings":
 	{

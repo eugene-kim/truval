@@ -11,7 +11,7 @@ const addUser = function(user = {}) {
 const editUser = function(id, newProps = {}) {
   return {
     type: types.EDIT_USER,
-    payload: {user: newProps},
+    payload: {id, newProps},
   };
 };
 
@@ -31,7 +31,7 @@ const addSession = function(session = {}) {
 
 const editSession = function(id, newProps = {}) {
   return {
-    type: types.EDIT_ACTIVITY,
+    type: types.EDIT_SESSION,
     payload: {id, newProps},
   };
 };
