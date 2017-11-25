@@ -2,27 +2,7 @@ import _ from 'lodash';
 import types from '../actions/types';
 
 
-const initialState = {
-  entities: {
-    user: {
-      entities: {},
-    },
-
-    session: {
-      entities: {},
-    },
-
-    activity: {
-      entities: {},
-    },
-
-    category: {
-      entities: {},
-    },
-  },
-};
-
-const userEntities = function(state, action) {
+const userEntities = function(userEntities = {}, action) {
   switch(action.type) {
     case types.ADD_USER: {
       const {payload} = action;
@@ -30,24 +10,23 @@ const userEntities = function(state, action) {
       // Payload should include the new User id.
       const {user} = payload;
 
-      return _.merge({}, state, {[user.id]: user});
+      return _.merge({}, userEntities, {[user.id]: user});
     }
     case types.EDIT_USER: {
       const {payload} = action;
       const {id, newProps} = payload;
-      const user = state.entities[id];
+      const user = userEntities[id];
       const updatedUser = _.merge({}, user, newProps);
 
-      return _.merge({}, state, updatedUser);
+      return _.merge({}, userEntities, {[id]: updatedUser});
     }
     case types.DELETE_USER: {
-      const {payload} = action;
-      const {id} = payload;
+      const deleteUserId = action.payload;
       const remainingEntities = {};
 
-      state.map(userId => {
-        if (userId !== id) {
-          const user = state.entities[id];
+      _.mapKeys(userEntities, (user, userId) => {
+        if (deleteUserId !== parseInt(userId)) {
+          const user = userEntities[deleteUserId];
 
           remainingEntities[userId] = user;
         }
@@ -56,32 +35,31 @@ const userEntities = function(state, action) {
       return remainingEntities;
     }
     default:
-      return state;
+      return userEntities;
   }
 };
 
-const sessionEntities = function(state, action) {
+const sessionEntities = function(sessionEntities = {}, action) {
   switch(action.type) {
     case types.ADD_SESSION: {
       const {session} = action.payload;
 
-      return _.merge({}, state, {[session.id]: session});
+      return _.merge({}, sessionEntities, {[session.id]: session});
     }
     case types.EDIT_SESSION: {
       const {id, newProps} = action.payload;
-      const session = state[id];
+      const session = sessionEntities[id];
       const updatedSession = _.merge({}, session, newProps);
 
-      return _.merge({}, state, {[id]: updatedSession});
+      return _.merge({}, sessionEntities, {[id]: updatedSession});
     }
     case types.DELETE_SESSION: {
-      const {id} = action.payload;
+      const deleteSessionId = action.payload;
       const remainingEntities = {};
 
-      state.map(sessionId => {
-        if (id !== sessionId) {
-          const session = state[sessionId];
+      _.mapKeys(sessionEntities, (session, sessionId) => {
 
+        if (deleteSessionId !== parseInt(sessionId)) {
           remainingEntities[sessionId] = session;
         }
       });
@@ -89,31 +67,31 @@ const sessionEntities = function(state, action) {
       return remainingEntities;
     }
     default:
-      return state;
+      return sessionEntities;
   }
 };
 
-const activityEntities = function(state, action) {
+const activityEntities = function(activityEntities = {}, action) {
   switch(action.type) {
     case types.ADD_ACTIVITY: {
       const {activity} = action.payload;
 
-      return _.merge({}, state, {[activity.id]: activity});
+      return _.merge({}, activityEntities, {[activity.id]: activity});
     }
     case types.EDIT_ACTIVITY: {
       const {id, newProps} = action.payload;
-      const activity = state[id];
+      const activity = activityEntities[id];
       const updatedActivity = _.merge({}, activity, newProps);
 
-      return _.merge({}, state, {[id]: updatedActivity});
+      return _.merge({}, activityEntities, {[id]: updatedActivity});
     }
     case types.DELETE_ACTIVITY: {
-      const {id} = action.payload;
+      const deleteActivityId = action.payload;
       const remainingEntities = {};
 
-      state.map(activityId => {
-        if (id !== activityId) {
-          const activity = state[activityId];
+      _.mapKeys(sessionEntities, (activity, activityId) => {
+        if (deleteActivityId !== parseInt(activityId)) {
+          const activity = activityEntities[activityId];
 
           remainingEntities[activityId] = activity;
         }
@@ -122,31 +100,31 @@ const activityEntities = function(state, action) {
       return remainingEntities;
     }
     default:
-      return state;
+      return activityEntities;
   }
 };
 
-const categoryEntities = function(state, action) {
+const categoryEntities = function(categoryEntities = {}, action) {
   switch(action.type) {
     case types.ADD_CATEGORY: {
       const {category} = action.payload;
 
-      return _.merge({}, state, {[category.id]: category});
+      return _.merge({}, categoryEntities, {[category.id]: category});
     }
     case types.EDIT_CATEGORY: {
       const {id, newProps} = action.payload;
-      const category = state[id];
+      const category = categoryEntities[id];
       const updatedCategory = _.merge({}, category, newProps);
 
-      return _.merge({}, state, {[id]: updatedCategory});
+      return _.merge({}, categoryEntities, {[id]: updatedCategory});
     }
     case types.DELETE_CATEGORY: {
       const {id} = action.payload;
       const remainingEntities = {};
 
-      state.map(categoryId => {
-        if (id !== categoryId) {
-          const category = state[categoryId];
+      _.mapKeys(sessionEntities, (category, categoryId) => {
+        if (id !== parseInt(categoryId)) {
+          const category = categoryEntities[categoryId];
 
           remainingEntities[categoryId] = category;
         }
@@ -155,26 +133,26 @@ const categoryEntities = function(state, action) {
       return remainingEntities;
     }
     default:
-      return state;
+      return categoryEntities;
   }
 };
 
-const focusApp = function(state = initialState, action) {
-  const {users, sessions, activities, categories} = state.entities;
+const focusApp = function(state = {}, action) {
+  const {user, session, activity, category} = state.entities;
 
   return {
     entities: {
       user: {
-        entities: userEntities(users, action),
+        entities: userEntities(user.entities, action),
       },
       session: {
-        entities: sessionEntities(sessions, action), 
+        entities: sessionEntities(session.entities, action), 
       },
       activity: {
-        entities: activityEntities(activities, action),
+        entities: activityEntities(activity.entities, action),
       },
       category: {
-        entities: categoryEntities(categories, action),
+        entities: categoryEntities(category.entities, action),
       },
     }
   } 
