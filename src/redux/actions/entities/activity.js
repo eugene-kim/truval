@@ -1,4 +1,4 @@
-import types from './types';
+import types from '../types';
 
 
 const addActivity = function(activity = {}) {
@@ -23,7 +23,7 @@ const deleteActivity = function(id) {
 };
 
 
-export default {
+export {
   addActivity,
   editActivity,
   deleteActivity,
