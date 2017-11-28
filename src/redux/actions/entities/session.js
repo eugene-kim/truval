@@ -1,4 +1,4 @@
-import types from './types';
+import types from '../types';
 
 
 const addSession = function(session = {}) {
@@ -23,7 +23,7 @@ const deleteSession = function(id) {
 };
 
 
-export default {
+export {
   addSession,
   editSession,
   deleteSession,

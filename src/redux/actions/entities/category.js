@@ -1,4 +1,4 @@
-import types from './types';
+import types from '../types';
 
 
 const addCategory = function(category = {}) {
@@ -23,7 +23,7 @@ const deleteCategory = function(id) {
 };
 
 
-export default {
+export {
   addCategory,
   editCategory,
   deleteCategory,
