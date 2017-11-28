@@ -137,6 +137,29 @@ const categoryEntities = function(categoryEntities = {}, action) {
   }
 };
 
+const sessionActivities = function(sessionActivities = {}, action) {
+  switch(action.type) {
+    case types.DELETE_SESSION: {
+
+    }
+
+    case types.ADD_SESSION: {
+
+    }
+
+    case types.ADD_ACTIVITY: {
+
+    }
+
+    case types.DELETE_SESSION: {
+
+    }
+
+    default:
+      return sessionActivities;
+  }
+};
+
 const focusApp = function(state = {}, action) {
   const {user, session, activity, category} = state.entities;
 
@@ -154,7 +177,14 @@ const focusApp = function(state = {}, action) {
       category: {
         entities: categoryEntities(category.entities, action),
       },
-    }
+    },
+
+    ordered: {
+      sessionActivities: {},
+      sessions: {
+        entries: [],
+      },
+    },
   } 
 }
 

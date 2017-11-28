@@ -1,5 +1,3 @@
-// TODO: think of a better name :)
-
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {StyleSheet, View} from 'react-native';
@@ -8,37 +6,10 @@ import {StyleSheet, View} from 'react-native';
 import AddActivityInput from './AddActivityInput/AddActivityInput';
 import ActivityList from './ActivityList';
 
-class TrackDayScreen extends Component {
+
+class SessionScreen extends Component {
   constructor(props) {
     super(props);
-
-    this.state = {
-      activities: [
-        {
-          activityStartTime: '10:00AM',
-          activityCategory: 'FOOD',
-          activityName: 'Eat Lunch',
-        },
-        {
-          activityStartTime: '11:00AM',
-          activityCategory: 'POTTY',
-          activityName: 'Poop',
-        },
-        {
-          activityStartTime: '12:00PM',
-          activityCategory: 'WORK',
-          activityName: 'React Native',
-        },
-      ],
-    };
-  }
-
-  // --------------------------------------------------
-  // Handlers
-  // --------------------------------------------------
-
-  handleSubmit = (activity) => {
-    this.setState({activities: this.state.activities.concat([activity])});
   }
 
   // --------------------------------------------------
@@ -69,4 +40,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default TrackDayScreen;
+export default SessionScreen;
