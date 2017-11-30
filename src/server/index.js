@@ -1,4 +1,5 @@
 const express = require('express');
+const morgan = require('morgan');
 
 // This package automatically parses JSON requests.
 const bodyParser = require('body-parser');
@@ -13,6 +14,8 @@ const db = require('./database');
 const schema = require('./graphql');
 
 var app = express();
+
+app.use(morgan('tiny'));
 
 app.use('/graphql', bodyParser.json(), graphqlExpress({schema}));
 app.use('/graphiql', graphiqlExpress({

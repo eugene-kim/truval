@@ -6,21 +6,19 @@ import _ from 'lodash';
 import ActivityRow from './ActivityRow';
 
 
-const ActivityList = ({activities}) => 
-  activities.map((activity, index) =>
-    <ActivityRow
-      name={activity.name}
-      category={activity.category}
-      time={activity.startTime}
-      key={index}
-    />
-  );
+const ActivityList = ({activities}) => {
+  return _.map(activities, activity => {
+    const {name, start, isComplete, categoryId} = activity;
 
-// --------------------------------------------------
-// Styles
-// --------------------------------------------------
-const styles = StyleSheet.create({
-});
+    return (
+      <ActivityRow
+        name={name}
+        time={start}
+        category={categoryId}
+      />
+    );
+  });
+}
 
 
 export default ActivityList;

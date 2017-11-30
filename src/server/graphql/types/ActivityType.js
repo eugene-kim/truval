@@ -42,6 +42,7 @@ const activityTypeDef = `
       isComplete: Boolean,
       duration: Int,
     ): Activity
+    
     deleteActivity(id: ID!): String!
   }
 `;
