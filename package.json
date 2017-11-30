@@ -28,11 +28,15 @@
     "setupTestFrameworkScriptFile": "./jest-plugins.js"
   },
   "dependencies": {
+    "apollo-cache-inmemory": "^1.1.1",
+    "apollo-client": "^2.0.3",
+    "apollo-link-http": "^1.2.0",
     "apollo-server-express": "^1.2.0",
     "body-parser": "^1.18.1",
     "express": "^4.16.2",
     "express-graphql": "^0.6.11",
     "graphql": "^0.11.7",
+    "graphql-tag": "^2.5.0",
     "graphql-tools": "^2.7.2",
     "immutable": "^3.8.2",
     "knex": "^0.13.0",
@@ -41,10 +45,9 @@
     "morgan": "^1.9.0",
     "pg": "^7.4.0",
     "react": "16.0.0",
+    "react-apollo": "^2.0.1",
     "react-native": "^0.50.0",
     "react-native-elements": "^0.18.2",
     "react-native-vector-icons": "^4.4.2",
-    "react-redux": "^5.0.6",
-    "redux": "^3.7.2"
   }
 }
