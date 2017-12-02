@@ -1,5 +1,5 @@
 import React, {Component} from 'react'; 
-import SessionScreen from './src/View/TrackActivity/SessionScreen';
+import SessionScreen from './src/View/SessionScreen/SessionScreen';
 
 import { ApolloProvider } from 'react-apollo';
 import { ApolloClient } from 'apollo-client';
@@ -16,7 +16,7 @@ class FocusApp extends Component {
   render() {
     return (
   		<ApolloProvider client={client}>
-        <SessionScreen />
+        <SessionScreen sessionId={1} />
       </ApolloProvider>
     );
   }
