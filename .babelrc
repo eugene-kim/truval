@@ -1,6 +1,6 @@
 {
   "plugins": [
-    "transform-decorators",
+    "transform-decorators-legacy",
     "babel-plugin-root-import"
   ],
 
