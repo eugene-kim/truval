@@ -1,5 +1,5 @@
 import React, {Component} from 'react'; 
-import SessionScreen from './src/View/SessionScreen/SessionScreen';
+import SessionScreen from 'src/View/SessionScreen/SessionScreen';
 
 import { ApolloProvider } from 'react-apollo';
 import { ApolloClient } from 'apollo-client';

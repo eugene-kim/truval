@@ -4,7 +4,7 @@
   "private": true,
   "devDependencies": {
     "babel-cli": "^6.26.0",
-    "babel-plugin-root-import": "^5.1.0",
+    "babel-plugin-module-resolver": "3.0.0-beta.5",
     "babel-plugin-transform-decorators-legacy": "^1.3.4",
     "babel-preset-react-native": "^4.0.0",
     "jest": "^21.2.1",
@@ -14,7 +14,7 @@
     "react-test-renderer": "16.0.0"
   },
   "scripts": {
-    "start": "react-native start",
+    "start": "react-native start -- --reset-cache",
     "debug": "node --inspect-brk src/server/index.js",
     "node": "nodemon src/server/index.js",
     "android": "react-native run-android",
