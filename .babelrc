@@ -1,7 +1,14 @@
 {
   "plugins": [
     "transform-decorators-legacy",
-    "babel-plugin-root-import"
+
+    [
+      "module-resolver",
+      {
+        "root": ["../../src"],
+        "extensions": [".js", ".ios.js", ".android.js"]
+      }
+    ]
   ],
 
   // For more details:
