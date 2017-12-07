@@ -12,56 +12,72 @@ import ActivityCategoryInput from './ActivityCategoryInput';
 import ActivityNameInput from './ActivityNameInput';
 import ActivitySubmitButton from './ActivitySubmitButton';
 
+import {SessionActivitiesQuery} from '../SessionScreen';
 
-const CREATE_ACTIVITY = gql`
+
+const createActivityMutation = gql`
   mutation createActivity(
     $sessionId: ID!,
-    $activityName: String!,
-    $activityStart: String!,
-    $activityCategory: ID!,
+    $name: String!,
+    $start: String!,
+    $categoryId: ID!,
+    $isComplete: Boolean!,
+
+    # Optional
+    $end: String,
+    $duration: Int,
   ) {
     createActivity(
-      name:$activityName,
-      start:$activityStart,
-      categoryId:$activityCategory,
+      name: $name,
+      start: $start,
+      categoryId: $categoryId,
       sessionId: $sessionId,
+      isComplete: $isComplete,
+
+      # Optional
+      end: $end,
+      duration: $duration,
     ) {
       name, start, categoryId
     }
   }
 `;
 
-@graphql(CREATE_ACTIVITY, {
+@graphql(createActivityMutation, {
   props: ({mutate}) => ({
 
     // Generates a submit handler based on the provided activity.
     // TODO: This should fire off another mutaiton that completes currently running event.
     generateOnSubmit: (newActivity = {}) => () => { 
-      const {name, start, categoryId, sessionId} = newActivity;
+      const {name, start, isComplete, categoryId, sessionId} = newActivity;
 
       mutate({
         variables: {
           ...newActivity,
+          isComplete,
+          end: null,
+          duration: null,
         },
-        optimisticResponse: {
-          createActivity: {
-            name,
-            start,
-            categoryId,
-            sessionId,
-          },
+        update: (store, {data: { createActivity }}) => {
+          const data = store.readQuery({
+            query: SessionActivitiesQuery,
+            variables: {sessionId},
+          });
+          console.log('data retrieved from store');
+          console.log(data);
+          const {activities} = data.session;
+
+          activities.unshift(newActivity);
+
+          store.writeQuery({
+            query: SessionActivitiesQuery,
+            variables: {sessionId},
+            data,
+          });
         },
-        // update: (proxy, {data: { createActivity }}) => {
-          
-        // },
       });
     },
   }),
-  options: {
-    update: (proxy, {data: {}}) => {
-
-    },
-  },
 })
 class AddActivityInput extends Component {
 
@@ -132,13 +148,15 @@ class AddActivityInput extends Component {
   // Render
   // --------------------------------------------------
   render() {
+    console.log('SessionActivitiesQuery', SessionActivitiesQuery);
     const {generateOnSubmit, sessionId} = this.props;
     const {activityStartTime, activityCategory, activityName} = this.state;
     const newActivity = {
       sessionId,
-      activityCategory,
-      activityName,
-      activityStart: activityStartTime,
+      name: activityName,
+      start: activityStartTime,
+      categoryId: parseInt(activityCategory),
+      isComplete: false,
     };
     const onSubmit = generateOnSubmit(newActivity);
 

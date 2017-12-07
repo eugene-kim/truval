@@ -8,12 +8,15 @@ import { graphql } from 'react-apollo';
 import AddActivityInput from './AddActivityInput/AddActivityInput';
 import ActivityList from './ActivityList';
 
-// Hardcoding to session 1 for the time being.
-const SESSION_ACTIVITIES = gql`
+
+export const SessionActivitiesQuery = gql`
   query SessionActivities($sessionId: ID!){
     session(id: $sessionId) {
       id,
       name,
+      start,
+      end,
+      isComplete,
       activities {
         id,
         name,
@@ -26,7 +29,7 @@ const SESSION_ACTIVITIES = gql`
     }
   }
 `;
-@graphql(SESSION_ACTIVITIES, {
+@graphql(SessionActivitiesQuery, {
   options: props => ({id: props.sessionId}),
   props: ({data: {loading, session}}) => ({loading, session}),
 })
