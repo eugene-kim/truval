@@ -10,7 +10,6 @@ const activityTypeDef = `
     end: String
     isComplete: Boolean!
     duration: Int
-    categoryId: Int!
     category: Category!
     session: Session!
   }

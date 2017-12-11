@@ -2,6 +2,9 @@
   "name": "focus-app",
   "version": "0.1.0",
   "private": true,
+  "config": {
+    "server_path": "src/server/index.js"
+  },
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-plugin-module-resolver": "3.0.0-beta.5",
@@ -15,8 +18,8 @@
   },
   "scripts": {
     "start": "react-native start -- --reset-cache",
-    "debug": "node --inspect-brk src/server/index.js",
-    "node": "nodemon src/server/index.js",
+    "debug": "nodemon --inspect-brk $npm_package_config_server_path",
+    "node": "nodemon $npm_package_config_server_path",
     "android": "react-native run-android",
     "ios": "react-native run-ios",
     "test": "jest",

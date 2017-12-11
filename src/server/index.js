@@ -11,7 +11,7 @@ const {graphqlExpress, graphiqlExpress} = require('apollo-server-express');
 const configurePostgresDriver = require('./database/configurePostgresDriver');
 configurePostgresDriver();
 const db = require('./database');
-const schema = require('./graphql');
+const schema = require('./graphql/schema');
 
 var app = express();
 
@@ -21,6 +21,11 @@ app.use('/graphql', bodyParser.json(), graphqlExpress({schema}));
 app.use('/graphiql', graphiqlExpress({
   endpointURL: '/graphql',
 }));
+
+
+app.get('/test', (req, res) => {
+  require('./graphql/client')();
+})
 
 const PORT = 3000
 app.listen(PORT, () => {
