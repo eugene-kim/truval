@@ -22,6 +22,12 @@ const activityResolvers = {
     updateActivity: (root, args) => Activity.updateActivity(args),
     deleteActivity: (root, {id}) => Activity.deleteActivity(id),
   },
+
+  // GraphQL Type Resolvers
+  Activity: {
+    category: (activity, args) => Activity.getCategory(activity.id),
+    session: (activity, args) => Activity.getSession(activity.id),
+  },
 };
 
 
