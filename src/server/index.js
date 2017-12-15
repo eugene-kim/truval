@@ -24,7 +24,17 @@ app.use('/graphiql', graphiqlExpress({
 
 
 app.get('/test', (req, res) => {
-  require('./graphql/client')();
+  require('./graphql/client')()
+  .then(normalizedData => {
+    console.log(normalizedData);
+
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify(normalizedData)); 
+  })
+  .catch(error => {
+    console.log(error);
+    res.send(error);
+  });
 })
 
 const PORT = 3000
