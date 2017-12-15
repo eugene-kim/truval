@@ -1,0 +1,46 @@
+{
+  "data": {
+    "session": {
+      "id": "1",
+      "isComplete": false,
+      "activities": [
+        {
+          "id": "1",
+          "name": "Write seed data"
+        },
+        {
+          "id": "2",
+          "name": "Lunch"
+        },
+        {
+          "id": "3",
+          "name": "Poop"
+        },
+        {
+          "id": "4",
+          "name": "Write test cases"
+        },
+        {
+          "id": "5",
+          "name": "Cheer up girlfriend"
+        },
+        {
+          "id": "6",
+          "name": "Reddit"
+        },
+        {
+          "id": "7",
+          "name": "Write seed data"
+        },
+        {
+          "id": "8",
+          "name": "Cheer up girlfriend"
+        }
+      ]
+    },
+    "user": {
+      "id": "1",
+      "username": "Huge Euge"
+    }
+  }
+}
