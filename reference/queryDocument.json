@@ -1,0 +1,136 @@
+{
+  "kind": "Document",
+  "definitions": [
+    {
+      "kind": "OperationDefinition",
+      "operation": "query",
+      "variableDefinitions": [],
+      "selectionSet": {
+        "kind": "SelectionSet",
+        "selections": [
+          {
+            "kind": "Field",
+            "name": {
+              "kind": "Name",
+              "value": "session",
+            },
+            "arguments": [
+              {
+                "kind": "Argument",
+                "name": {
+                  "kind": "Name",
+                  "value": "id",
+                },
+                "value": {
+                  "kind": "IntValue",
+                  "value": "1",
+                },
+              }
+            ],
+            "selectionSet": {
+              "kind": "SelectionSet",
+              "selections": [
+                {
+                  "kind": "Field",
+                  "name": {
+                    "kind": "Name",
+                    "value": "isComplete",
+                  },
+                  "arguments": [],
+                  "selectionSet": null,
+                },
+                {
+                  "kind": "Field",
+                  "name": {
+                    "kind": "Name",
+                    "value": "activities",
+                  },
+                  "arguments": [],
+                  "selectionSet": {
+                    "kind": "SelectionSet",
+                    "selections": [
+                      {
+                        "kind": "Field",
+                        "name": {
+                          "kind": "Name",
+                          "value": "name",
+                        },
+                        "arguments": [],
+                        "selectionSet": null,
+                      },
+                      {
+                        "kind": "Field",
+                        "name": {
+                          "kind": "Name",
+                          "value": "session",
+                        },
+                        "arguments": [],
+                        "selectionSet": {
+                          "kind": "SelectionSet",
+                          "selections": [
+                            {
+                              "kind": "Field",
+                              "name": {
+                                "kind": "Name",
+                                "value": "id",
+                              },
+                              "arguments": [],
+                              "selectionSet": null,
+                            }
+                          ],
+                        },
+                      }
+                    ],
+                  },
+                }
+              ],
+            },
+          },
+          {
+            "kind": "Field",
+            "name": {
+              "kind": "Name",
+              "value": "user",
+            },
+            "arguments": [
+              {
+                "kind": "Argument",
+                "name": {
+                  "kind": "Name",
+                  "value": "id",
+                },
+                "value": {
+                  "kind": "IntValue",
+                  "value": "1",
+                },
+              }
+            ],
+            "selectionSet": {
+              "kind": "SelectionSet",
+              "selections": [
+                {
+                  "kind": "Field",
+                  "name": {
+                    "kind": "Name",
+                    "value": "id",
+                  },
+                  "arguments": [],
+                  "selectionSet": null,
+                },
+                {
+                  "kind": "Field",
+                  "name": {
+                    "kind": "Name",
+                    "value": "username",
+                  },
+                  "arguments": [],
+                  "selectionSet": null,
+                }
+              ],
+            },
+          }
+        ],
+      },
+    }
+  ],
+}
