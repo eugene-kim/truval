@@ -24,6 +24,7 @@ module.exports = async () => {
   }`;
 
   const fieldTypes = {
+    NON_NULL: 'NON_NULL',
     OBJECT: 'OBJECT',
     LIST: 'LIST',
   };
@@ -57,30 +58,59 @@ module.exports = async () => {
     Field: {
       enter(node) {
         debugger;
-        
+
         // Skip over scalar fields - normalizr automatically adds those properties in.
         if (isScalarNode(node)) {
+
+          // Returning false makes `visit()` skip over this node.
           return false;
         }
 
         const fieldName = getFieldName(node);
         const operationRootField = getOpRootField(node, operationSchema);
-        const nodeGqlSchema = getNodeGqlSchema(node, schemaDoc, operationSchema, operationRootField);
-        const nodeNormalizrSchema = createNormalizrSchema(node, nodeGqlSchema.type);
 
-        // Assign the schema to the proper parent.
         if (operationRootField) { /* This field is the root field on the operation. */
+          console.log('Node is an operation root field.\n');
+
+          const nodeNormalizrSchema = createNormalizrSchema(node, operationRootField.type);
+          const fieldType = getNodeFieldType(operationRootField.type);
+
           Object.assign(normalizrSchema, {[fieldName]: nodeNormalizrSchema});
-        } else { /* This is a child field on an operation. */
-          const parentNormalizrSchema = getCurrentParent(stack);
-          const parentNormalizrSchemaDefinition = parentNormalizrSchema.schema;
+
+          console.log(`Adding ${fieldType} to the stack`);
+
+          stack.push({fieldType, nodeNormalizrSchema})
+
+          console.log('stack\n', stack);
+        } else { /* This is a descendant field on an operation. */
+          console.log('Node is an operation descendant field.\n');
+
+          const parent = getCurrentParent(stack);
+          const parentNormalizrSchema = parent.nodeNormalizrSchema;
+          const parentFieldType = parent.fieldType;
+
+          console.log('parentFieldType', parentFieldType);
+
+          debugger
+
+          const fieldTypeObject = getChildFieldType(parentFieldType, node, schemaDoc);
+
+          console.log('fieldTypeObject', fieldTypeObject);
+          console.log('typeof fieldTypeObject', typeof fieldTypeObject);
+
+          const fieldTypeName = getNodeFieldType(fieldTypeObject);
+          const nodeNormalizrSchema = createNormalizrSchema(node, fieldTypeObject);
 
           // Update the parent schema definition to include this child schema.
+          const parentNormalizrSchemaDefinition = parentNormalizrSchema.schema;
           Object.assign(parentNormalizrSchemaDefinition, {[fieldName]: nodeNormalizrSchema});
           parentNormalizrSchema.define(parentNormalizrSchemaDefinition);
-        }
 
-        stack.push(nodeNormalizrSchema);
+          console.log(`Adding ${fieldTypeName} to the stack`);
+          stack.push({fieldType: fieldTypeName, nodeNormalizrSchema});
+
+          console.log('stack\n', stack);
+        }
       },
 
       leave() {
@@ -89,31 +119,57 @@ module.exports = async () => {
     },
   };
 
-  const getOpRootField = (node, opSchema) => opSchema.fields.find(field => field.name === getFieldName(node));
+  const getChildFieldType = (parentFieldType, node, schemaDoc) => {
+    const parentSchema = getNodeSchema(parentFieldType, schemaDoc);
+    const childField = parentSchema.fields.find(field => field.name === getFieldName(node));
 
-  const getNodeGqlSchema = (node, schemaDoc, opSchema, isOpRootField) => {
-    return isOpRootField ? getOpRootFieldGqlSchema(node, schemaDoc, opSchema) : getOpChildFieldGqlSchema(node, schemaDoc);
+    return childField.type;
   }
+
+  const getOpRootField = (node, opSchema) => opSchema.fields.find(field => field.name === getFieldName(node));
 
   const getOpRootFieldGqlSchema = (node, schemaDoc, opSchema) => {
     return opSchema.fields.find(opFieldSchema => getFieldName(node) === opFieldSchema.name);
   }
 
-  const getOpChildFieldGqlSchema = (node, schemaDoc) => {
-    return schemaDoc.types.find(schemaType => schemaType.name === getFieldName(node));
+  const getNodeSchema = (typeName, schemaDoc) => {
+    return schemaDoc.types.find(schemaType => schemaType.name === typeName);
+  }
+
+  // TODO: Expand this method as you come across more types.
+  const getNodeFieldType = ({kind, name, ofType}) => {
+    console.log(`kind is ${kind}`);
+    console.log(`name is ${name}`);
+    console.log(`ofType is:\n`, ofType);
+
+    switch(kind) {
+      case fieldTypes.NON_NULL:
+        return getNodeFieldType(ofType);
+      case fieldTypes.LIST:
+        return ofType.name;
+      case fieldTypes.OBJECT:
+        return name;
+      default:
+        throw `Unknown field kind: ${kind}. Unable to grab node type name.`;
+    }
   }
 
   const createNormalizrSchema = (node, {kind, name, ofType}) => {
     const fieldName = getFieldName(node);
+    console.log({kind, name, ofType});
 
-    if (kind === fieldTypes.OBJECT) {
-      return new schema.Entity(fieldName);
-    } else if (kind === fieldTypes.LIST) {
-      const instanceSchema = new schema.Entity(fieldName);
+    switch(kind) {
+      case fieldTypes.NON_NULL:
+        return createNormalizrSchema(node, ofType);
+      case fieldTypes.LIST: {
+        const instanceSchema = new schema.Entity(fieldName);
 
-      return new schema.Array(instanceSchema);
-    } else {
-      throw `Unidentified field kind for node ${getFieldName(node)} - ${node}`;
+        return new schema.Array(instanceSchema);
+      }
+      case fieldTypes.OBJECT:
+        return new schema.Entity(fieldName);
+      default:
+        throw `Unknown field kind: ${kind}. Unable to create normalizr schema.`;
     }
   }
 
