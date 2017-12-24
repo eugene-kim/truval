@@ -10,23 +10,56 @@ const {normalize, schema} = require('normalizr');
 const queryResult = require('./sampleQueryResult.json');
 
 module.exports = async () => {
+
   const queryString = `query {
-    session(id:1) {
-      isComplete,
-      activities {
-        name
-      }
-    }
     user(id:1) {
       id,
-      username
+      username,
+      email,
+      password,
+      sessions {
+        id,
+        name,
+        start,
+        isComplete,
+        activities {
+          id,
+          start,
+          end,
+          isComplete,
+          session {
+            id,
+            start,
+            end,
+            isComplete,
+            activities {
+              id,
+              start,
+              end,
+            }
+          },
+          category {
+            id,
+            color,
+            name
+          }
+        }
+      }
     }
-  }`;
+}`;
 
   const fieldTypes = {
     NON_NULL: 'NON_NULL',
     OBJECT: 'OBJECT',
     LIST: 'LIST',
+  };
+
+  const normalizrSchemaTypes = {
+    ARRAY: 'ArraySchema',
+    VALUES: 'ValuesSchema',
+    UNION: 'UnionSchema',
+    OBJECT: 'ObjectSchema',
+    ENTITY: 'EntitySchema',
   };
 
   const stack = [];
@@ -51,14 +84,10 @@ module.exports = async () => {
         }
 
         operationSchema = schemaDoc.types.find(type => type.name === operationName);
-
-        // console.log(`${operationName} schema: ${operationSchema}`);
       },
     },
     Field: {
       enter(node) {
-        debugger;
-
         // Skip over scalar fields - normalizr automatically adds those properties in.
         if (isScalarNode(node)) {
 
@@ -69,9 +98,11 @@ module.exports = async () => {
         const fieldName = getFieldName(node);
         const operationRootField = getOpRootField(node, operationSchema);
 
-        if (operationRootField) { /* This field is the root field on the operation. */
-          console.log('Node is an operation root field.\n');
+        // An operation root field has no parents. We must ensure that the node isn't a
+        // child field that simply has the same name as an operation root field.
+        const isOperationRootField = operationRootField && !getCurrentParent(stack);
 
+        if (isOperationRootField) {
           const nodeNormalizrSchema = createNormalizrSchema(node, operationRootField.type);
           const fieldType = getNodeFieldType(operationRootField.type);
 
@@ -83,28 +114,16 @@ module.exports = async () => {
 
           console.log('stack\n', stack);
         } else { /* This is a descendant field on an operation. */
-          console.log('Node is an operation descendant field.\n');
-
           const parent = getCurrentParent(stack);
           const parentNormalizrSchema = parent.nodeNormalizrSchema;
           const parentFieldType = parent.fieldType;
-
-          console.log('parentFieldType', parentFieldType);
-
-          debugger
-
+          const parentSingleSchema = getNonPolymorphicSchema(parentNormalizrSchema);
           const fieldTypeObject = getChildFieldType(parentFieldType, node, schemaDoc);
-
-          console.log('fieldTypeObject', fieldTypeObject);
-          console.log('typeof fieldTypeObject', typeof fieldTypeObject);
-
           const fieldTypeName = getNodeFieldType(fieldTypeObject);
           const nodeNormalizrSchema = createNormalizrSchema(node, fieldTypeObject);
-
-          // Update the parent schema definition to include this child schema.
-          const parentNormalizrSchemaDefinition = parentNormalizrSchema.schema;
+          const parentNormalizrSchemaDefinition = parentSingleSchema.schema;
           Object.assign(parentNormalizrSchemaDefinition, {[fieldName]: nodeNormalizrSchema});
-          parentNormalizrSchema.define(parentNormalizrSchemaDefinition);
+          parentSingleSchema.define(parentNormalizrSchemaDefinition);
 
           console.log(`Adding ${fieldTypeName} to the stack`);
           stack.push({fieldType: fieldTypeName, nodeNormalizrSchema});
@@ -114,10 +133,34 @@ module.exports = async () => {
       },
 
       leave() {
-        stack.pop();
+        const stackEntry = stack.pop();
+
+        console.log(`Popping ${stackEntry.fieldType} from the stack.`);
       },
     },
   };
+
+
+  /**
+   * This returns the single schema definition if the passed in normalizr schema
+   * is a polymorphic one. If the normalizr schema is already a non polymorphic schema,
+   * it's simply returned.
+   */
+  const getNonPolymorphicSchema = (normalizrSchema) => {
+    const normalizrSchemaType = normalizrSchema.constructor.name;
+
+    switch(normalizrSchemaType) {
+      case normalizrSchemaTypes.OBJECT:
+      case normalizrSchemaTypes.ENTITY:
+        return normalizrSchema;
+      case normalizrSchemaTypes.ARRAY:
+      case normalizrSchemaTypes.VALUES:
+      case normalizrSchemaTypes.UNION:
+        return normalizrSchema.schema;
+      default:
+        throw `Unknown normalizr schema type: ${normalizrSchemaType}.`;
+    }
+  }
 
   const getChildFieldType = (parentFieldType, node, schemaDoc) => {
     const parentSchema = getNodeSchema(parentFieldType, schemaDoc);
@@ -126,15 +169,11 @@ module.exports = async () => {
     return childField.type;
   }
 
-  const getOpRootField = (node, opSchema) => opSchema.fields.find(field => field.name === getFieldName(node));
-
-  const getOpRootFieldGqlSchema = (node, schemaDoc, opSchema) => {
-    return opSchema.fields.find(opFieldSchema => getFieldName(node) === opFieldSchema.name);
-  }
-
   const getNodeSchema = (typeName, schemaDoc) => {
     return schemaDoc.types.find(schemaType => schemaType.name === typeName);
   }
+
+  const getOpRootField = (node, opSchema) => opSchema.fields.find(field => field.name === getFieldName(node));
 
   // TODO: Expand this method as you come across more types.
   const getNodeFieldType = ({kind, name, ofType}) => {
@@ -176,7 +215,7 @@ module.exports = async () => {
   const isScalarNode = node => !isEntityNode(node);
   const isEntityNode = node => !!node.selectionSet;
   const getFieldName = node => node.name.value;
-  const getCurrentParent = stack => stack.length > 1 ? stack[stack.length - 1] : stack[0];
+  const getCurrentParent = stack => stack.length > 0 ? stack[stack.length - 1] : undefined;
 
   visit(queryAST, visitor);
 
