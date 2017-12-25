@@ -1,16 +1,28 @@
 const fs = require('fs');
 const {introspectionQuery} = require('graphql/utilities');
 const {graphql} = require('graphql');
-const gqlSchema = require('../schema');
+const gqlSchema = require('../../schema');
 const {parse} = require('graphql/language/parser');
 const {visit} = require('graphql/language/visitor');
 const {Schema} = require('normalizr');
 const {normalize, schema} = require('normalizr');
 
 const queryResult = require('./sampleQueryResult.json');
+const fieldTypes = {
+  NON_NULL: 'NON_NULL',
+  OBJECT: 'OBJECT',
+  LIST: 'LIST',
+};
 
-module.exports = async () => {
+const normalizrSchemaTypes = {
+  ARRAY: 'ArraySchema',
+  VALUES: 'ValuesSchema',
+  UNION: 'UnionSchema',
+  OBJECT: 'ObjectSchema',
+  ENTITY: 'EntitySchema',
+};
 
+module.exports = async (query) => {
   const queryString = `query {
     user(id:1) {
       id,
@@ -46,27 +58,15 @@ module.exports = async () => {
         }
       }
     }
-}`;
+  }`;
 
-  const fieldTypes = {
-    NON_NULL: 'NON_NULL',
-    OBJECT: 'OBJECT',
-    LIST: 'LIST',
-  };
-
-  const normalizrSchemaTypes = {
-    ARRAY: 'ArraySchema',
-    VALUES: 'ValuesSchema',
-    UNION: 'UnionSchema',
-    OBJECT: 'ObjectSchema',
-    ENTITY: 'EntitySchema',
-  };
-
-  const stack = [];
+  // Returns a schema document containing all the types that our GraphQL schema supports.
+  // Includes GraphQL native types.
   const schemaDocumentWhole = await graphql(gqlSchema, introspectionQuery);
   const schemaDoc = schemaDocumentWhole.data.__schema;
   const queryAST = parse(queryString);
   const normalizrSchema = {};
+  const stack = [];
   const visitor = {
     Document(node) {
       if (node.definitions.length > 1) {
@@ -90,16 +90,24 @@ module.exports = async () => {
       enter(node) {
         // Skip over scalar fields - normalizr automatically adds those properties in.
         if (isScalarNode(node)) {
-
-          // Returning false makes `visit()` skip over this node.
           return false;
+        }
+
+        if (!entityContainsId(node)) {
+          throw `Every non scalar field must contain an id field in order for normalizr to work properly.`;
         }
 
         const fieldName = getFieldName(node);
         const operationRootField = getOpRootField(node, operationSchema);
 
-        // An operation root field has no parents. We must ensure that the node isn't a
-        // child field that simply has the same name as an operation root field.
+        // An operation root field is a field that directly follows an operation (query, mutation, subscription).
+        //
+        // An operation root field:
+        // (1) will match one of fields on the operation type in the schema and
+        // (2) has no parents on the stack (it's the first field you come across when parsing a query).
+        // 
+        // An operation root field that matches one of the fields on the operation type but has
+        // a parent is an operation child field with simply the same name as an operation root field.
         const isOperationRootField = operationRootField && !getCurrentParent(stack);
 
         if (isOperationRootField) {
@@ -107,39 +115,38 @@ module.exports = async () => {
           const fieldType = getNodeFieldType(operationRootField.type);
 
           Object.assign(normalizrSchema, {[fieldName]: nodeNormalizrSchema});
-
           console.log(`Adding ${fieldType} to the stack`);
-
           stack.push({fieldType, nodeNormalizrSchema})
-
-          console.log('stack\n', stack);
+          console.log('Stack\n', stack);
         } else { /* This is a descendant field on an operation. */
+
+          // Grab the parent from the stack so we can grab the current gql node type and
+          // assign this node's normalizr schema to the parent's normalizr schema.
           const parent = getCurrentParent(stack);
           const parentNormalizrSchema = parent.nodeNormalizrSchema;
           const parentFieldType = parent.fieldType;
           const parentSingleSchema = getNonPolymorphicSchema(parentNormalizrSchema);
+          const parentNormalizrSchemaDefinition = parentSingleSchema.schema;
+
+          // Create normalizr schema for current node.
           const fieldTypeObject = getChildFieldType(parentFieldType, node, schemaDoc);
           const fieldTypeName = getNodeFieldType(fieldTypeObject);
           const nodeNormalizrSchema = createNormalizrSchema(node, fieldTypeObject);
-          const parentNormalizrSchemaDefinition = parentSingleSchema.schema;
+
           Object.assign(parentNormalizrSchemaDefinition, {[fieldName]: nodeNormalizrSchema});
           parentSingleSchema.define(parentNormalizrSchemaDefinition);
-
           console.log(`Adding ${fieldTypeName} to the stack`);
           stack.push({fieldType: fieldTypeName, nodeNormalizrSchema});
-
-          console.log('stack\n', stack);
+          console.log('Stack\n', stack);
         }
       },
 
       leave() {
         const stackEntry = stack.pop();
-
         console.log(`Popping ${stackEntry.fieldType} from the stack.`);
       },
     },
   };
-
 
   /**
    * This returns the single schema definition if the passed in normalizr schema
@@ -212,6 +219,8 @@ module.exports = async () => {
     }
   }
 
+  const entityContainsId = entityNode => getNodeFields(entityNode).find(field => field.name.value === 'id');
+  const getNodeFields = entityNode => entityNode.selectionSet.selections;
   const isScalarNode = node => !isEntityNode(node);
   const isEntityNode = node => !!node.selectionSet;
   const getFieldName = node => node.name.value;

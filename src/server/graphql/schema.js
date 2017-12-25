@@ -7,7 +7,6 @@ const SessionType = require('./types/SessionType');
 const CategoryType = require('./types/CategoryType');
 const ActivityType = require('./types/ActivityType');
 
-
 const typeDefs = mergeTypes([UserType, SessionType, CategoryType, ActivityType]);
 
 
