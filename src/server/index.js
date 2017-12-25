@@ -24,7 +24,7 @@ app.use('/graphiql', graphiqlExpress({
 
 
 app.get('/test', (req, res) => {
-  require('./graphql/client')()
+  require('./graphql/client/gqlParser')()
   .then(normalizedData => {
     console.log(normalizedData);
 
