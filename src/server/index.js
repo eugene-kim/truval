@@ -24,7 +24,44 @@ app.use('/graphiql', graphiqlExpress({
 
 
 app.get('/test', (req, res) => {
-  require('./graphql/client/gqlParser')()
+  const queryString = `query {
+    user(id:1) {
+      id,
+      username,
+      email,
+      password,
+      sessions {
+        id,
+        name,
+        start,
+        isComplete,
+        activities {
+          id,
+          start,
+          end,
+          isComplete,
+          session {
+            id,
+            start,
+            end,
+            isComplete,
+            activities {
+              id,
+              start,
+              end,
+            }
+          },
+          category {
+            id,
+            color,
+            name
+          }
+        }
+      }
+    }
+  }`;
+  
+  require('./graphql/client/parser')(queryString)
   .then(normalizedData => {
     console.log(normalizedData);
 
