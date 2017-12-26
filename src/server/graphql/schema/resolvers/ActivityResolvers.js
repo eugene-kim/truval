@@ -1,7 +1,7 @@
 'use strict';
 
 
-const Activity = require('../../models/Activity');
+const Activity = require('../../../models/Activity');
 
 const activityResolvers = {
   Query: {

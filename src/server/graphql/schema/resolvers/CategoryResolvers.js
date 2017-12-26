@@ -1,7 +1,7 @@
 'use strict';
 
 
-const Category = require('../../models/Category');
+const Category = require('../../../models/Category');
 
 const resolvers = {
   Query: {
