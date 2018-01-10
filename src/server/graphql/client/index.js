@@ -2,30 +2,28 @@ const {normalize} = require('normalizr');
 const request = require('request-promise');
 
 // TODO: Remove this once you've got the actual query portion of the client complete.
-const queryResult = require('./parser/sampleQueryResult.json');
-const mutationResult = require('./parser/sampleMutationResult.json');
-const parser = require('./parser');
+const queryResult = require('./gqlNormalizer/sampleQueryResult.json');
+const mutationResult = require('./gqlNormalizer/sampleMutationResult.json');
+const normalizeGql = require('./gqlNormalizer');
 const {parse} = require('graphql/language/parser');
 
 module.exports = {
   query: async (query, options = {}) => {
-    const normalizrSchema = await parser(query);
+    const normalizrSchema = await normalizeGql(query);
     const requestOptions = {
       method: 'POST',
       uri: 'http://localhost:3000/graphql',
       body: JSON.stringify({query}),
       headers: {
-        'Accept':'application/json',
         'Content-Type':'application/json',
+        'Accept':'application/json',
       },
-
-      // Automatically parse the JSON string in the response.
-      json: true,
     };
 
     try {
-      const data = await request(requestOptions);  
-      const normalizedData = normalize(data, normalizrSchema);
+      const gqlResponse = await request(requestOptions);
+      const responseObject = JSON.parse(gqlResponse);
+      const normalizedData = normalize(responseObject, normalizrSchema);
 
       return normalizedData;
     } catch(error) {
@@ -34,23 +32,21 @@ module.exports = {
   },
 
   mutate: async (mutation, options = {}) => {
-    const normalizrSchema = await parser(mutation);
+    const normalizrSchema = await normalizeGql(mutation);
     const requestOptions = {
       method: 'POST',
       uri: 'http://localhost:3000/graphql',
       body: JSON.stringify({query: mutation}),
       headers: {
-        'Accept':'application/json',
         'Content-Type':'application/json',
+        'Accept':'application/json',
       },
-
-      // Automatically parse the JSON string in the response.
-      json: true,
     };
 
     try {
-      const data = await request(requestOptions);  
-      const normalizedData = normalize(data, normalizrSchema);
+      const gqlResponse = await request(requestOptions);  
+      const responseObject = JSON.parse(gqlResponse);
+      const normalizedData = normalize(responseObject, normalizrSchema);
 
       return normalizedData;
     } catch(error) {
