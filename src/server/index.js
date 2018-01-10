@@ -1,5 +1,6 @@
 const express = require('express');
 const morgan = require('morgan');
+const gqlClient = require('graphql/client');
 
 // This package automatically parses JSON requests.
 const bodyParser = require('body-parser');
@@ -16,13 +17,30 @@ const schema = require('./graphql/schema');
 var app = express();
 
 app.use(morgan('tiny'));
-
 app.use('/graphql', bodyParser.json(), graphqlExpress({schema}));
 app.use('/graphiql', graphiqlExpress({
   endpointURL: '/graphql',
 }));
 
+app.get('/testMutation', (req, res) => {
+  const mutationString = `mutation {
+    updateUser(id:1, username:"the hugest") {
+      id,
+      username,
+      sessions {
+        id,
+        name,
+        start,
+        activities {
+          id,
+          name
+        }
+      }
+    }
+  }`;
 
+  gqlClient.mutate(mutationString);
+});
 app.get('/test', (req, res) => {
   const queryString = `query {
     user(id:1) {
@@ -60,7 +78,7 @@ app.get('/test', (req, res) => {
       }
     }
   }`;
-  
+
   require('./graphql/client/parser')(queryString)
   .then(normalizedData => {
     console.log(normalizedData);

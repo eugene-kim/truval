@@ -1,4 +1,4 @@
-const config = {
+module.exports = {
   directory: 'src/server/database/migrations',
   development: {
     client: 'pg',
@@ -8,7 +8,4 @@ const config = {
       directory: './seeds',
     }
   },
-}
-
-
-module.exports = config;
+};
