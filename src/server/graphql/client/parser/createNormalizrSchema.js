@@ -1,7 +1,6 @@
 const {schema} = require('normalizr');
 const {visit} = require('graphql/language/visitor');
 
-
 const GQL_FIELD_TYPES = {
   NON_NULL: 'NON_NULL',
   OBJECT: 'OBJECT',
@@ -65,14 +64,15 @@ module.exports = (operationAST, schemaDoc) => {
 
         // An operation root field is a field that directly follows an operation name (query, mutation, subscription).
         const operationRootField = getOpRootField(node, operationSchema);
+        const parent = getCurrentParent(stack);
 
         // An operation root field:
         // (1) will match one of field names on the operation type in the schema and
         // (2) has no parents on the stack (it's the first field you come across when parsing a query).
         // 
-        // An operation root field that matches one of the fields on the operation type but has
+        // A field that matches one of the root fields on the operation type but has
         // a parent is an operation child field with simply the same name as an operation root field.
-        const isOperationRootField = operationRootField && !getCurrentParent(stack);
+        const isOperationRootField = operationRootField && !parent;
 
         if (isOperationRootField) {
           const nodeNormalizrSchema = createNormalizrSchema(node, operationRootField.type);
@@ -86,7 +86,6 @@ module.exports = (operationAST, schemaDoc) => {
 
           // Grab the parent from the stack so we can grab the current gql node type and
           // assign this node's normalizr schema to the parent's normalizr schema.
-          const parent = getCurrentParent(stack);
           const parentNormalizrSchema = parent.nodeNormalizrSchema;
           const parentFieldType = parent.fieldType;
           const parentSingleSchema = getNonPolymorphicSchema(parentNormalizrSchema);
@@ -122,7 +121,7 @@ module.exports = (operationAST, schemaDoc) => {
  * is a polymorphic one. If the normalizr schema is already a non polymorphic schema,
  * it's simply returned.
  */
-const getNonPolymorphicSchema = (normalizrSchema) => {
+const getNonPolymorphicSchema = normalizrSchema => {
   const normalizrSchemaType = normalizrSchema.constructor.name;
 
   switch(normalizrSchemaType) {
