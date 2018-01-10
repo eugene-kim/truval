@@ -1,6 +1,6 @@
 const express = require('express');
 const morgan = require('morgan');
-const gqlClient = require('graphql/client');
+const gqlClient = require('./graphql/client');
 
 // This package automatically parses JSON requests.
 const bodyParser = require('body-parser');
@@ -22,7 +22,7 @@ app.use('/graphiql', graphiqlExpress({
   endpointURL: '/graphql',
 }));
 
-app.get('/testMutation', (req, res) => {
+app.get('/testMutation', async (req, res) => {
   const mutationString = `mutation {
     updateUser(id:1, username:"the hugest") {
       id,
@@ -39,9 +39,17 @@ app.get('/testMutation', (req, res) => {
     }
   }`;
 
-  gqlClient.mutate(mutationString);
+  try {
+    const normalizedData = await gqlClient.mutate(mutationString);
+
+    res.setHeader('Content-Type', 'application/json');
+    res.setHeader('Accept', 'application/json');
+    res.send(JSON.stringify(normalizedData));
+  } catch(error) {
+    console.log(error);
+  }
 });
-app.get('/test', (req, res) => {
+app.get('/testQuery', async (req, res) => {
   const queryString = `query {
     user(id:1) {
       id,
@@ -79,17 +87,15 @@ app.get('/test', (req, res) => {
     }
   }`;
 
-  require('./graphql/client/parser')(queryString)
-  .then(normalizedData => {
-    console.log(normalizedData);
+  try {
+    const normalizedData = await gqlClient.query(queryString);
 
     res.setHeader('Content-Type', 'application/json');
-    res.send(JSON.stringify(normalizedData)); 
-  })
-  .catch(error => {
+    res.setHeader('Accept', 'application/json');
+    res.send(JSON.stringify(normalizedData));
+  } catch(error) {
     console.log(error);
-    res.send(error);
-  });
+  }
 })
 
 const PORT = 3000
