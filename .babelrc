@@ -1,10 +1,19 @@
 {
   "plugins": [
-    "transform-decorators",
-    "babel-plugin-root-import"
+    "transform-decorators-legacy",
+
+    [
+      "module-resolver",
+      {
+        "root": ["../../src"],
+        "extensions": [".js", ".ios.js", ".android.js"]
+      }
+    ]
   ],
 
   // For more details:
   // https://github.com/facebook/react-native/blob/master/babel-preset/configs/main.js#L21
-  "presets": ["react-native"]
+  "presets": ["react-native"],
+
+  "retainLines": true,
 }

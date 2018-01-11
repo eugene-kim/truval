@@ -1,0 +1,709 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"cons",
+				"console"
+			],
+			[
+				"se",
+				"sessionId"
+			],
+			[
+				"new",
+				"newEntities"
+			],
+			[
+				"updated",
+				"updatedUserEntity"
+			],
+			[
+				"EDIT",
+				"EDIT_USER"
+			],
+			[
+				"ADD",
+				"ADD_USER"
+			],
+			[
+				"stateSelect",
+				"stateSelectDropdown"
+			],
+			[
+				"stateSel",
+				"stateSelectDropdown"
+			],
+			[
+				"chan",
+				"channelPlaylistVideoIds"
+			],
+			[
+				"channella",
+				"channelPlaylistsVideoIds"
+			],
+			[
+				"playli",
+				"playlistVideoIds"
+			],
+			[
+				"like",
+				"likedVideosPlaylistId"
+			],
+			[
+				"cha",
+				"channelVideoIds"
+			],
+			[
+				"requ",
+				"requestVideoIds"
+			],
+			[
+				"uploaded",
+				"uploadedVideosPlaylistId"
+			],
+			[
+				"chann",
+				"channelId"
+			],
+			[
+				"getC",
+				"getChannelPlaylistVideoIds"
+			],
+			[
+				"getPL",
+				"getPlaylistVideoIds"
+			],
+			[
+				"channel",
+				"channelName"
+			],
+			[
+				"vide",
+				"videoIdsList"
+			],
+			[
+				"play",
+				"playlistItems"
+			],
+			[
+				"getchan",
+				"getChannelVideoIds"
+			],
+			[
+				"getCha",
+				"getChannelVideoIds"
+			],
+			[
+				"get",
+				"getChannelPlaylists"
+			],
+			[
+				"ch",
+				"channelId"
+			],
+			[
+				"video",
+				"videoIds"
+			],
+			[
+				"pla",
+				"playlistId"
+			],
+			[
+				"getCh",
+				"getChannelVideoIds"
+			],
+			[
+				"playl",
+				"playlistIds"
+			],
+			[
+				"getPlay",
+				"getPlaylistVideoIds"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "src/redux/store.js",
+			"settings":
+			{
+				"buffer_size": 693,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/redux/actions/actions.js",
+			"settings":
+			{
+				"buffer_size": 1627,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/redux/reducers/index.js",
+			"settings":
+			{
+				"buffer_size": 4127,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		}
+	],
+	"build_system": "",
+	"build_system_choices":
+	[
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 299.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"pretty",
+				"Pretty JSON: Format (Pretty Print) JSON"
+			],
+			[
+				"pretty json",
+				"Pretty JSON: Validate"
+			],
+			[
+				"install ",
+				"Package Control: Install Package"
+			],
+			[
+				"install",
+				"Package Control: Install Package"
+			]
+		],
+		"width": 412.0
+	},
+	"console":
+	{
+		"height": 130.0,
+		"history":
+		[
+			"import urllib.request,os,hashlib; h = '6f4c264a24d933ce70df5dedcf1dcaee' + 'ebe013ee18cced0ef93d5f746d80ef60'; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); by = urllib.request.urlopen( 'http://packagecontrol.io/' + pf.replace(' ', '%20')).read(); dh = hashlib.sha256(by).hexdigest(); print('Error validating download (got %s instead of %s), please try manual install' % (dh, h)) if dh != h else open(os.path.join( ipp, pf), 'wb' ).write(by)"
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"expanded_folders":
+	[
+		"/Users/eugene.kim/projects/personal/focus",
+		"/Users/eugene.kim/projects/personal/focus/src",
+		"/Users/eugene.kim/projects/personal/focus/src/redux",
+		"/Users/eugene.kim/projects/personal/focus/src/redux/actions",
+		"/Users/eugene.kim/projects/personal/focus/src/redux/reducers"
+	],
+	"file_history":
+	[
+		"/Users/eugene.kim/projects/personal/focus/.gitignore",
+		"/Users/eugene.kim/projects/personal/focus/src/redux/actions/types.js",
+		"/Users/eugene.kim/projects/personal/focus/src/redux/actions/actions.js",
+		"/Users/eugene.kim/projects/personal/focus/src/redux/reducers/index.js",
+		"/Users/eugene.kim/projects/personal/focus/package.json",
+		"/Users/eugene.kim/projects/personal/focus/src/redux/store.js",
+		"/Users/eugene.kim/projects/personal/focus/focus.sublime-project",
+		"/Users/eugene.kim/projects/personal/focus/.babelrc",
+		"/Users/eugene.kim/projects/personal/focus/src/redux/reducers/focusApp.js",
+		"/Users/eugene.kim/projects/personal/focus/nodemon.json",
+		"/Users/eugene.kim/projects/personal/focus/App.js",
+		"/Users/eugene.kim/projects/personal/focus/lib/server/models/User.js",
+		"/Users/eugene.kim/projects/personal/focus/lib/redux/store.js",
+		"/Users/eugene.kim/projects/personal/focus/src/View/ComponentTemplate.js",
+		"/Users/eugene.kim/projects/personal/focus/src/View/TrackActivity/AddActivityInput/AddActivityInput.js",
+		"/Users/eugene.kim/projects/personal/focus/redux/reducers/focusApp.js",
+		"/Users/eugene.kim/projects/personal/focus/redux/actions/types.js",
+		"/etc/hosts",
+		"/Users/eugene.kim/projects/personal/focus/redux/actions/actions.js",
+		"/Users/eugene.kim/projects/personal/focus/View/TrackActivity/TrackDayScreen.js",
+		"/Users/eugene.kim/projects/personal/focus/redux/store.js",
+		"/Users/eugene.kim/projects/personal/focus/redux/actions/store.js",
+		"/Users/eugene.kim/projects/aem/sfdc-aem-master/sfdc-aem-master-clientlibs/src/main/content/jcr_root/etc/clientlibs/sfdc-aem-master/clientlibs_analytics_bottom/js/AppMeasurementConfig.js",
+		"/Users/eugene.kim/projects/aem/sfdc-www/sfdc-www-view/src/main/content/jcr_root/apps/sfdc-www/components/content/form/base/v1/selectField/selectField.html",
+		"/Users/eugene.kim/projects/personal/tutorials/redux_tutorial/action.js",
+		"/Users/eugene.kim/projects/personal/focus/node_modules/react-native-elements/src/buttons/Button.js",
+		"/Users/eugene.kim/projects/personal/focus/View/TrackActivity/AddActivityInput/ActivitySubmitButton.js",
+		"/Users/eugene.kim/projects/chef/sfdc-aem-cookbook/config_local_web.2017.02.1.yaml",
+		"/Users/eugene.kim/projects/misc/video-whitelist-generator/test.json",
+		"/Users/eugene.kim/projects/misc/video-whitelist-generator/jsonfile-promise.js",
+		"/Users/eugene.kim/projects/misc/video-whitelist-generator/getYoutubeIds.js",
+		"/Users/eugene.kim/projects/misc/video-whitelist-generator/test.js",
+		"/Users/eugene.kim/projects/misc/video-whitelist-generator/node_modules/lodash/_cacheHas.js"
+	],
+	"find":
+	{
+		"height": 39.0
+	},
+	"find_in_files":
+	{
+		"height": 101.0,
+		"where_history":
+		[
+			""
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": true,
+		"find_history":
+		[
+			"initialState",
+			"type:",
+			"type",
+			"addUser",
+			"store",
+			"const",
+			"Entities",
+			"type",
+			"./reducers",
+			"remainingEntities",
+			"Session",
+			"session",
+			"SESSION",
+			"Session",
+			"session",
+			"SESSION",
+			"add_session",
+			"reduce",
+			"Entities",
+			"newEntities",
+			"wrapper",
+			"entitiesWrapper",
+			"wrapper",
+			"updatedUserEntity",
+			"newUserEntity",
+			"userToUpdate",
+			"propsToEdit",
+			"case",
+			"const",
+			"export ",
+			"Props",
+			"userProps",
+			"USER",
+			"(),",
+			"user",
+			"const",
+			"Props",
+			"ACTIVITY",
+			"activity",
+			"Activity",
+			"SESSION",
+			"session",
+			"Session",
+			"session",
+			"propsToEdit",
+			"user",
+			"USER",
+			"EDIT_USER",
+			"user",
+			"User",
+			"userId",
+			"u",
+			"UPDATE",
+			"update",
+			"UPDATE",
+			"export const ",
+			"const",
+			"EDIT",
+			"SESSION",
+			"ACTIVITY",
+			"const"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 0,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "src/redux/store.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 693,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								547,
+								547
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Babel/JavaScript (Babel).sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				}
+			]
+		},
+		{
+			"selected": 1,
+			"sheets":
+			[
+				{
+					"buffer": 1,
+					"file": "src/redux/actions/actions.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1627,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								360,
+								360
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Babel/JavaScript (Babel).sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "src/redux/reducers/index.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 4127,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								4127,
+								4127
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Babel/JavaScript (Babel).sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 2050.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 23.0
+	},
+	"input":
+	{
+		"height": 37.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			],
+			[
+				1,
+				0,
+				2,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			0.5,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"pinned_build_system": "",
+	"project": "focus.sublime-project",
+	"replace":
+	{
+		"height": 42.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"action.js",
+				"src/redux/actions/actions.js"
+			],
+			[
+				"gitig",
+				".gitignore"
+			],
+			[
+				"types.js",
+				"src/redux/actions/types.js"
+			],
+			[
+				"sublime",
+				"focus.sublime-project"
+			],
+			[
+				"pack",
+				"package.json"
+			],
+			[
+				"store.js",
+				"src/redux/store.js"
+			],
+			[
+				"app.js",
+				"App.js"
+			],
+			[
+				"babelrc",
+				".babelrc"
+			],
+			[
+				"user.js",
+				"lib/server/models/User.js"
+			],
+			[
+				"focusapp.js",
+				"src/redux/reducers/focusApp.js"
+			],
+			[
+				"packa",
+				"package.json"
+			],
+			[
+				"srcstore.js",
+				"src/redux/store.js"
+			],
+			[
+				"libstore.js",
+				"lib/redux/store.js"
+			],
+			[
+				"actions.js",
+				"src/redux/actions/actions.js"
+			],
+			[
+				"componenttt",
+				"src/View/ComponentTemplate.js"
+			],
+			[
+				"reducerindex.js",
+				"redux/reducers/index.js"
+			],
+			[
+				"trackdayscreen",
+				"View/TrackActivity/TrackDayScreen.js"
+			],
+			[
+				"pom.xml",
+				"pom.xml"
+			],
+			[
+				"gitignore",
+				".gitignore"
+			],
+			[
+				"action",
+				"action.js"
+			],
+			[
+				"actio",
+				"action.js"
+			],
+			[
+				"redu",
+				"reducers.js"
+			],
+			[
+				"eventformpage",
+				"sfdc-www-view/src/main/content/jcr_root/apps/sfdc-www/components/pages/event_form_page/.content.xml"
+			],
+			[
+				"optin.h",
+				"sfdc-www-view/src/main/content/jcr_root/apps/sfdc-www/components/content/form/fields/v1/checkBoxOptIn/checkBoxOptIn.html"
+			],
+			[
+				"checkbox.html",
+				"sfdc-www-view/src/main/content/jcr_root/apps/sfdc-www/components/content/form/base/v1/checkbox/checkbox.html"
+			],
+			[
+				"formrede",
+				"sfdc-www-view/src/main/content/jcr_root/etc/clientlibs/sfdc-www/clientlibs_forms/js/sfdc/form-redesign.js"
+			],
+			[
+				"selectfield.html",
+				"sfdc-www-view/src/main/content/jcr_root/apps/sfdc-www/components/content/form/base/v1/selectField/selectField.html"
+			],
+			[
+				"emailopt",
+				"sfdc-www-view/src/main/content/jcr_root/etc/clientlibs/sfdc-www/clientlibs_forms_optin/js/sfdc/email-opt-in.js"
+			],
+			[
+				"select.js",
+				"sfdc-www-view/src/main/content/jcr_root/etc/clientlibs/sfdc-www/clientlibs_forms/js/jquery-plugins/selectBox.js"
+			],
+			[
+				"formbuilder",
+				"sfdc-www-view/src/main/content/jcr_root/etc/clientlibs/sfdc-www/clientlibs_forms/js/sfdc/form-builder.js"
+			],
+			[
+				"button",
+				"node_modules/react-native-elements/src/buttons/Button.js"
+			],
+			[
+				"nam",
+				"sfdc-www-view/src/main/content/jcr_root/etc/clientlibs/sfdc-www/clientlibs_forms/js/jquery-plugins/namespace.js"
+			],
+			[
+				"va",
+				"Vagrantfile"
+			],
+			[
+				"git",
+				".gitignore"
+			],
+			[
+				"test",
+				"test.json"
+			],
+			[
+				"tes",
+				"test.json"
+			],
+			[
+				"chann",
+				"youtube/channels.js"
+			],
+			[
+				"getyou",
+				"youtube/getYoutubeIds.js"
+			],
+			[
+				"ind",
+				"index.js"
+			],
+			[
+				"channel",
+				"channels.js"
+			],
+			[
+				"ch",
+				"node_modules/lodash/_cacheHas.js"
+			],
+			[
+				"goog",
+				"googleApiHelper.js"
+			],
+			[
+				"googlep",
+				"googleApiHelper.js"
+			],
+			[
+				"i",
+				"index.js"
+			]
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": false,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 270.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}
