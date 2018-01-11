@@ -43,7 +43,6 @@ app.get('/testMutation', async (req, res) => {
     const normalizedData = await gqlClient.mutate(mutationString);
 
     res.setHeader('Content-Type', 'application/json');
-    res.setHeader('Accept', 'application/json');
     res.send(JSON.stringify(normalizedData));
   } catch(error) {
     console.log(error);
@@ -91,7 +90,6 @@ app.get('/testQuery', async (req, res) => {
     const normalizedData = await gqlClient.query(queryString);
 
     res.setHeader('Content-Type', 'application/json');
-    res.setHeader('Accept', 'application/json');
     res.send(JSON.stringify(normalizedData));
   } catch(error) {
     console.log(error);
