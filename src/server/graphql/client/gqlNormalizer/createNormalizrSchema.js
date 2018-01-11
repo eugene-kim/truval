@@ -113,7 +113,8 @@ module.exports = (operationAST, schemaDoc) => {
 
   visit(operationAST, visitor);
 
-  return normalizrSchema;
+  // The GraphQL responses always contain the `data` root property.
+  return {data: normalizrSchema};
 }
 
 /**

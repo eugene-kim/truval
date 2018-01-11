@@ -16,7 +16,6 @@ module.exports = {
       body: JSON.stringify({query}),
       headers: {
         'Content-Type':'application/json',
-        'Accept':'application/json',
       },
     };
 
@@ -39,7 +38,6 @@ module.exports = {
       body: JSON.stringify({query: mutation}),
       headers: {
         'Content-Type':'application/json',
-        'Accept':'application/json',
       },
     };
 
