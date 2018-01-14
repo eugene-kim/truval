@@ -10,6 +10,8 @@ const {parse} = require('graphql/language/parser');
 module.exports = {
   query: async (query, options = {}) => {
     const normalizrSchema = await normalizeGql(query);
+    // TODO: Determine if we need to query the gql server or if we have the data we need.
+
     const requestOptions = {
       method: 'POST',
       uri: 'http://localhost:3000/graphql',
