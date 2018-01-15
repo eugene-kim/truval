@@ -179,10 +179,6 @@ const getOpRootField = (node, opSchema) =>
 
 // TODO: Expand this method as you come across more types.
 const getNodeFieldType = ({kind, name, ofType}) => {
-  console.log(`kind is ${kind}`);
-  console.log(`name is ${name}`);
-  console.log(`ofType is:\n`, ofType);
-
   switch(kind) {
     case GQL_FIELD_TYPES.NON_NULL:
       return getNodeFieldType(ofType);

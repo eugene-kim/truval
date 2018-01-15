@@ -213,7 +213,7 @@ describe('test createNormalizrSchema', () => {
     });
   });
 
-  describe('invalid queries', () => {
+  describe('invalid queries / mutations', () => {
     describe('queries without id fields', () => {
       it('non nested query without an id throws an error', () => {
         const query = `
@@ -241,6 +241,37 @@ describe('test createNormalizrSchema', () => {
         const queryAST = parse(query);
 
         expect(() => {createNormalizrSchema(queryAST, schemaDoc)}).toThrow();
+      });
+    });
+
+    describe('mutations without id fields', () => {
+      it('non nested mutation without an id throws an error', () => {
+        const mutation = `
+          mutation {
+            updateUser(id:1, username:"the hugest") {
+              username,
+            }
+          }`;
+        const mutationAST = parse(mutation);
+
+        expect(() => {createNormalizrSchema(mutationAST, schemaDoc)}).toThrow();
+      });
+
+      it('single nested mutation without an id throws an error', () => {
+        const mutation = `
+          mutation {
+            updateUser(id:1, username:"the hugest") {
+              id,
+              username,
+              sessions {
+                name,
+                start,
+              }
+            }
+          }`;
+        const mutationAST = parse(mutation);
+
+        expect(() => {createNormalizrSchema(mutationAST, schemaDoc)}).toThrow();
       });
     });
   });
