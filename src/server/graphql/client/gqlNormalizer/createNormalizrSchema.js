@@ -1,5 +1,6 @@
 const {schema} = require('normalizr');
 const {visit} = require('graphql/language/visitor');
+const _ = require('lodash');
 
 const GQL_FIELD_TYPES = {
   NON_NULL: 'NON_NULL',
@@ -20,6 +21,7 @@ module.exports = (operationAST, schemaDoc) => {
   const normalizrSchema = {};
   const stack = [];
   let operationSchema;
+  let operationName;
 
   /**
    * A visitor is an object that's passed into GraphQL's visit function. The visitor contains methods
@@ -40,10 +42,11 @@ module.exports = (operationAST, schemaDoc) => {
       enter(node) {
         const {operation} = node;
         const operationKey = `${operation}Type`;
-        const operationName = schemaDoc[operationKey].name;
+        
+        operationName = schemaDoc[operationKey].name;
 
         if (!operationName) {
-          console.error(`${operationKey} is not a valid operation!`);
+          throw `${operationKey} is not a valid operation!`;
         }
 
         operationSchema = schemaDoc.types.find(type => type.name === operationName);
@@ -75,15 +78,21 @@ module.exports = (operationAST, schemaDoc) => {
         const isOperationRootField = operationRootField && !parent;
 
         if (isOperationRootField) {
-          const nodeNormalizrSchema = createNormalizrSchema(node, operationRootField.type);
+
+          // The operation name isn't guaranteed to be the same name as the type that it retrieves.
+          // We'll use the field type to create our normalizr schema.
+          const operationFieldType = getOperationFieldType(operationName, fieldName, schemaDoc);
+          const operationFieldTypeLower = _.toLower(operationFieldType);
+
+          const nodeNormalizrSchema = createNormalizrSchema(operationFieldTypeLower, operationRootField.type);
           const fieldType = getNodeFieldType(operationRootField.type);
 
-          Object.assign(normalizrSchema, {[fieldName]: nodeNormalizrSchema});
+          Object.assign(normalizrSchema, {[operationFieldTypeLower]: nodeNormalizrSchema});
           console.log(`Adding ${fieldType} to the stack`);
           stack.push({fieldType, nodeNormalizrSchema})
           console.log('Stack\n', stack);
         } else { /* This is a descendant field on an operation. */
-
+          
           // Grab the parent from the stack so we can grab the current gql node type and
           // assign this node's normalizr schema to the parent's normalizr schema.
           const parentNormalizrSchema = parent.nodeNormalizrSchema;
@@ -94,7 +103,7 @@ module.exports = (operationAST, schemaDoc) => {
           // Create normalizr schema for current node.
           const fieldTypeObject = getChildFieldType(parentFieldType, node, schemaDoc);
           const fieldTypeName = getNodeFieldType(fieldTypeObject);
-          const nodeNormalizrSchema = createNormalizrSchema(node, fieldTypeObject);
+          const nodeNormalizrSchema = createNormalizrSchema(fieldName, fieldTypeObject);
 
           Object.assign(parentNormalizrSchemaDefinition, {[fieldName]: nodeNormalizrSchema});
           parentSingleSchema.define(parentNormalizrSchemaDefinition);
@@ -115,6 +124,23 @@ module.exports = (operationAST, schemaDoc) => {
 
   // The GraphQL responses always contain the `data` root property.
   return {data: normalizrSchema};
+}
+
+const getOperationFieldType = (operationName, fieldName, schemaDoc) => {
+  const operation = schemaDoc.types.find(schemaType => schemaType.name === operationName);
+
+  if (!operation) {
+    throw `No operation of type ${operationType} found.`;
+  }
+
+  const operationFields = operation.fields;
+  const operationField = operationFields.find(operationField => operationField.name === fieldName);
+
+  if (!operationField) {
+    throw `No field with name ${fieldName} found under the fields of ${operationType}`;
+  }
+
+  return getNodeFieldType(operationField.type);
 }
 
 /**
@@ -169,13 +195,10 @@ const getNodeFieldType = ({kind, name, ofType}) => {
   }
 }
 
-const createNormalizrSchema = (node, {kind, name, ofType}) => {
-  const fieldName = getFieldName(node);
-  console.log({kind, name, ofType});
-
+const createNormalizrSchema = (fieldName, {kind, name, ofType}) => {
   switch(kind) {
     case GQL_FIELD_TYPES.NON_NULL:
-      return createNormalizrSchema(node, ofType);
+      return createNormalizrSchema(fieldName, ofType);
     case GQL_FIELD_TYPES.LIST: {
       const instanceSchema = new schema.Entity(fieldName);
 

@@ -20,28 +20,29 @@ beforeAll(async () => {
 });
 
 describe('test createNormalizrSchema', () => {
-  it('single level query', async () => {
-    const query = `
-      query {
-        user(id:1) {
-          id,
-          username
-        }
-      }`;
-    const queryAST = parse(query);
-    const resultNormalizrSchema = createNormalizrSchema(queryAST, schemaDoc);
-    const resultSchemaString = JSON.stringify(resultNormalizrSchema);
-    const expectedNormalizrSchema = {
-      data: {
-        user: new schema.Entity('user'),
-      },
-    };
-    const expectedSchemaString = JSON.stringify(expectedNormalizrSchema);
+  describe('valid queries', () => {
+    it('single level query', () => {
+      const query = `
+        query {
+          user(id:1) {
+            id,
+            username
+          }
+        }`;
+      const queryAST = parse(query);
+      const resultNormalizrSchema = createNormalizrSchema(queryAST, schemaDoc);
+      const resultSchemaString = JSON.stringify(resultNormalizrSchema);
+      const expectedNormalizrSchema = {
+        data: {
+          user: new schema.Entity('user'),
+        },
+      };
+      const expectedSchemaString = JSON.stringify(expectedNormalizrSchema);
 
-    expect(resultSchemaString === expectedSchemaString).toBe(true);
-  });
+      expect(resultSchemaString === expectedSchemaString).toBe(true);
+    });
 
-  it('test single nested query', async () => {
+    it('single nested query', () => {
       const query = `
         query {
           user(id:1) {
@@ -68,39 +69,179 @@ describe('test createNormalizrSchema', () => {
       const expectedSchemaString = JSON.stringify(expectedNormalizrSchema);
 
       expect(resultSchemaString === expectedSchemaString).toBe(true);
-  });
-
-  // it('test five level nested query with circular reference', async () => {
-
-  // });
-
-  describe('operations without ids throw an error', () => {
-    it('query without an id throws an error', async () => {
-      const query = `
-        query {
-          user(id:1) {
-            username
-          }
-        }`;
-      const queryAST = parse(query);
-
-      expect(() => {createNormalizrSchema(queryAST, schemaDoc)}).toThrow();
     });
 
-    it('nested query without an id throws an error', async () => {
-      const query = `
-        query {
-          user(id:1) {
+    it('five level nested query with circular reference', () => {
+      const query = `query {
+        user(id:1) {
+          id,
+          username,
+          email,
+          password,
+          sessions {
             id,
-            username,
-            sessions {
+            name,
+            start,
+            isComplete,
+            activities {
+              id,
+              start,
+              end,
+              isComplete,
+              session {
+                id,
+                start,
+                end,
+                isComplete,
+                activities {
+                  id,
+                  start,
+                  end,
+                }
+              },
+              category {
+                id,
+                color,
+                name
+              }
+            }
+          }
+        }
+      }`;
+      const queryAST = parse(query);
+      const resultNormalizrSchema = createNormalizrSchema(queryAST, schemaDoc);
+      const expectedNormalizrSchema = {
+        data: {
+          user: new schema.Entity('user', {
+            sessions: new schema.Array(new schema.Entity('sessions', {
+              activities: new schema.Array(new schema.Entity('activities', {
+                session: new schema.Entity('session', {
+                  activities: new schema.Array(new schema.Entity('activities')),
+                }),
+                category: new schema.Entity('category'),
+              })),
+            })),
+          }),
+        }
+      };
+      const resultSchemaString = JSON.stringify(resultNormalizrSchema);
+      const expectedSchemaString = JSON.stringify(expectedNormalizrSchema);
+
+      expect(resultSchemaString === expectedSchemaString).toBe(true);
+    });
+  });
+
+  describe('valid mutations', () => {
+    it('single level mutation', () => {
+      const mutation = `mutation {
+        updateUser(id:1, username:"the hugest") {
+          id,
+          username,
+        }
+      }`;
+      const mutationAST = parse(mutation);
+      const resultNormalizrSchema = createNormalizrSchema(mutationAST, schemaDoc);
+      const expectedNormalizrSchema = {
+        data: {
+          user: new schema.Entity('user'),
+        },
+      };
+      const resultSchemaString = JSON.stringify(resultNormalizrSchema);
+      const expectedSchemaString = JSON.stringify(expectedNormalizrSchema);
+
+      expect(resultSchemaString === expectedSchemaString).toBe(true);
+    });
+
+    it('single nested mutation', () => {
+      const mutation = `mutation {
+        updateUser(id:1, username:"the hugest") {
+          id,
+          username,
+          sessions {
+            id,
+            name,
+            start,
+          }
+        }
+      }`;
+      const mutationAST = parse(mutation);
+      const resultNormalizrSchema = createNormalizrSchema(mutationAST, schemaDoc);
+      const expectedNormalizrSchema = {
+        data: {
+          user: new schema.Entity('user', {
+            sessions: new schema.Array(new schema.Entity('sessions')),
+          }),
+        },
+      };
+      const resultSchemaString = JSON.stringify(resultNormalizrSchema);
+      const expectedSchemaString = JSON.stringify(expectedNormalizrSchema);
+
+      expect(resultSchemaString === expectedSchemaString).toBe(true);
+    });
+
+    it('double nested mutation', () => {
+      const mutation = `mutation {
+        updateUser(id:1, username:"the hugest") {
+          id,
+          username,
+          sessions {
+            id,
+            name,
+            start,
+            activities {
+              id,
               name
             }
           }
-        }`;
-      const queryAST = parse(query);
+        }
+      }`;
+      const mutationAST = parse(mutation);
+      const resultNormalizrSchema = createNormalizrSchema(mutationAST, schemaDoc);
+      const expectedNormalizrSchema = {
+        data: {
+          user: new schema.Entity('user', {
+            sessions: new schema.Array(new schema.Entity('sessions', {
+              activities: new schema.Array(new schema.Entity('activities')),
+            })),
+          }),
+        },
+      };
+      const resultSchemaString = JSON.stringify(resultNormalizrSchema);
+      const expectedSchemaString = JSON.stringify(expectedNormalizrSchema);
 
-      expect(() => {createNormalizrSchema(queryAST, schemaDoc)}).toThrow();
+      expect(resultSchemaString === expectedSchemaString).toBe(true);
+    });
+  });
+
+  describe('invalid queries', () => {
+    describe('queries without id fields', () => {
+      it('non nested query without an id throws an error', () => {
+        const query = `
+          query {
+            user(id:1) {
+              username
+            }
+          }`;
+        const queryAST = parse(query);
+
+        expect(() => {createNormalizrSchema(queryAST, schemaDoc)}).toThrow();
+      });
+
+      it('single nested query without an id throws an error', () => {
+        const query = `
+          query {
+            user(id:1) {
+              id,
+              username,
+              sessions {
+                name
+              }
+            }
+          }`;
+        const queryAST = parse(query);
+
+        expect(() => {createNormalizrSchema(queryAST, schemaDoc)}).toThrow();
+      });
     });
   });
 });
