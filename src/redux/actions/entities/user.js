@@ -1,21 +1,21 @@
 import types from '../types';
 
 
-const addUser = function(user = {}) {
+const addUser = (user = {}) => {
   return {
     type: types.ADD_USER,
     payload: {user},
   };
 };
 
-const editUser = function(id, newProps = {}) {
+const editUser = (id, newProps = {}) => {
   return {
     type: types.EDIT_USER,
     payload: {id, newProps},
   };
 };
 
-const deleteUser = function(id) {
+const deleteUser = id => {
   return {
     type: types.DELETE_USER,
     payload: id,

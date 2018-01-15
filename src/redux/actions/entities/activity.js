@@ -1,21 +1,21 @@
 import types from '../types';
 
 
-const addActivity = function(activity = {}) {
+const addActivity = (activity = {}) => {
   return {
     type: types.ADD_ACTIVITY,
     payload: {activity},
   };
 };
 
-const editActivity = function(id, newProps = {}) {
+const editActivity = (id, newProps = {}) => {
   return {
     type: types.EDIT_ACTIVITY,
     payload: {id, newProps},
   };
 };
 
-const deleteActivity = function(id) {
+const deleteActivity = id => {
   return {
     type: types.DELETE_ACTIVITY,
     payload: id,
