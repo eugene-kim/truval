@@ -1,5 +1,6 @@
 const {schema} = require('normalizr');
 const {visit} = require('graphql/language/visitor');
+const pluralize = require('pluralize');
 const _ = require('lodash');
 
 const GQL_FIELD_TYPES = {

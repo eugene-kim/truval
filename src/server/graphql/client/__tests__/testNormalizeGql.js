@@ -8,8 +8,8 @@ const _ = require('lodash');
 const util = require('util');
 
 // Local imports
-const createNormalizrSchema = require('../createNormalizrSchema');
-const gqlSchema = require('../../../schema');
+const normalizeGql = require('../normalizeGql');
+const gqlSchema = require('../../schema');
 
 let schemaDocumentWhole;
 let schemaDoc;
@@ -19,7 +19,7 @@ beforeAll(async () => {
   schemaDoc = schemaDocumentWhole.data.__schema;
 });
 
-describe('test createNormalizrSchema', () => {
+describe('test normalizeGql', () => {
   describe('valid queries', () => {
     it('single level query', () => {
       const query = `
@@ -30,7 +30,7 @@ describe('test createNormalizrSchema', () => {
           }
         }`;
       const queryAST = parse(query);
-      const resultNormalizrSchema = createNormalizrSchema(queryAST, schemaDoc);
+      const resultNormalizrSchema = normalizeGql(queryAST, schemaDoc);
       const resultSchemaString = JSON.stringify(resultNormalizrSchema);
       const expectedNormalizrSchema = {
         data: {
@@ -55,7 +55,7 @@ describe('test createNormalizrSchema', () => {
           }
         }`;
       const queryAST = parse(query);
-      const resultNormalizrSchema = createNormalizrSchema(queryAST, schemaDoc);
+      const resultNormalizrSchema = normalizeGql(queryAST, schemaDoc);
       const sessionsSchema = new schema.Entity('sessions');
       const expectedNormalizrSchema = {
         data: {
@@ -109,7 +109,7 @@ describe('test createNormalizrSchema', () => {
         }
       }`;
       const queryAST = parse(query);
-      const resultNormalizrSchema = createNormalizrSchema(queryAST, schemaDoc);
+      const resultNormalizrSchema = normalizeGql(queryAST, schemaDoc);
       const expectedNormalizrSchema = {
         data: {
           user: new schema.Entity('user', {
@@ -140,7 +140,7 @@ describe('test createNormalizrSchema', () => {
         }
       }`;
       const mutationAST = parse(mutation);
-      const resultNormalizrSchema = createNormalizrSchema(mutationAST, schemaDoc);
+      const resultNormalizrSchema = normalizeGql(mutationAST, schemaDoc);
       const expectedNormalizrSchema = {
         data: {
           user: new schema.Entity('user'),
@@ -165,7 +165,7 @@ describe('test createNormalizrSchema', () => {
         }
       }`;
       const mutationAST = parse(mutation);
-      const resultNormalizrSchema = createNormalizrSchema(mutationAST, schemaDoc);
+      const resultNormalizrSchema = normalizeGql(mutationAST, schemaDoc);
       const expectedNormalizrSchema = {
         data: {
           user: new schema.Entity('user', {
@@ -196,7 +196,7 @@ describe('test createNormalizrSchema', () => {
         }
       }`;
       const mutationAST = parse(mutation);
-      const resultNormalizrSchema = createNormalizrSchema(mutationAST, schemaDoc);
+      const resultNormalizrSchema = normalizeGql(mutationAST, schemaDoc);
       const expectedNormalizrSchema = {
         data: {
           user: new schema.Entity('user', {
@@ -224,7 +224,7 @@ describe('test createNormalizrSchema', () => {
           }`;
         const queryAST = parse(query);
 
-        expect(() => {createNormalizrSchema(queryAST, schemaDoc)}).toThrow();
+        expect(() => {normalizeGql(queryAST, schemaDoc)}).toThrow();
       });
 
       it('single nested query without an id throws an error', () => {
@@ -240,7 +240,7 @@ describe('test createNormalizrSchema', () => {
           }`;
         const queryAST = parse(query);
 
-        expect(() => {createNormalizrSchema(queryAST, schemaDoc)}).toThrow();
+        expect(() => {normalizeGql(queryAST, schemaDoc)}).toThrow();
       });
     });
 
@@ -254,7 +254,7 @@ describe('test createNormalizrSchema', () => {
           }`;
         const mutationAST = parse(mutation);
 
-        expect(() => {createNormalizrSchema(mutationAST, schemaDoc)}).toThrow();
+        expect(() => {normalizeGql(mutationAST, schemaDoc)}).toThrow();
       });
 
       it('single nested mutation without an id throws an error', () => {
@@ -271,7 +271,7 @@ describe('test createNormalizrSchema', () => {
           }`;
         const mutationAST = parse(mutation);
 
-        expect(() => {createNormalizrSchema(mutationAST, schemaDoc)}).toThrow();
+        expect(() => {normalizeGql(mutationAST, schemaDoc)}).toThrow();
       });
     });
   });
