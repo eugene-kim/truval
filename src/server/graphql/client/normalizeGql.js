@@ -83,12 +83,12 @@ module.exports = (operationAST, schemaDoc) => {
           // The operation name isn't guaranteed to be the same name as the type that it retrieves.
           // We'll use the field type to create our normalizr schema.
           const operationFieldType = getOperationFieldType(operationName, fieldName, schemaDoc);
-          const operationFieldTypeLower = _.toLower(operationFieldType);
+          const formattedOpFieldType = _.toLower(operationFieldType);
 
-          const nodeNormalizrSchema = createNormalizrSchema(operationFieldTypeLower, operationRootField.type);
+          const nodeNormalizrSchema = createNormalizrSchema(formattedOpFieldType, operationRootField.type);
           const fieldType = getNodeFieldType(operationRootField.type);
 
-          Object.assign(normalizrSchema, {[operationFieldTypeLower]: nodeNormalizrSchema});
+          Object.assign(normalizrSchema, {[formattedOpFieldType]: nodeNormalizrSchema});
           console.log(`Adding ${fieldType} to the stack`);
           stack.push({fieldType, nodeNormalizrSchema})
           console.log('Stack\n', stack);

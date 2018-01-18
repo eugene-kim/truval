@@ -57,6 +57,7 @@
     "react-native": "^0.50.0",
     "react-native-elements": "^0.18.2",
     "react-native-vector-icons": "^4.4.2",
+    "redux": "^3.7.2",
     "request": "^2.83.0",
     "request-promise": "^4.2.2"
   }
