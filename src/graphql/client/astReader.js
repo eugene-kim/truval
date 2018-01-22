@@ -1,8 +1,8 @@
 const _ = require('lodash');
 
-module.exports = {
+const astReader = {
   isEntityNode: node => !!node.selectionSet,
-  isScalarNode: node => !isEntityNode(node),
+  isScalarNode: node => !this.isEntityNode(node),
   getFieldName: node => node.name.value,
   entityContainsId: entityNode => getNodeFields(entityNode).find(field => field.name.value === 'id'),
   getCurrentParent: stack => stack.length > 0 ? stack[stack.length - 1] : undefined,
@@ -36,3 +36,5 @@ module.exports = {
     return lastTwo === 'Id';
   },
 };
+
+module.exports = astReader;

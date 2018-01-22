@@ -1,8 +1,8 @@
 'use strict';
 
 
-const Session = require('../../../models/Session');
-const Activity = require('../../../models/Activity');
+const Session = require('../../../server/models/Session');
+const Activity = require('../../../server/models/Activity');
 
 const sessionResolvers = {
   Query: {

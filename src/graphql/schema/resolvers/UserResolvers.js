@@ -1,8 +1,8 @@
 'use strict';
 
-const User = require('../../../models/User');
-const Session = require('../../../models/Session');
-const Category = require('../../../models/Category');
+const User = require('../../../server/models/User');
+const Session = require('../../../server/models/Session');
+const Category = require('../../../server/models/Category');
 
 const userResolvers = {
   Query: {

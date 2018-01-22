@@ -1,6 +1,6 @@
 const express = require('express');
 const morgan = require('morgan');
-const gqlClient = require('./graphql/client');
+const gqlClient = require('../graphql/client');
 
 // This package automatically parses JSON requests.
 const bodyParser = require('body-parser');
@@ -12,7 +12,7 @@ const {graphqlExpress, graphiqlExpress} = require('apollo-server-express');
 const configurePostgresDriver = require('./database/configurePostgresDriver');
 configurePostgresDriver();
 const db = require('./database');
-const schema = require('./graphql/schema');
+const schema = require('../graphql/schema');
 
 var app = express();
 
@@ -49,40 +49,45 @@ app.get('/testMutation', async (req, res) => {
   }
 });
 app.get('/testQuery', async (req, res) => {
+  // const queryString = `query {
+  //   user(id:1) {
+  //     id,
+  //     username,
+  //     email,
+  //     password,
+  //     sessions {
+  //       id,
+  //       name,
+  //       start,
+  //       isComplete,
+  //       activities {
+  //         id,
+  //         start,
+  //         end,
+  //         isComplete,
+  //         session {
+  //           id,
+  //           start,
+  //           end,
+  //           isComplete,
+  //           activities {
+  //             id,
+  //             start,
+  //             end,
+  //           }
+  //         },
+  //         category {
+  //           id,
+  //           color,
+  //           name
+  //         }
+  //       }
+  //     }
+  //   }
+  // }`;
   const queryString = `query {
-    user(id:1) {
-      id,
-      username,
-      email,
-      password,
-      sessions {
-        id,
-        name,
-        start,
-        isComplete,
-        activities {
-          id,
-          start,
-          end,
-          isComplete,
-          session {
-            id,
-            start,
-            end,
-            isComplete,
-            activities {
-              id,
-              start,
-              end,
-            }
-          },
-          category {
-            id,
-            color,
-            name
-          }
-        }
-      }
+    sessions(userId:1) {
+      id, name
     }
   }`;
 
