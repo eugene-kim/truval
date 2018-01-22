@@ -1,3 +1,5 @@
+const _ = require('lodash');
+
 module.exports = {
   isEntityNode: node => !!node.selectionSet,
   isScalarNode: node => !isEntityNode(node),
@@ -16,15 +18,21 @@ module.exports = {
   },
 
   /**
-   * Retrieves the `id` argument of a node. The id argument will be named:
-   * (1) `id` or
-   * (2) <typeName>Id
-   * If both exist, `id` gets preference.
+   * Retrieves a node's argument that ends with `Id`, e.g. `userId`.
    */
-  getIdArgument: node => {
-    try {
-      node.arguments.filter(argument => )
+  getEntityIdArgument: node => node.arguments.find(argument => endsWithId(argument.name.value)),
 
+  endsWithId: string => {
+    const length = string.length;
+
+    if (length < 2) {
+      return false;
     }
-  }
+
+    const lastTwo = string.substring(string.length - 2, string.length);
+
+    // Our use of camelcase should prevent most if not all false positives that might have
+    // come from other word that ended with 'i' and 'd'.
+    return lastTwo === 'Id';
+  },
 };

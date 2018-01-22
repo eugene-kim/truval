@@ -2,6 +2,7 @@ const {visit} = require('graphql/language/visitor');
 const pluralize = require('pluralize');
 const astReader = require('./astReader');
 
+
 module.exports = (gqlOperationAST, schemaDoc, state) => {
   const stack = [];
   let operationSchema;
@@ -28,11 +29,11 @@ module.exports = (gqlOperationAST, schemaDoc, state) => {
     },
     Field: {
     	enter(node) {
-        if (!astReader.entityContainsId(node)) {
-          throw `Every non scalar field must include the id field in order for normalizr to work properly.`;
-        }
-
         if (isEntityNode(node)) {
+          if (!astReader.entityContainsId(node)) {
+            throw `Every non scalar field must include the id field in order for normalizr to work properly.`;
+          }
+
           // An operation root field is a field that directly follows an operation name (query, mutation, subscription).
           const operationRootField = astReader.getOpRootField(node, operationSchema);
           const parent = astReader.getCurrentParent(stack);
@@ -50,12 +51,37 @@ module.exports = (gqlOperationAST, schemaDoc, state) => {
             // e.g. the operationRootField for a mutation might be `updateUser` and we're really
             // interested in what type this retrieves, which is `User`.
             const operationFieldType = getOperationFieldType(operationName, fieldName, schemaDoc);
-            const formattedOpFieldType = getReduxEntityName(operationFieldType);
-            const id = astReader.getArgument(node, 'id');
+            const entityName = getReduxEntityName(operationFieldType);
+            
+            // Assume that a query will have an argument named `id` or 
+            const id = astReader.getArgument(node, id);
 
-            if (!id) {
-              throw `The root field of the operation must contain an id as one of the arguments`;
+            if (id) {
+              const entity = getEntity(id, entityName, state);
+              
+              if (!entity) {
+                existsInStore = false;
+
+                return visitor.BREAK;
+              }
+
+              stack.push({
+                name: entityName,
+                ids: [id],
+              });
+            } else { // 
+              const entityIdArgument = astReader.getEntityIdArgument(node);
+
+              if (!entityIdArgument) {
+                throw `Root field must contain an argument containing an id or an entity id.`;
+              }
+
+              const entityIdArgumentName = entityIdArgument.name.value;
+              const entityIdArgumentValue = entityIdArgument.value.value;
+
+
             }
+
           } else {
 
           }
@@ -80,5 +106,5 @@ module.exports = (gqlOperationAST, schemaDoc, state) => {
  */
 const getReduxEntityName = name => pluralize.singular(_.toLower(name));
 
-
+const getEntity = (id, entityName, state) => state.entities[entityName][id];
 }
