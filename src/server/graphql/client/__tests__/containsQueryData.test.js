@@ -27,7 +27,7 @@ describe('test containsQueryData()', () => {
           }
         }
       `;
-    })
+    });
     set('queryAST', () => parse(query));
     set('initialStoreState', () => initialState);
     set('store', () => createStore(reducer, initialStoreState));
