@@ -1,5 +1,4 @@
 import _ from 'lodash';
-import bind from '../../library/decorators/bind';
 
 
 const astReader = {
@@ -28,8 +27,7 @@ const astReader = {
     return stack.length > 0 ? stack[stack.length - 1] : undefined;
   },
 
-  @bind
-  getOpRootField: (node, opSchema) => {
+  getOpRootField(node, opSchema) {
     return opSchema.fields.find(field => field.name === this.getFieldName(node));
   },
 
