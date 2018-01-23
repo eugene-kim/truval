@@ -1,7 +1,7 @@
-const {schema} = require('normalizr');
-const {visit} = require('graphql/language/visitor');
-const astReader = require('./astReader');
-const _ = require('lodash');
+import {schema} from 'normalizr';
+import {visit} from 'graphql/language/visitor';
+import astReader from './astReader';
+import _ from 'lodash';
 
 const GQL_FIELD_TYPES = {
   NON_NULL: 'NON_NULL',
@@ -204,5 +204,3 @@ const createNormalizrSchema = (fieldName, {kind, name, ofType}) => {
       throw `Unknown field kind: ${kind}. Unable to create normalizr schema.`;
   }
 }
-
-const getNodeFields = entityNode => entityNode.selectionSet.selections;

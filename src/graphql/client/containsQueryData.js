@@ -1,9 +1,9 @@
-const {visit} = require('graphql/language/visitor');
-const pluralize = require('pluralize');
-const astReader = require('./astReader');
+import {visit} from 'graphql/language/visitor';
+import pluralize from 'pluralize';
+import astReader from './astReader';
 
 
-module.exports = (gqlOperationAST, schemaDoc, state) => {
+export default (gqlOperationAST, schemaDoc, state) => {
   const stack = [];
   let operationSchema;
   let existsInStore = true;
@@ -107,4 +107,3 @@ module.exports = (gqlOperationAST, schemaDoc, state) => {
 const getReduxEntityName = name => pluralize.singular(_.toLower(name));
 
 const getEntity = (id, entityName, state) => state.entities[entityName][id];
-}

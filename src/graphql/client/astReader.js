@@ -1,24 +1,38 @@
-const _ = require('lodash');
+import _ from 'lodash';
+import bind from '../../library/decorators/bind';
+
 
 const astReader = {
+
   isEntityNode(node) {
     return !!node.selectionSet;
   },
-  isScalarNode(node){
+
+  isScalarNode(node) {
     return !this.isEntityNode(node);
   },
+
   getFieldName(node) {
     return node.name.value;
   },
+
   entityContainsId(entityNode) {
     return this.getNodeFields(entityNode).find(field => field.name.value === 'id');
   },
+
+  getNodeFields(entityNode) {
+    return entityNode.selectionSet.selections;
+  },
+
   getCurrentParent(stack) {
     return stack.length > 0 ? stack[stack.length - 1] : undefined;
   },
+
+  @bind
   getOpRootField: (node, opSchema) => {
-    return opSchema.fields.find(field => field.name === astReader.getFieldName(node));
+    return opSchema.fields.find(field => field.name === this.getFieldName(node));
   },
+
   getArgument(node, argumentName) {
     try {
       return node.arguments.find(argument => argument.name.value === argumentName).value.value;
@@ -31,7 +45,7 @@ const astReader = {
    * Retrieves a node's argument that ends with `Id`, e.g. `userId`.
    */
   getEntityIdArgument(node){
-    return node.arguments.find(argument => astReader.endsWithId(argument.name.value));
+    return node.arguments.find(argument => this.endsWithId(argument.name.value));
   },
 
   endsWithId(string) {
@@ -49,4 +63,5 @@ const astReader = {
   },
 };
 
-module.exports = astReader;
+
+export default astReader;

@@ -1,18 +1,19 @@
-const express = require('express');
-const morgan = require('morgan');
-const gqlClient = require('../graphql/client');
+import express from 'express';
+import morgan from 'morgan';
+import gqlClient from '../graphql/client';
 
 // This package automatically parses JSON requests.
-const bodyParser = require('body-parser');
+import bodyParser from 'body-parser';
 
 // This package will handle GraphQL server requests and responses
 // for you, based on your schema.
-const {graphqlExpress, graphiqlExpress} = require('apollo-server-express');
+import {graphqlExpress, graphiqlExpress} from 'apollo-server-express';
+import configurePostgresDriver from './database/configurePostgresDriver';
 
-const configurePostgresDriver = require('./database/configurePostgresDriver');
 configurePostgresDriver();
-const db = require('./database');
-const schema = require('../graphql/schema');
+
+import db from './database';
+import schema from '../graphql/schema';
 
 var app = express();
 
@@ -49,47 +50,47 @@ app.get('/testMutation', async (req, res) => {
   }
 });
 app.get('/testQuery', async (req, res) => {
-  // const queryString = `query {
-  //   user(id:1) {
-  //     id,
-  //     username,
-  //     email,
-  //     password,
-  //     sessions {
-  //       id,
-  //       name,
-  //       start,
-  //       isComplete,
-  //       activities {
-  //         id,
-  //         start,
-  //         end,
-  //         isComplete,
-  //         session {
-  //           id,
-  //           start,
-  //           end,
-  //           isComplete,
-  //           activities {
-  //             id,
-  //             start,
-  //             end,
-  //           }
-  //         },
-  //         category {
-  //           id,
-  //           color,
-  //           name
-  //         }
-  //       }
-  //     }
-  //   }
-  // }`;
   const queryString = `query {
-    sessions(userId:1) {
-      id, name
+    user(id:1) {
+      id,
+      username,
+      email,
+      password,
+      sessions {
+        id,
+        name,
+        start,
+        isComplete,
+        activities {
+          id,
+          start,
+          end,
+          isComplete,
+          session {
+            id,
+            start,
+            end,
+            isComplete,
+            activities {
+              id,
+              start,
+              end,
+            }
+          },
+          category {
+            id,
+            color,
+            name
+          }
+        }
+      }
     }
   }`;
+  // const queryString = `query {
+  //   sessions(userId:1) {
+  //     id, name
+  //   }
+  // }`;
 
   try {
     const normalizedData = await gqlClient.query(queryString);

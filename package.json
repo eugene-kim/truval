@@ -28,7 +28,8 @@
     "ios": "react-native run-ios",
     "test": "jest",
     "seed": "knex --knexfile=src/server/database/knexfile.js seed:run",
-    "compile": "npx babel src --out-dir lib --source-maps"
+    "compile": "npx babel src --out-dir lib --source-maps",
+    "babel": "nodemon --inspect $npm_package_config_server_path --exec babel-node"
   },
   "jest": {
     "setupTestFrameworkScriptFile": "./jest-plugins.js"
