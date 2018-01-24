@@ -79,14 +79,13 @@ module.exports = (operationAST, schemaDoc) => {
         const isOperationRootField = operationRootField && !parent;
 
         if (isOperationRootField) {
-
           // The operation name isn't guaranteed to be the same name as the type that it retrieves.
           // We'll use the field type to create our normalizr schema.
-          const operationFieldType = getOperationFieldType(operationName, fieldName, schemaDoc);
+          const operationFieldType = ast.getOperationFieldType(operationName, fieldName, schemaDoc);
           const formattedOpFieldType = _.toLower(operationFieldType);
 
           const nodeNormalizrSchema = createNormalizrSchema(formattedOpFieldType, operationRootField.type);
-          const fieldType = getNodeFieldType(operationRootField.type);
+          const fieldType = astReader.getNodeFieldType(operationRootField.type);
 
           Object.assign(normalizrSchema, {[formattedOpFieldType]: nodeNormalizrSchema});
           console.log(`Adding ${fieldType} to the stack`);
@@ -102,8 +101,8 @@ module.exports = (operationAST, schemaDoc) => {
           const parentNormalizrSchemaDefinition = parentSingleSchema.schema;
 
           // Create normalizr schema for current node.
-          const fieldTypeObject = getChildFieldType(parentFieldType, node, schemaDoc);
-          const fieldTypeName = getNodeFieldType(fieldTypeObject);
+          const fieldTypeObject = astReader.getChildFieldType(parentFieldType, node, schemaDoc);
+          const fieldTypeName = astReader.getNodeFieldType(fieldTypeObject);
           const nodeNormalizrSchema = createNormalizrSchema(fieldName, fieldTypeObject);
 
           Object.assign(parentNormalizrSchemaDefinition, {[fieldName]: nodeNormalizrSchema});
@@ -127,23 +126,6 @@ module.exports = (operationAST, schemaDoc) => {
   return {data: normalizrSchema};
 }
 
-const getOperationFieldType = (operationName, fieldName, schemaDoc) => {
-  const operation = schemaDoc.types.find(schemaType => schemaType.name === operationName);
-
-  if (!operation) {
-    throw `No operation of type ${operationType} found.`;
-  }
-
-  const operationFields = operation.fields;
-  const operationField = operationFields.find(operationField => operationField.name === fieldName);
-
-  if (!operationField) {
-    throw `No field with name ${fieldName} found under the fields of ${operationType}`;
-  }
-
-  return getNodeFieldType(operationField.type);
-}
-
 /**
  * This returns the single schema definition if the passed in normalizr schema
  * is a polymorphic one. If the normalizr schema is already a non polymorphic schema,
@@ -162,30 +144,6 @@ const getNonPolymorphicSchema = normalizrSchema => {
       return normalizrSchema.schema;
     default:
       throw `Unknown normalizr schema type: ${normalizrSchemaType}.`;
-  }
-}
-
-const getChildFieldType = (parentFieldType, node, schemaDoc) => {
-  const parentSchema = getNodeSchema(parentFieldType, schemaDoc);
-  const childField = parentSchema.fields.find(field => field.name === astReader.getFieldName(node));
-
-  return childField.type;
-}
-
-const getNodeSchema = (typeName, schemaDoc) =>
-  schemaDoc.types.find(schemaType => schemaType.name === typeName);
-
-// TODO: Expand this method as you come across more types.
-const getNodeFieldType = ({kind, name, ofType}) => {
-  switch(kind) {
-    case GQL_FIELD_TYPES.NON_NULL:
-      return getNodeFieldType(ofType);
-    case GQL_FIELD_TYPES.LIST:
-      return ofType.name;
-    case GQL_FIELD_TYPES.OBJECT:
-      return name;
-    default:
-      throw `Unknown field kind: ${kind}. Unable to grab node type name.`;
   }
 }
 

@@ -22,14 +22,13 @@
   },
   "scripts": {
     "start": "react-native start -- --reset-cache",
-    "debug": "nodemon --inspect $npm_package_config_server_path",
-    "node": "nodemon $npm_package_config_server_path",
+    "node": "nodemon $npm_package_config_server_path --exec babel-node",
+    "debug": "nodemon --inspect $npm_package_config_server_path --exec babel-node",
     "android": "react-native run-android",
     "ios": "react-native run-ios",
     "test": "jest",
     "seed": "knex --knexfile=src/server/database/knexfile.js seed:run",
-    "compile": "npx babel src --out-dir lib --source-maps",
-    "babel": "nodemon --inspect $npm_package_config_server_path --exec babel-node"
+    "compile": "npx babel src --out-dir lib --source-maps"
   },
   "jest": {
     "setupTestFrameworkScriptFile": "./jest-plugins.js"
