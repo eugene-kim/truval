@@ -1,12 +1,14 @@
-const {normalize} = require('normalizr');
-const request = require('request-promise');
-const normalizeGql = require('./normalizeGql');
-const {graphql} = require('graphql');
-const {parse} = require('graphql/language/parser');
-const {introspectionQuery} = require('graphql/utilities');
-const gqlSchema = require('../schema');
+import {normalize} from 'normalizr';
+import request from 'request-promise';
+import normalizeGql from './normalizeGql';
+import {graphql} from 'graphql';
+import {parse} from 'graphql/language/parser';
+import {introspectionQuery} from 'graphql/utilities';
+import gqlSchema from '../schema';
+import reduxify from './reduxify';
 
-module.exports = {
+
+export default {
 
   // TODO: Consider being able to dynamically determine if query or mutation.
   query: async (query, options = {}) => {
@@ -32,8 +34,9 @@ module.exports = {
       const gqlResponse = await request(requestOptions);
       const responseObject = JSON.parse(gqlResponse);
       const normalizedData = normalize(responseObject, normalizrSchema);
+      const reduxFriendlyData = reduxify(normalizedData, gqlOperationAST, schemaDoc);
 
-      return normalizedData;
+      return reduxFriendlyData;
     } catch(error) {
       console.log(error);
     }

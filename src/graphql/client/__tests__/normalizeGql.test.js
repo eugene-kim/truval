@@ -1,15 +1,15 @@
 // Module imports
-const {graphql} = require('graphql');
-const {introspectionQuery} = require('graphql/utilities');
-const {parse} = require('graphql/language/parser');
-const {schema} = require('normalizr');
-const _ = require('lodash');
-
-const util = require('util');
+import {graphql} from 'graphql';
+import {introspectionQuery} from 'graphql/utilities';
+import {parse} from 'graphql/language/parser';
+import {schema} from 'normalizr';
+import _ from 'lodash';
+import util from 'util';
 
 // Local imports
-const normalizeGql = require('../normalizeGql');
-const gqlSchema = require('../../schema');
+import normalizeGql from '../normalizeGql';
+import gqlSchema from '../../schema';
+
 
 let schemaDocumentWhole;
 let schemaDoc;

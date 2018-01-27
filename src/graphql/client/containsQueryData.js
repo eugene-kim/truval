@@ -1,6 +1,7 @@
 import {visit} from 'graphql/language/visitor';
 import pluralize from 'pluralize';
 import astReader from './astReader';
+import {getReduxEntityName} from './reduxify';
 
 
 export default (gqlOperationAST, schemaDoc, state) => {
@@ -97,13 +98,5 @@ export default (gqlOperationAST, schemaDoc, state) => {
   };
 };
 
-/**
- * Formats a String to be lowercase and singular.
- * 
- * This is useful when accessing our redux store since a GraphQL type can be represented in multiple ways
- * (e.g. get a single session with `session` or get all of a user's sessions via `sessions`) while
- * an entity in our Redux store will exist in a single location.
- */
-const getReduxEntityName = name => pluralize.singular(_.toLower(name));
 
 const getEntity = (id, entityName, state) => state.entities[entityName][id];

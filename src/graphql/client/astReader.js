@@ -5,7 +5,7 @@ const astReader = {
 
   /**
    * -------------------------------------------------------
-   * Boolean methods
+   * Node Boolean methods
    * -------------------------------------------------------
    */
 
@@ -27,12 +27,12 @@ const astReader = {
 
   /**
    * -------------------------------------------------------
-   * Retrieval methods
+   * Node Retrieval methods
    * -------------------------------------------------------
    */
 
-  getFieldName(node) {
-    return node.name.value;
+  getFieldName(field) {
+    return field.name.value;
   },
 
   getNodeFields(entityNode) {
@@ -76,8 +76,12 @@ const astReader = {
     return lastTwo === 'Id';
   },
 
+  getOperationType(operationName, schemaDoc) {
+    return schemaDoc.types.find(schemaType => schemaType.name === operationName);
+  }
+
   getOperationFieldType(operationName, fieldName, schemaDoc) {
-    const operation = schemaDoc.types.find(schemaType => schemaType.name === operationName);
+    const operation = this.getOperationType(operationName, schemaDoc);
 
     if (!operation) {
       throw `No operation of type ${operationType} found.`;
@@ -101,9 +105,8 @@ const astReader = {
   getNodeFieldType({kind, name, ofType}) {
     switch(kind) {
       case GQL_FIELD_TYPES.NON_NULL:
-        return this.getNodeFieldType(ofType);
       case GQL_FIELD_TYPES.LIST:
-        return ofType.name;
+        return this.getNodeFieldType(ofType);
       case GQL_FIELD_TYPES.OBJECT:
         return name;
       default:
@@ -140,7 +143,38 @@ const astReader = {
 
   getNodeSchema(typeName, schemaDoc) {
     return schemaDoc.types.find(schemaType => schemaType.name === typeName);
-  }
+  },
+
+  /**
+   * -------------------------------------------------------
+   * AST retrieval methods - no node interaction
+   * -------------------------------------------------------
+   */
+
+  getOperationName(operationAST) {
+    return _.toStartCase(this.getOperationDefinition().operation);
+  },
+
+  /**
+   * We're supporting one operation type per request.
+   */
+  getOperationDefinition(operationAST) {
+    return operationAST.definitions[0];
+  },
+
+  getOperationRootField(operationAST) {
+    return this.getOperationDefinition(operationAST).selectionSet.selections[0];
+  },
+
+  getOperationRootFields(operationAST) {
+    return this.getOperationDefinition(operationAST).selectionSet.selections;
+  },
+
+  getOperationRootFieldName(operationAST) {
+    const operationRootField = this.getOperationRootField(operationAST);
+
+    return getFieldName(operationRootField);
+  }  
 };
 
 const GQL_FIELD_TYPES = {

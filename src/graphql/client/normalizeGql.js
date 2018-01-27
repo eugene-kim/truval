@@ -77,8 +77,8 @@ module.exports = (operationAST, schemaDoc) => {
           // There's a good chance that the field name on this root field is not something we
           // can use in the Redux store, e.g. fieldName is something like `createUser`.
           // This is okay. This method is simply for normalizing the gql response, so we have
-          // to keep this name for now. We'll make an adjustment after the normalizr schema
-          // has been created.
+          // to keep this name for now, with any assumptions.
+          // Adjustments will be made after the normalizr schema has been created.
           const nodeNormalizrSchema = createNormalizrSchema(fieldName, operationRootField.type);
           const fieldType = astReader.getNodeFieldType(operationRootField.type);
 
