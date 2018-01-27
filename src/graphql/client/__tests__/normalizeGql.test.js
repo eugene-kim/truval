@@ -143,7 +143,7 @@ describe('test normalizeGql', () => {
       const resultNormalizrSchema = normalizeGql(mutationAST, schemaDoc);
       const expectedNormalizrSchema = {
         data: {
-          user: new schema.Entity('user'),
+          updateUser: new schema.Entity('updateUser'),
         },
       };
       const resultSchemaString = JSON.stringify(resultNormalizrSchema);
@@ -168,7 +168,7 @@ describe('test normalizeGql', () => {
       const resultNormalizrSchema = normalizeGql(mutationAST, schemaDoc);
       const expectedNormalizrSchema = {
         data: {
-          user: new schema.Entity('user', {
+          updateUser: new schema.Entity('updateUser', {
             sessions: new schema.Array(new schema.Entity('sessions')),
           }),
         },
@@ -199,7 +199,7 @@ describe('test normalizeGql', () => {
       const resultNormalizrSchema = normalizeGql(mutationAST, schemaDoc);
       const expectedNormalizrSchema = {
         data: {
-          user: new schema.Entity('user', {
+          updateUser: new schema.Entity('updateUser', {
             sessions: new schema.Array(new schema.Entity('sessions', {
               activities: new schema.Array(new schema.Entity('activities')),
             })),
