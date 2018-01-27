@@ -1,13 +1,7 @@
 import {schema} from 'normalizr';
 import {visit} from 'graphql/language/visitor';
-import astReader from './astReader';
+import astReader, {GQL_FIELD_TYPES} from './astReader';
 import _ from 'lodash';
-
-const GQL_FIELD_TYPES = {
-  NON_NULL: 'NON_NULL',
-  OBJECT: 'OBJECT',
-  LIST: 'LIST',
-};
 
 const NORMALIZR_SCHEMA_TYPES = {
   ARRAY: 'ArraySchema',
@@ -79,18 +73,17 @@ module.exports = (operationAST, schemaDoc) => {
         const isOperationRootField = operationRootField && !parent;
 
         if (isOperationRootField) {
-          // The operation name isn't guaranteed to be the same name as the type that it retrieves.
-          // We'll use the field type to create our normalizr schema.
-          const operationFieldType = ast.getOperationFieldType(operationName, fieldName, schemaDoc);
-          const formattedOpFieldType = _.toLower(operationFieldType);
 
-          const nodeNormalizrSchema = createNormalizrSchema(formattedOpFieldType, operationRootField.type);
+          // There's a good chance that the field name on this root field is not something we
+          // can use in the Redux store, e.g. fieldName is something like `createUser`.
+          // This is okay. This method is simply for normalizing the gql response, so we have
+          // to keep this name for now. We'll make an adjustment after the normalizr schema
+          // has been created.
+          const nodeNormalizrSchema = createNormalizrSchema(fieldName, operationRootField.type);
           const fieldType = astReader.getNodeFieldType(operationRootField.type);
 
-          Object.assign(normalizrSchema, {[formattedOpFieldType]: nodeNormalizrSchema});
-          console.log(`Adding ${fieldType} to the stack`);
+          Object.assign(normalizrSchema, {[fieldName]: nodeNormalizrSchema});
           stack.push({fieldType, nodeNormalizrSchema})
-          console.log('Stack\n', stack);
         } else { /* This is a descendant field on an operation. */
           
           // Grab the parent from the stack so we can grab the current gql node type and
@@ -101,29 +94,32 @@ module.exports = (operationAST, schemaDoc) => {
           const parentNormalizrSchemaDefinition = parentSingleSchema.schema;
 
           // Create normalizr schema for current node.
-          const fieldTypeObject = astReader.getChildFieldType(parentFieldType, node, schemaDoc);
+          const fieldTypeObject = astReader.getChildFieldType(fieldName, parentFieldType, schemaDoc);
           const fieldTypeName = astReader.getNodeFieldType(fieldTypeObject);
           const nodeNormalizrSchema = createNormalizrSchema(fieldName, fieldTypeObject);
 
           Object.assign(parentNormalizrSchemaDefinition, {[fieldName]: nodeNormalizrSchema});
           parentSingleSchema.define(parentNormalizrSchemaDefinition);
-          console.log(`Adding ${fieldTypeName} to the stack`);
+
           stack.push({fieldType: fieldTypeName, nodeNormalizrSchema});
-          console.log('Stack\n', stack);
         }
       },
 
       leave() {
         const stackEntry = stack.pop();
-        console.log(`Popping ${stackEntry.fieldType} from the stack.`);
       },
     },
   };
 
   visit(operationAST, visitor);
 
-  // The GraphQL responses always contain the `data` root property.
-  return {data: normalizrSchema};
+  // The GraphQL responses always contain the `data` root property,
+  // so we'll have to account for this to normalize data properly.
+  const finalNormalizrSchema = {data: normalizrSchema};
+
+  console.log(finalNormalizrSchema);
+
+  return finalNormalizrSchema;
 }
 
 /**

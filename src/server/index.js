@@ -41,7 +41,7 @@ app.get('/testMutation', async (req, res) => {
   }`;
 
   try {
-    const normalizedData = await gqlClient.mutate(mutationString);
+    const normalizedData = await gqlClient.query(mutationString);
 
     res.setHeader('Content-Type', 'application/json');
     res.send(JSON.stringify(normalizedData));

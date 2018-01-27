@@ -3,6 +3,12 @@ import _ from 'lodash';
 
 const astReader = {
 
+  /**
+   * -------------------------------------------------------
+   * Boolean methods
+   * -------------------------------------------------------
+   */
+
   isEntityNode(node) {
     return !!node.selectionSet;
   },
@@ -11,12 +17,22 @@ const astReader = {
     return !this.isEntityNode(node);
   },
 
-  getFieldName(node) {
-    return node.name.value;
-  },
-
   entityContainsId(entityNode) {
     return this.getNodeFields(entityNode).find(field => field.name.value === 'id');
+  },
+
+  getIsQueryOperation(operationName) {
+    return operationName === 'Query';
+  },
+
+  /**
+   * -------------------------------------------------------
+   * Retrieval methods
+   * -------------------------------------------------------
+   */
+
+  getFieldName(node) {
+    return node.name.value;
   },
 
   getNodeFields(entityNode) {
@@ -60,26 +76,6 @@ const astReader = {
     return lastTwo === 'Id';
   },
 
-  /**
-   * This method 
-   */
-  getOperationRootFieldName(operationName, fieldName, schemaDoc) {
-
-    // The root field in a query will result in 
-    if (getIsQueryOperation(operationName)) {
-      return fieldName;
-    }
-
-    // Mutations (and potentially other operations) have root field names that
-    // will not match what the GraphQL server returns, e.g. getUser() -> user
-
-
-  },
-
-  getIsQueryOperation(operationName) {
-    return operationName === 'Query';
-  },
-
   getOperationFieldType(operationName, fieldName, schemaDoc) {
     const operation = schemaDoc.types.find(schemaType => schemaType.name === operationName);
 
@@ -98,13 +94,14 @@ const astReader = {
   },
 
   /**
-   * Returns the node's GraphQL type.
+   * Returns the node's GraphQL type that is defined in your GraphQL schema.
+   * e.g. 'User', 'Session'
    */
   // TODO: Expand this method as you come across more types.
   getNodeFieldType({kind, name, ofType}) {
     switch(kind) {
       case GQL_FIELD_TYPES.NON_NULL:
-        return getNodeFieldType(ofType);
+        return this.getNodeFieldType(ofType);
       case GQL_FIELD_TYPES.LIST:
         return ofType.name;
       case GQL_FIELD_TYPES.OBJECT:
@@ -114,9 +111,29 @@ const astReader = {
     }
   },
 
-  getChildFieldType(parentFieldType, node, schemaDoc) {
-    const parentSchema = getNodeSchema(parentFieldType, schemaDoc);
-    const childField = parentSchema.fields.find(field => field.name === astReader.getFieldName(node));
+  /**
+   * This method retrieves the GraphQL schema type object of an entity field that's
+   * a child of another entity field.
+   * 
+   * Params:
+   * - fieldName: name of the field that the visitor is going across
+   * - parentFieldType: the GraphQL schema type string
+   * - schemaDoc: the schema document that's been retrieved via the GraphQL introspection query
+
+   Example input:
+   ('sessions', 'User', <schemaDoc>) -> {
+     "kind": "LIST",
+     "name": null,
+     "ofType": {
+       "kind": "OBJECT",
+       "name": "Session",
+       "ofType": null
+     }
+   }
+   */
+  getChildFieldType(fieldName, parentFieldType, schemaDoc) {
+    const parentSchema = this.getNodeSchema(parentFieldType, schemaDoc);
+    const childField = parentSchema.fields.find(field => field.name === fieldName);
 
     return childField.type;
   },
@@ -126,5 +143,12 @@ const astReader = {
   }
 };
 
+const GQL_FIELD_TYPES = {
+  NON_NULL: 'NON_NULL',
+  OBJECT: 'OBJECT',
+  LIST: 'LIST',
+};
 
+
+export {GQL_FIELD_TYPES};
 export default astReader;
