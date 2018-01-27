@@ -50,47 +50,47 @@ app.get('/testMutation', async (req, res) => {
   }
 });
 app.get('/testQuery', async (req, res) => {
-  // const queryString = `query {
-  //   user(id:1) {
-  //     id,
-  //     username,
-  //     email,
-  //     password,
-  //     sessions {
-  //       id,
-  //       name,
-  //       start,
-  //       isComplete,
-  //       activities {
-  //         id,
-  //         start,
-  //         end,
-  //         isComplete,
-  //         session {
-  //           id,
-  //           start,
-  //           end,
-  //           isComplete,
-  //           activities {
-  //             id,
-  //             start,
-  //             end,
-  //           }
-  //         },
-  //         category {
-  //           id,
-  //           color,
-  //           name
-  //         }
-  //       }
-  //     }
-  //   }
-  // }`;
   const queryString = `query {
-    sessions(userId:1) {
-      id, name
+    user(id:1) {
+      id,
+      username,
+      email,
+      password,
+      sessions {
+        id,
+        name,
+        start,
+        isComplete,
+        activities {
+          id,
+          start,
+          end,
+          isComplete,
+          session {
+            id,
+            start,
+            end,
+            isComplete,
+            activities {
+              id,
+              start,
+              end,
+            }
+          },
+          category {
+            id,
+            color,
+            name
+          }
+        }
+      }
     }
   }`;
+  // const queryString = `query {
+  //   sessions(userId:1) {
+  //     id, name
+  //   }
+  // }`;
 
   try {
     const normalizedData = await gqlClient.query(queryString);

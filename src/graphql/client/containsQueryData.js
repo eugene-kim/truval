@@ -1,5 +1,4 @@
 import {visit} from 'graphql/language/visitor';
-import pluralize from 'pluralize';
 import astReader from './astReader';
 import {getReduxEntityName} from './reduxify';
 

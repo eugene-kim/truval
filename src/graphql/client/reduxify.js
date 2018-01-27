@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import astReader from './astReader';
+import pluralize from 'pluralize';
 
 
 /**
@@ -10,7 +11,6 @@ import astReader from './astReader';
  * In this case, `createUser` will become `user`. Should a user entity already exist,
  * we'll merge the two objects.`
  */
-
 const reduxify = (normalizedGqlResponse, operationAST, schemaDoc) => {  
   const operationName = astReader.getOperationName(operationAST);
   const rootFieldNames = astReader.getOperationRootFieldNames(operationAST);
@@ -21,10 +21,12 @@ const reduxify = (normalizedGqlResponse, operationAST, schemaDoc) => {
   const reduxFriendlyData = Object.assign({}, normalizedGqlResponse);
 
   rootFieldNameTypes.map(rootFieldNameType => {
-    const reduxEntityName = getReduxEntityName(rootFieldNameType.type);
+    const {name, type} = rootFieldNameType;
+    const reduxEntityName = getReduxEntityName(type);
+    const {entities} = reduxFriendlyData;
 
-    reduxFriendlyData[reduxEntityName] = reduxFriendlyData[rootFieldNameType.name];
-    delete reduxFriendlyData[rootFieldNameType.name];
+    entities[reduxEntityName] = entities[name];
+    delete entities[name];
   });
 
   return reduxFriendlyData;
@@ -37,8 +39,6 @@ const reduxify = (normalizedGqlResponse, operationAST, schemaDoc) => {
  * (e.g. get a single session with `session` or get all of a user's sessions via `sessions`) while
  * an entity in our Redux store will exist in a single location.
  */
-const getReduxEntityName = name => pluralize.singular(_.toLower(name));
-
-export {getReduxEntityName};
+export const getReduxEntityName = name => pluralize.singular(_.toLower(name));
 
 export default reduxify;

@@ -78,20 +78,21 @@ const astReader = {
 
   getOperationType(operationName, schemaDoc) {
     return schemaDoc.types.find(schemaType => schemaType.name === operationName);
-  }
+  },
 
   getOperationFieldType(operationName, fieldName, schemaDoc) {
-    const operation = this.getOperationType(operationName, schemaDoc);
+    const operationType = this.getOperationType(operationName, schemaDoc);
+    const operationTypeName = operationType.name;
 
-    if (!operation) {
-      throw `No operation of type ${operationType} found.`;
+    if (!operationType) {
+      throw `No operation of type ${operationTypeName} found.`;
     }
 
-    const operationFields = operation.fields;
+    const operationFields = operationType.fields;
     const operationField = operationFields.find(operationField => operationField.name === fieldName);
 
     if (!operationField) {
-      throw `No field with name ${fieldName} found under the fields of ${operationType}`;
+      throw `No field with name ${fieldName} found under the fields of ${operationTypeName}`;
     }
 
     return this.getNodeFieldType(operationField.type);
@@ -152,7 +153,7 @@ const astReader = {
    */
 
   getOperationName(operationAST) {
-    return _.toStartCase(this.getOperationDefinition().operation);
+    return _.startCase(this.getOperationDefinition(operationAST).operation);
   },
 
   /**
@@ -163,7 +164,7 @@ const astReader = {
   },
 
   getOperationRootField(operationAST) {
-    return this.getOperationDefinition(operationAST).selectionSet.selections[0];
+    return this.getOperationRootFields(operationAST)[0];
   },
 
   getOperationRootFields(operationAST) {
@@ -173,8 +174,14 @@ const astReader = {
   getOperationRootFieldName(operationAST) {
     const operationRootField = this.getOperationRootField(operationAST);
 
-    return getFieldName(operationRootField);
-  }  
+    return this.getFieldName(operationRootField);
+  },
+
+  getOperationRootFieldNames(operationAST) {
+    const operationRootFields = this.getOperationRootFields(operationAST);
+
+    return operationRootFields.map(operationRootField => this.getFieldName(operationRootField));
+  },
 };
 
 const GQL_FIELD_TYPES = {
