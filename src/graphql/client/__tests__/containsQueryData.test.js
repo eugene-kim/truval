@@ -18,12 +18,15 @@ describe('test containsQueryData()', () => {
     schemaDoc = schemaDocumentWhole.data.__schema;
   });
 
-  describe('non-nested query requesting a user with id: 1', () => {
+  describe('using non-nested query requesting a user with id: 1 with the fields id, username, email, password', () => {
     set('query', () => {
       return `
         query {
           user(id: 1) {
-            id
+            id,
+            username,
+            email,
+            password,
           }
         }
       `;
@@ -90,7 +93,34 @@ describe('test containsQueryData()', () => {
       expect(storeContainsData).toBe(false);
     });
 
-    it('should return true with a store containing a user with id: 1', () => {
+    it('should return false when store contains matching user but with no username property', () => {
+      const initialStoreState = _.merge(
+        {},
+        initialState,
+        {
+          entities: {
+            user: {
+              entities: {
+                '1': {
+                  id: '1',
+                  email: 'hugeeuge@gmail.com',
+                  password: 'password',
+                  sessions: ['1', '2', '3', '7', '8', '9']
+                }
+              }
+            }
+          }
+        }
+      );
+      const store = createStore(reducer, initialStoreState);
+
+      debugger
+      const storeContainsData = containsQueryData(queryAST, schemaDoc, store);
+
+      expect(storeContainsData).toBe(false);
+    });
+
+    it('should return true when store contains matching user with all expected scalar fields', () => {
       const initialStoreState = _.merge(
         {},
         initialState,
@@ -111,9 +141,6 @@ describe('test containsQueryData()', () => {
         }
       );
       const store = createStore(reducer, initialStoreState);
-
-      debugger
-
       const storeContainsData = containsQueryData(queryAST, schemaDoc, store);
 
       expect(storeContainsData).toBe(true);

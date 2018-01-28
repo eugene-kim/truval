@@ -147,6 +147,10 @@ export default (operationAST, schemaDoc, store) => {
 
             return BREAK;
           }
+
+          // We need to push a placeholder value onto the stack since we'll be leaving the scalar node
+          // subsequently (scalar nodes don't have any children).
+          stack.push(null);
         }
     	},
 
