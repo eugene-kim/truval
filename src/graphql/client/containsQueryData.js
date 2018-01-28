@@ -3,7 +3,7 @@ import astReader from './astReader';
 import {getReduxEntityName} from './reduxify';
 
 
-export default (gqlOperationAST, schemaDoc, state) => {
+export default (operationAST, schemaDoc, state) => {
   const stack = [];
   let operationSchema;
   let existsInStore = true;
@@ -29,7 +29,9 @@ export default (gqlOperationAST, schemaDoc, state) => {
     },
     Field: {
     	enter(node) {
-        if (isEntityNode(node)) {
+        const fieldName = astReader.getFieldName(node);
+
+        if (astReader.isEntityNode(node)) {
           if (!astReader.entityContainsId(node)) {
             throw `Every non scalar field must include the id field in order for normalizr to work properly.`;
           }
@@ -54,7 +56,7 @@ export default (gqlOperationAST, schemaDoc, state) => {
             const entityName = getReduxEntityName(operationFieldType);
             
             // Assume that a query will have an argument named `id` or 
-            const id = astReader.getArgument(node, id);
+            const id = astReader.getArgument('id', node);
 
             if (id) {
               const entity = getEntity(id, entityName, state);
@@ -69,24 +71,78 @@ export default (gqlOperationAST, schemaDoc, state) => {
                 name: entityName,
                 ids: [id],
               });
-            } else { // 
-              const entityIdArgument = astReader.getEntityIdArgument(node);
+            } else { // Look for an alternative argument containing `Id`, e.g. `userId`.
+              const typeIdArgument = astReader.getTypeIdArgument(node);
 
-              if (!entityIdArgument) {
+              if (!typeIdArgument) {
                 throw `Root field must contain an argument containing an id or an entity id.`;
               }
 
-              const entityIdArgumentName = entityIdArgument.name.value;
-              const entityIdArgumentValue = entityIdArgument.value.value;
+              const typeIdName = typeIdArgument.name.value;
+              const typeIdValue = typeIdArgument.value.value;
+              const typeName = typeIdName.substring(0, typeIdName.length - 2);
+              const typeEntity = getEntity(typeIdValue, typeName, state);
+              const entityIds = typeEntity[fieldName];
 
+              if (!entityIds) {
+                existsInStore = false;
 
+                return visitor.BREAK;
+              }
+
+              stack.push({
+                name: fieldName,
+                ids: getArray(entityIds),
+              });
+            }
+          } else { // Child entity field
+            const parent = astReader.getCurrentParent(stack);
+            const parentEntityName = parent.name;
+            const parentEntityIds = parent.ids;
+            const {entities} = state;
+            
+            // Go through parent instances and create an array of ids
+            const entityIds = parentEntityIds.reduce((accum, parentEntityId) => {
+              const parentEntity = entities[fieldName][parentEntityId];
+              const entityIds = parentEntity[fieldName];
+
+              return accum.concat(entityIds);
+            }, []);
+
+            // Verify that the store contains all instances of entity ids
+            const allEntitiesExist = entityIds.every(entityId => entityExistsInState(fieldName, entityId, state));
+
+            if (!allEntitiesExist) {
+              existsInStore = false;
+
+              return visitor.BREAK;
             }
 
-          } else {
-
+            stack.push({
+              name: fieldName,
+              ids: entityIds,
+            });
           }
-        } else { // Scalar node
+        } else { // Scalar node - verify that all the entities in the store contain the scalar field.
 
+          // Parent is the entity that contains this scalar field.
+          const parent = astReader.getCurrentParent(stack);
+          const entityName = parent.name;
+          const entityIds = parent.ids;
+          const scalarsExists = ids.every(id => {
+
+            // We know the entity exists by virtue of getting to this block withing the function
+            // having previously returned.
+            const entity = getEntity(id, entityName, state);
+
+            return entity.hasOwnProperty(fieldName);
+          });
+
+          if (!scalarsExists) {
+            existsInStore = false
+
+            return visitor.BREAK;
+          }
         }
     	},
 
@@ -95,7 +151,21 @@ export default (gqlOperationAST, schemaDoc, state) => {
       }
     }
   };
+
+  visit(operationAST, visitor);
+
+  return existsInStore;
 };
 
+const entityExistsInState = (entityName, entityId, state) => {
+  const {entities} = state;
+  const entityType = entities[entityName];
+  if (entityType) {
+    return false;
+  }
 
+  return entityType.hasOwnProperty(entityId);
+};
+
+const getArray = (object) => Array.isArray(object) ? object : [object];
 const getEntity = (id, entityName, state) => state.entities[entityName][id];

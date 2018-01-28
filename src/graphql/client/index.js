@@ -20,7 +20,6 @@ export default {
     // const shouldMakeRequest;
 
     const normalizrSchema = await normalizeGql(gqlOperationAST, schemaDoc);
-
     const requestOptions = {
       method: 'POST',
       uri: 'http://localhost:3000/graphql',

@@ -47,7 +47,7 @@ const astReader = {
     return opSchema.fields.find(field => field.name === this.getFieldName(node));
   },
 
-  getArgument(node, argumentName) {
+  getArgument(argumentName, node) {
     try {
       return node.arguments.find(argument => argument.name.value === argumentName).value.value;
     } catch (error) {
@@ -58,7 +58,7 @@ const astReader = {
   /**
    * Retrieves a node's argument that ends with `Id`, e.g. `userId`.
    */
-  getEntityIdArgument(node){
+  getTypeIdArgument(node){
     return node.arguments.find(argument => this.endsWithId(argument.name.value));
   },
 

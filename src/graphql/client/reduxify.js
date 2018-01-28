@@ -12,13 +12,13 @@ import pluralize from 'pluralize';
  * we'll merge the two objects.`
  */
 const reduxify = (normalizedGqlResponse, operationAST, schemaDoc) => {  
+  const reduxFriendlyData = Object.assign({}, normalizedGqlResponse);
   const operationName = astReader.getOperationName(operationAST);
   const rootFieldNames = astReader.getOperationRootFieldNames(operationAST);
   const rootFieldNameTypes = rootFieldNames.map(rootFieldName => ({
     name: rootFieldName,
     type: astReader.getOperationFieldType(operationName, rootFieldName, schemaDoc),
   }));
-  const reduxFriendlyData = Object.assign({}, normalizedGqlResponse);
 
   rootFieldNameTypes.map(rootFieldNameType => {
     const {name, type} = rootFieldNameType;
