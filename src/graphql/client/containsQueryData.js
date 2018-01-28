@@ -1,4 +1,4 @@
-import {visit} from 'graphql/language/visitor';
+import {visit, BREAK} from 'graphql/language/visitor';
 import astReader from './astReader';
 import {getReduxEntityName} from './reduxify';
 
@@ -6,7 +6,8 @@ import {getReduxEntityName} from './reduxify';
 export default (operationAST, schemaDoc, store) => {
   const state = store.getState();
   const stack = [];
-  
+
+  let operationName;
   let operationSchema;
   let existsInStore = true;
 
@@ -20,7 +21,8 @@ export default (operationAST, schemaDoc, store) => {
       enter(node) {
         const {operation} = node;
         const operationKey = `${operation}Type`;
-        const operationName = schemaDoc[operationKey].name;
+
+        operationName = schemaDoc[operationKey].name;
 
         if (!operationName) {
           throw `${operationKey} is not a valid operation!`;
@@ -54,23 +56,23 @@ export default (operationAST, schemaDoc, store) => {
             // The operation name isn't guaranteed to be the same name as the type that it retrieves,
             // e.g. the operationRootField for a mutation might be `updateUser` and we're really
             // interested in what type this retrieves, which is `User`.
-            const operationFieldType = getOperationFieldType(operationName, fieldName, schemaDoc);
-            const entityName = getReduxEntityName(operationFieldType);
+            const operationFieldType = astReader.getOperationFieldType(operationName, fieldName, schemaDoc);
+            const entityTypeName = getReduxEntityName(operationFieldType);
             
             // Assume that a query will have an argument named `id` or 
             const id = astReader.getArgument('id', node);
 
             if (id) {
-              const entity = getEntity(id, entityName, state);
+              const entity = getEntity(id, entityTypeName, state);
               
               if (!entity) {
                 existsInStore = false;
 
-                return visitor.BREAK;
+                return BREAK;
               }
 
               stack.push({
-                name: entityName,
+                name: entityTypeName,
                 ids: [id],
               });
             } else { // Look for an alternative argument containing `Id`, e.g. `userId`.
@@ -89,7 +91,7 @@ export default (operationAST, schemaDoc, store) => {
               if (!entityIds) {
                 existsInStore = false;
 
-                return visitor.BREAK;
+                return BREAK;
               }
 
               stack.push({
@@ -117,7 +119,7 @@ export default (operationAST, schemaDoc, store) => {
             if (!allEntitiesExist) {
               existsInStore = false;
 
-              return visitor.BREAK;
+              return BREAK;
             }
 
             stack.push({
@@ -131,11 +133,11 @@ export default (operationAST, schemaDoc, store) => {
           const parent = astReader.getCurrentParent(stack);
           const entityName = parent.name;
           const entityIds = parent.ids;
-          const scalarsExists = ids.every(id => {
+          const scalarsExists = entityIds.every(entityId => {
 
             // We know the entity exists by virtue of getting to this block withing the function
             // having previously returned.
-            const entity = getEntity(id, entityName, state);
+            const entity = getEntity(entityId, entityName, state);
 
             return entity.hasOwnProperty(fieldName);
           });
@@ -143,7 +145,7 @@ export default (operationAST, schemaDoc, store) => {
           if (!scalarsExists) {
             existsInStore = false
 
-            return visitor.BREAK;
+            return BREAK;
           }
         }
     	},
@@ -170,4 +172,4 @@ const entityExistsInState = (entityName, entityId, state) => {
 };
 
 const getArray = (object) => Array.isArray(object) ? object : [object];
-const getEntity = (id, entityName, state) => state.entities[entityName][id];
+const getEntity = (id, entityName, state) => state.entities[entityName].entities[id];

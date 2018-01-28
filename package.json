@@ -28,6 +28,7 @@
     "android": "react-native run-android",
     "ios": "react-native run-ios",
     "test": "jest",
+    "test_debug":"node --inspect-brk node_modules/.bin/jest --runInBand",
     "seed": "knex --knexfile=src/server/database/knexfile.js seed:run",
     "compile": "npx babel src --out-dir lib --source-maps"
   },
