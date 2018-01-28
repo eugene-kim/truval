@@ -2,6 +2,9 @@
   "plugins": [
     "transform-decorators-legacy",
     "transform-class-properties",
+    ["babel-plugin-root-import", {
+      "rootPathSuffix": "src"
+    }],
     [
       "module-resolver",
       {

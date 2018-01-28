@@ -6,8 +6,8 @@ import _ from 'lodash';
 
 import gqlSchema from '../../schema';
 import containsQueryData from '../containsQueryData';
-import initialState from '../../../../redux/store/initialState';
-import reducer from '../../../../redux/reducers';
+import initialState from '~/redux/store/initialState';
+import reducer from '~/redux/reducers';
 
 describe('test containsQueryData()', () => {
   let schemaDocumentWhole;

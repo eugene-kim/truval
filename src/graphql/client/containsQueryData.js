@@ -3,8 +3,10 @@ import astReader from './astReader';
 import {getReduxEntityName} from './reduxify';
 
 
-export default (operationAST, schemaDoc, state) => {
+export default (operationAST, schemaDoc, store) => {
+  const state = store.getState();
   const stack = [];
+  
   let operationSchema;
   let existsInStore = true;
 
