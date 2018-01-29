@@ -1,9 +1,10 @@
 import {normalize} from 'normalizr';
 import request from 'request-promise';
-import normalizeGql from './normalizeGql';
 import {graphql} from 'graphql';
 import {parse} from 'graphql/language/parser';
 import {introspectionQuery} from 'graphql/utilities';
+
+import normalizeGql from './normalizeGql';
 import gqlSchema from '../schema';
 import reduxify from './reduxify';
 import containsQueryData from './containsQueryData';

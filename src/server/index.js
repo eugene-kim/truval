@@ -15,13 +15,23 @@ configurePostgresDriver();
 import db from './database';
 import schema from '../graphql/schema';
 
+import {createStore} from 'redux';
+import reducer from '~/redux/reducers';
+import initialState from '~/redux/store/initialState';
+
 var app = express();
 
+
+// Basic logging
 app.use(morgan('tiny'));
+
 app.use('/graphql', bodyParser.json(), graphqlExpress({schema}));
 app.use('/graphiql', graphiqlExpress({
   endpointURL: '/graphql',
 }));
+
+// Blank store for testing
+const store = createStore(reducer, initialState);
 
 app.get('/testMutation', async (req, res) => {
   const mutationString = `mutation {
@@ -41,7 +51,7 @@ app.get('/testMutation', async (req, res) => {
   }`;
 
   try {
-    const normalizedData = await gqlClient.query(mutationString);
+    const normalizedData = await gqlClient.query(mutationString, store);
 
     res.setHeader('Content-Type', 'application/json');
     res.send(JSON.stringify(normalizedData));
@@ -50,50 +60,48 @@ app.get('/testMutation', async (req, res) => {
   }
 });
 app.get('/testQuery', async (req, res) => {
-  // const queryString = `query {
-  //   user(id:1) {
-  //     id,
-  //     username,
-  //     email,
-  //     password,
-  //     sessions {
-  //       id,
-  //       name,
-  //       start,
-  //       isComplete,
-  //       activities {
-  //         id,
-  //         start,
-  //         end,
-  //         isComplete,
-  //         session {
-  //           id,
-  //           start,
-  //           end,
-  //           isComplete,
-  //           activities {
-  //             id,
-  //             start,
-  //             end,
-  //           }
-  //         },
-  //         category {
-  //           id,
-  //           color,
-  //           name
-  //         }
-  //       }
-  //     }
-  //   }
-  // }`;
   const queryString = `query {
-    sessions(userId:1) {
-      id, name
+    user(id:1) {
+      id,
+      username,
+      email,
+      password,
+      sessions {
+        id,
+        name,
+        start,
+        isComplete,
+        activities {
+          id,
+          isComplete,
+          session {
+            id,
+            start,
+            end,
+            isComplete,
+            activities {
+              id,
+              start,
+              end,
+            }
+          },
+          category {
+            id,
+            color,
+            name
+          }
+        }
+      }
     }
   }`;
+  // const queryString = `query {
+  //   sessions(userId:1) {
+  //     id, name
+  //   }
+  // }`;
 
   try {
-    const normalizedData = await gqlClient.query(queryString);
+    const normalizedData = await gqlClient.query(queryString, store);
 
     res.setHeader('Content-Type', 'application/json');
     res.send(JSON.stringify(normalizedData));

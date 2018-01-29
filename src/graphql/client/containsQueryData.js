@@ -1,6 +1,7 @@
 import {visit, BREAK} from 'graphql/language/visitor';
 import astReader from './astReader';
 import {getReduxEntityName} from './reduxify';
+import pluralize from 'pluralize';
 
 
 export default (operationAST, schemaDoc, store) => {
@@ -33,7 +34,6 @@ export default (operationAST, schemaDoc, store) => {
     },
     Field: {
     	enter(node) {
-        debugger
         const fieldName = astReader.getFieldName(node);
 
         if (astReader.isEntityNode(node)) {
@@ -109,20 +109,22 @@ export default (operationAST, schemaDoc, store) => {
             }
           } else { // Child entity field
             const parent = astReader.getCurrentParent(stack);
-            const parentEntityName = parent.name;
             const parentEntityIds = parent.ids;
+            const parentFieldName = parent.name;
+            const parentEntityType = pluralize.singular(parentFieldName);
+            const entityType = pluralize.singular(fieldName);
             const {entities} = state;
             
             // Go through parent instances and create an array of ids
-            const entityIds = parentEntityIds.reduce((accum, parentEntityId) => {
-              const parentEntity = entities[fieldName][parentEntityId];
+            const allEntityIds = parentEntityIds.reduce((accum, parentEntityId) => {
+              const parentEntity = getEntity(parentEntityId, parentEntityType, state);
               const entityIds = parentEntity[fieldName];
 
               return accum.concat(entityIds);
             }, []);
 
             // Verify that the store contains all instances of entity ids
-            const allEntitiesExist = entityIds.every(entityId => entityExistsInState(fieldName, entityId, state));
+            const allEntitiesExist = allEntityIds.every(entityId => entityExistsInState(entityType, entityId, state));
 
             if (!allEntitiesExist) {
               existsInStore = false;
@@ -132,7 +134,7 @@ export default (operationAST, schemaDoc, store) => {
 
             stack.push({
               name: fieldName,
-              ids: entityIds,
+              ids: allEntityIds,
             });
           }
         } else { // Scalar node - verify that all the entities in the store contain the scalar field.
@@ -176,12 +178,14 @@ export default (operationAST, schemaDoc, store) => {
 const entityExistsInState = (entityName, entityId, state) => {
   const {entities} = state;
   const entityType = entities[entityName];
-  if (entityType) {
+  if (!entityType) {
     return false;
   }
 
-  return entityType.hasOwnProperty(entityId);
+  return entityType.entities.hasOwnProperty(entityId);
 };
 
 const getArray = (object) => Array.isArray(object) ? object : [object];
-const getEntity = (id, entityName, state) => state.entities[entityName].entities[id];
+const getEntity = (id, entityName, state) => {
+  return state.entities[entityName] ? state.entities[entityName].entities[id] : undefined;
+}
