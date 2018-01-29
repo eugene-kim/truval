@@ -18,7 +18,7 @@ describe('test containsQueryData()', () => {
     schemaDoc = schemaDocumentWhole.data.__schema;
   });
 
-  describe('using non-nested query requesting a user with id: 1 with the fields id, username, email, password', () => {
+  describe('non-nested query requesting `user(id: 1)`with the fields:\n\tid, username, email, password', () => {
     set('query', () => {
       return `
         query {
@@ -113,8 +113,6 @@ describe('test containsQueryData()', () => {
         }
       );
       const store = createStore(reducer, initialStoreState);
-
-      debugger
       const storeContainsData = containsQueryData(queryAST, schemaDoc, store);
 
       expect(storeContainsData).toBe(false);
@@ -138,6 +136,215 @@ describe('test containsQueryData()', () => {
               }
             }
           }
+        }
+      );
+      const store = createStore(reducer, initialStoreState);
+      const storeContainsData = containsQueryData(queryAST, schemaDoc, store);
+
+      expect(storeContainsData).toBe(true);
+    });
+  });
+
+  describe('non-nested query requesting `sessions(userId: 1)` with the fields:\n\tid, name, start, isComplete', () => {
+    set('query', () => {
+      return `
+        query {
+          sessions(userId:1) {
+            id, name, start, isComplete
+          }
+        }`;
+    });
+    set('queryAST', () => parse(query));
+
+    it('should return false with an empty store', () => {
+      const store = createStore(reducer, initialState);
+      const storeContainsData = containsQueryData(queryAST, schemaDoc, store);
+
+      expect(storeContainsData).toBe(false);
+    });
+
+    it('should return false with a store containing a user with a different id', () => {
+      const initialStoreState = _.merge(
+        {},
+        initialState,
+        {
+          entities: {
+            user: {
+              entities: {
+
+                // Id is 2 instead of 1
+                '2': {
+                  id: '2',
+                  username: 'the hugest',
+                  email: 'hugeeuge@gmail.com',
+                  password: 'password',
+                  sessions: ['1', '2', '3'],
+                },
+              },
+            },
+            session: {
+              entities: {
+                '1': {
+                  id: '1',
+                  name: 'Study Session 1',
+                  start: '2017-10-21T15:51:09.489-07:00',
+                  isComplete: false,
+                },
+                '2': {
+                  id: '2',
+                  name: 'Study Session 2',
+                  start: '2017-10-21T15:51:09.489-07:00',
+                  isComplete: false,
+                },
+                '3': {
+                  id: '3',
+                  name: 'Study Session 3',
+                  start: '2017-10-21T15:51:09.489-07:00',
+                  isComplete: false,
+                },
+              },
+            },
+          },
+        }
+      );
+      const store = createStore(reducer, initialStoreState);
+      const storeContainsData = containsQueryData(queryAST, schemaDoc, store);
+
+      expect(storeContainsData).toBe(false);
+    });
+
+    it('should return false with a store containing a matching user but with a missing session entity', () => {
+      const initialStoreState = _.merge(
+        {},
+        initialState,
+        {
+          entities: {
+            user: {
+              entities: {
+                '1': {
+                  id: '1',
+                  username: 'the hugest',
+                  email: 'hugeeuge@gmail.com',
+                  password: 'password',
+                  sessions: ['1', '2', '3'],
+                },
+              },
+            },
+            session: {
+              entities: {
+                '1': {
+                  id: '1',
+                  name: 'Study Session 1',
+                  start: '2017-10-21T15:51:09.489-07:00',
+                  isComplete: false,
+                },
+                '2': {
+                  id: '2',
+                  name: 'Study Session 2',
+                  start: '2017-10-21T15:51:09.489-07:00',
+                  isComplete: false,
+                },
+                // Missing session w/ id: 3
+              },
+            },
+          },
+        }
+      );
+      const store = createStore(reducer, initialStoreState);
+      const storeContainsData = containsQueryData(queryAST, schemaDoc, store);
+
+      expect(storeContainsData).toBe(false);
+    });
+
+    it('should return false when all entities are present but a session entity is missing scalar field', () => {
+      const initialStoreState = _.merge(
+        {},
+        initialState,
+        {
+          entities: {
+            user: {
+              entities: {
+                '1': {
+                  id: '1',
+                  username: 'the hugest',
+                  email: 'hugeeuge@gmail.com',
+                  password: 'password',
+                  sessions: ['1', '2', '3'],
+                },
+              },
+            },
+            session: {
+              entities: {
+                '1': {
+                  id: '1',
+                  name: 'Study Session 1',
+                  start: '2017-10-21T15:51:09.489-07:00',
+                  isComplete: false,
+                },
+                '2': {
+                  id: '2',
+                  name: 'Study Session 2',
+                  start: '2017-10-21T15:51:09.489-07:00',
+                  isComplete: false,
+                },
+                '3': {
+                  id: '3',
+                  name: 'Study Session 3',
+                  // Missing start scalar field
+                  // start: '2017-10-21T15:51:09.489-07:00',
+                  isComplete: false,
+                },
+              },
+            },
+          },
+        }
+      );
+      const store = createStore(reducer, initialStoreState);
+      const storeContainsData = containsQueryData(queryAST, schemaDoc, store);
+
+      expect(storeContainsData).toBe(false);
+    });
+
+    it('should return true when all entities are present with all expected scalar fields', () => {
+      const initialStoreState = _.merge(
+        {},
+        initialState,
+        {
+          entities: {
+            user: {
+              entities: {
+                '1': {
+                  id: '1',
+                  username: 'the hugest',
+                  email: 'hugeeuge@gmail.com',
+                  password: 'password',
+                  sessions: ['1', '2', '3'],
+                },
+              },
+            },
+            session: {
+              entities: {
+                '1': {
+                  id: '1',
+                  name: 'Study Session 1',
+                  start: '2017-10-21T15:51:09.489-07:00',
+                  isComplete: false,
+                },
+                '2': {
+                  id: '2',
+                  name: 'Study Session 2',
+                  start: '2017-10-21T15:51:09.489-07:00',
+                  isComplete: false,
+                },
+                '3': {
+                  id: '3',
+                  name: 'Study Session 3',
+                  start: '2017-10-21T15:51:09.489-07:00',
+                  isComplete: false,
+                },
+              },
+            },
+          },
         }
       );
       const store = createStore(reducer, initialStoreState);

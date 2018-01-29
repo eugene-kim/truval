@@ -33,6 +33,7 @@ export default (operationAST, schemaDoc, store) => {
     },
     Field: {
     	enter(node) {
+        debugger
         const fieldName = astReader.getFieldName(node);
 
         if (astReader.isEntityNode(node)) {
@@ -86,6 +87,13 @@ export default (operationAST, schemaDoc, store) => {
               const typeIdValue = typeIdArgument.value.value;
               const typeName = typeIdName.substring(0, typeIdName.length - 2);
               const typeEntity = getEntity(typeIdValue, typeName, state);
+
+              if (!typeEntity) {
+                existsInStore = false;
+
+                return BREAK;
+              }
+
               const entityIds = typeEntity[fieldName];
 
               if (!entityIds) {
@@ -131,7 +139,7 @@ export default (operationAST, schemaDoc, store) => {
 
           // Parent is the entity that contains this scalar field.
           const parent = astReader.getCurrentParent(stack);
-          const entityName = parent.name;
+          const entityName = getReduxEntityName(parent.name);
           const entityIds = parent.ids;
           const scalarsExists = entityIds.every(entityId => {
 
@@ -139,7 +147,7 @@ export default (operationAST, schemaDoc, store) => {
             // having previously returned.
             const entity = getEntity(entityId, entityName, state);
 
-            return entity.hasOwnProperty(fieldName);
+            return entity ? entity.hasOwnProperty(fieldName) : false;
           });
 
           if (!scalarsExists) {
