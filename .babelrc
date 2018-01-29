@@ -1,7 +1,10 @@
 {
   "plugins": [
     "transform-decorators-legacy",
-
+    "transform-class-properties",
+    ["babel-plugin-root-import", {
+      "rootPathSuffix": "src"
+    }],
     [
       "module-resolver",
       {
@@ -13,7 +16,6 @@
 
   // For more details:
   // https://github.com/facebook/react-native/blob/master/babel-preset/configs/main.js#L21
-  "presets": ["react-native"],
-
+  "presets": ["react-native", "babel-preset-env"],
   "retainLines": true,
 }

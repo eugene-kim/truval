@@ -21,7 +21,7 @@ const focusApp = function(state = {}, action) {
         entities: reduceUserEntities(user.entities, action),
       },
       session: {
-        entities: reduceSessionEntities(session.entities, action), 
+        entities: reduceSessionEntities(session.entities, action),
       },
       activity: {
         entities: reduceActivityEntities(activity.entities, action),

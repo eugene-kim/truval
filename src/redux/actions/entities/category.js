@@ -1,21 +1,21 @@
 import types from '../types';
 
 
-const addCategory = function(category = {}) {
+const addCategory = (category = {}) => {
   return {
     type: types.ADD_CATEGORY,
     payload: {category},
   };
 };
 
-const editCategory = function(id, newProps = {}) {
+const editCategory = (id, newProps = {}) => {
   return {
     type: types.EDIT_CATEGORY,
     payload: {id, newProps},
   };
 };
 
-const deleteCategory = function(id) {
+const deleteCategory = id => {
   return {
     type: types.DELETE_CATEGORY,
     payload: id,

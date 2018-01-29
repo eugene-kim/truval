@@ -1,26 +1,37 @@
-const express = require('express');
-const morgan = require('morgan');
-const gqlClient = require('./graphql/client');
+import express from 'express';
+import morgan from 'morgan';
+import gqlClient from '../graphql/client';
 
 // This package automatically parses JSON requests.
-const bodyParser = require('body-parser');
+import bodyParser from 'body-parser';
 
 // This package will handle GraphQL server requests and responses
 // for you, based on your schema.
-const {graphqlExpress, graphiqlExpress} = require('apollo-server-express');
+import {graphqlExpress, graphiqlExpress} from 'apollo-server-express';
+import configurePostgresDriver from './database/configurePostgresDriver';
 
-const configurePostgresDriver = require('./database/configurePostgresDriver');
 configurePostgresDriver();
-const db = require('./database');
-const schema = require('./graphql/schema');
+
+import db from './database';
+import schema from '../graphql/schema';
+
+import {createStore} from 'redux';
+import reducer from '~/redux/reducers';
+import initialState from '~/redux/store/initialState';
 
 var app = express();
 
+
+// Basic logging
 app.use(morgan('tiny'));
+
 app.use('/graphql', bodyParser.json(), graphqlExpress({schema}));
 app.use('/graphiql', graphiqlExpress({
   endpointURL: '/graphql',
 }));
+
+// Blank store for testing
+const store = createStore(reducer, initialState);
 
 app.get('/testMutation', async (req, res) => {
   const mutationString = `mutation {
@@ -40,7 +51,7 @@ app.get('/testMutation', async (req, res) => {
   }`;
 
   try {
-    const normalizedData = await gqlClient.mutate(mutationString);
+    const normalizedData = await gqlClient.query(mutationString, store);
 
     res.setHeader('Content-Type', 'application/json');
     res.send(JSON.stringify(normalizedData));
@@ -62,8 +73,6 @@ app.get('/testQuery', async (req, res) => {
         isComplete,
         activities {
           id,
-          start,
-          end,
           isComplete,
           session {
             id,
@@ -85,9 +94,14 @@ app.get('/testQuery', async (req, res) => {
       }
     }
   }`;
+  // const queryString = `query {
+  //   sessions(userId:1) {
+  //     id, name
+  //   }
+  // }`;
 
   try {
-    const normalizedData = await gqlClient.query(queryString);
+    const normalizedData = await gqlClient.query(queryString, store);
 
     res.setHeader('Content-Type', 'application/json');
     res.send(JSON.stringify(normalizedData));
