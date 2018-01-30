@@ -4,6 +4,15 @@ import {getReduxEntityName} from './reduxify';
 import pluralize from 'pluralize';
 
 
+/**
+ * containsQueryData will read through the abstract syntax tree of an operation
+ * and determine whether the store already contains the data being requested.
+ * This is useful when determining if a network request to the GraphQL server needs
+ * to be made or if the store can simply return the data at hand.
+ * 
+ * If all the entities being requested and all their scalar fields are present in the store,
+ * this function returns true.
+ */
 export default (operationAST, schemaDoc, store) => {
   const state = store.getState();
   const stack = [];
