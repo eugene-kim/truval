@@ -10,6 +10,7 @@ import pluralize from 'pluralize';
  * This is useful when determining if a network request to the GraphQL server needs
  * to be made or if the store can simply return the data at hand.
  * 
+ * Criteria to determine whether the store contains query data:
  * If all the entities being requested and all their scalar fields are present in the store,
  * this function returns true.
  */
