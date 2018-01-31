@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import astReader from './astReader';
 import pluralize from 'pluralize';
+import {renameKey} from '~/libs/util/objectUtil';
 
 
 /**
@@ -23,10 +24,10 @@ const reduxify = (normalizedGqlResponse, operationAST, schemaDoc) => {
   rootFieldNameTypes.map(rootFieldNameType => {
     const {name, type} = rootFieldNameType;
     const reduxEntityName = getReduxEntityName(type);
+    console.log(reduxEntityName);
     const {entities} = reduxFriendlyData;
 
-    entities[reduxEntityName] = entities[name];
-    delete entities[name];
+    renameKey(entities, reduxEntityName, name);
   });
 
   return reduxFriendlyData;
