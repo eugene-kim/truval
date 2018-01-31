@@ -1,37 +1,21 @@
 import _ from 'lodash';
 import types from '../../actions/types';
+import {addEntity, editEntity, deleteEntity, hydrateEntities} from '../commonReducers';
 
 
 const activityEntities = function(activityEntities = {}, action) {
   switch(action.type) {
     case types.ADD_ACTIVITY: {
-      const {activity} = action.payload;
-
-      return _.merge({}, activityEntities, {[activity.id]: activity});
+      return addEntity(activityEntities, action, 'activity');
     }
     case types.EDIT_ACTIVITY: {
-      const {id, newProps} = action.payload;
-      const activity = activityEntities[id];
-      const updatedActivity = _.merge({}, activity, newProps);
-
-      return _.merge({}, activityEntities, {[id]: updatedActivity});
+      return editEntity(activityEntities, action);
     }
     case types.DELETE_ACTIVITY: {
-      const deleteActivityId = action.payload;
-      const remainingEntities = {};
-
-      _.mapKeys(sessionEntities, (activity, activityId) => {
-        if (deleteActivityId !== parseInt(activityId)) {
-          const activity = activityEntities[activityId];
-
-          remainingEntities[activityId] = activity;
-        }
-      });
-
-      return remainingEntities;
+      return deleteEntity(activityEntities, action);
     }
     default:
-      return activityEntities;
+      return hydrateEntities(activityEntities, action, 'activity');
   }
 };
 

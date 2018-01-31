@@ -1,39 +1,23 @@
 import _ from 'lodash';
 import types from '../../actions/types';
+import {addEntity, editEntity, deleteEntity, hydrateEntities} from '../commonReducers';
 
 
 const reduceUserEntities = function(userEntities = {}, action) {
-  switch(action.type) {
-    case types.ADD_USER: {
-      const {payload} = action;
-      const {user} = payload;
+  const {payload, type} = action;
 
-      return _.merge({}, userEntities, {[user.id]: user});
+  switch(type) {
+    case types.ADD_USER: {
+      return addEntity(userEntities, action, 'user');
     }
     case types.EDIT_USER: {
-      const {payload} = action;
-      const {id, newProps} = payload;
-      const user = userEntities[id];
-      const updatedUser = _.merge({}, user, newProps);
-
-      return _.merge({}, userEntities, {[id]: updatedUser});
+      return editEntity(userEntities, action);
     }
     case types.DELETE_USER: {
-      const deleteUserId = action.payload;
-      const remainingEntities = {};
-
-      _.mapKeys(userEntities, (user, userId) => {
-        if (deleteUserId !== parseInt(userId)) {
-          const user = userEntities[deleteUserId];
-
-          remainingEntities[userId] = user;
-        }
-      });
-
-      return remainingEntities;
+      return deleteEntity(userEntities, action);
     }
     default:
-      return userEntities;
+      return hydrateEntities(userEntities, action, 'user');
   }
 };
 
