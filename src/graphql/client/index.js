@@ -36,6 +36,7 @@ export default {
         const gqlResponse = await request(requestOptions);
         const responseObject = JSON.parse(gqlResponse);
         const normalizedData = normalize(responseObject, normalizrSchema);
+        debugger
         const reduxFriendlyData = reduxify(normalizedData, gqlOperationAST, schemaDoc);
 
         store.dispatch({

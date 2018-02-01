@@ -1,5 +1,5 @@
 import {addUser, editUser, deleteUser} from '../user';
-import types from '../../types';
+import {ADD_USER, EDIT_USER, DELETE_USER} from '../../types';
 
 
 describe('user actions', () => {
@@ -14,7 +14,7 @@ describe('user actions', () => {
   describe('add user', () => {
     it('should create an action to add a user', () => {
       const expected = {
-        type: types.ADD_USER,
+        type: ADD_USER,
         payload: {user},
       };
       const addUserAction = addUser(user);
@@ -31,7 +31,7 @@ describe('user actions', () => {
 
     it('should create an action to edit a user', () => {
       const expected = {
-        type: types.EDIT_USER,
+        type: EDIT_USER,
         payload: {newProps, id},
       };
       const editUserAction = editUser(id, newProps);
@@ -43,7 +43,7 @@ describe('user actions', () => {
   describe('delete user', () => {
     it('should create an action to delete a user', () => {
       const expected = {
-        type: types.DELETE_USER,
+        type: DELETE_USER,
         payload: id
       };
       const deleteUserAction = deleteUser(id);

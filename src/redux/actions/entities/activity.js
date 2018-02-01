@@ -1,23 +1,23 @@
-import types from '../types';
+import {ADD_ACTIVITY, EDIT_ACTIVITY, DELETE_ACTIVITY} from '../types';
 
 
 const addActivity = (activity = {}) => {
   return {
-    type: types.ADD_ACTIVITY,
+    type: ADD_ACTIVITY,
     payload: {activity},
   };
 };
 
 const editActivity = (id, newProps = {}) => {
   return {
-    type: types.EDIT_ACTIVITY,
+    type: EDIT_ACTIVITY,
     payload: {id, newProps},
   };
 };
 
 const deleteActivity = id => {
   return {
-    type: types.DELETE_ACTIVITY,
+    type: DELETE_ACTIVITY,
     payload: id,
   };
 };

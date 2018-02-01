@@ -1,10 +1,15 @@
+// Module imports
 import {graphql} from 'graphql';
 import {introspectionQuery} from 'graphql/utilities';
 import {parse} from 'graphql/language/parser';
+import _ from 'lodash';
 
+// Local imports
 import reduxify from '../reduxify';
 import gqlSchema from '../../schema';
-import normalizedData from './resources/normalizedQueryData';
+import normalizedQueryData from './resources/normalizedQueryData';
+import normalizedMutationData from './resources/normalizedMutationData';
+
 
 describe('test reduxify', () => {
   let schemaDocumentWhole;
@@ -46,7 +51,7 @@ describe('test reduxify', () => {
       }`
     });
     set('queryAST', () => parse(query));
-    set('reduxFriendlyData', () => reduxify(normalizedData, queryAST, schemaDoc));
+    set('reduxFriendlyData', () => reduxify(normalizedQueryData, queryAST, schemaDoc));
     set('entities', () => reduxFriendlyData.entities);
 
     it('plural key sessions doesn\'t exist in reduxified data', () => {
@@ -75,7 +80,36 @@ describe('test reduxify', () => {
     });
   });
 
-  // describe('with mutation with root field updateUser', () => {
+  describe('with mutation with root field updateUser', () => {
+    set('mutation', () => {
+      return `mutation {
+        updateUser(id:1, username:"the hugest") {
+          id,
+          username,
+          sessions {
+            id,
+            name,
+            start,
+            activities {
+              id,
+              name
+            }
+          }
+        }
+      }`
+    });
+    set('mutationAST', () => parse(mutation));
+    set('reduxFriendlyData', () => reduxify(normalizedMutationData, mutationAST, schemaDoc));
+    set('entities', () => reduxFriendlyData.entities);
 
-  // });
+    it('updateUser property has been replaced with redux entity name `user`', () => {
+      expect(entities.hasOwnProperty('updateUser')).toBe(false);
+      expect(entities.hasOwnProperty('user')).toBe(true);
+
+      const updateUserValue = normalizedMutationData.entities.updateUser;
+      const userValue = entities.user;
+
+      expect(_.isEqual(updateUserValue, userValue)).toBe(true);
+    });
+  });
 });

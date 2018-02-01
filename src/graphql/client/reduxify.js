@@ -12,8 +12,11 @@ import {renameKey} from '~/libs/util/objectUtil';
  * In this case, `createUser` will become `user`. Should a user entity already exist,
  * we'll merge the two objects.`
  */
-const reduxify = (normalizedGqlResponse, operationAST, schemaDoc) => {  
-  const reduxFriendlyData = Object.assign({}, normalizedGqlResponse);
+const reduxify = (normalizedGqlResponse, operationAST, schemaDoc) => {
+
+  // TODO: If the normalized response is too big, we might want to use an immutable library
+  // like Immutable.js to increase our performance.
+  const reduxFriendlyData = _.cloneDeep(normalizedGqlResponse);
   const {entities} = reduxFriendlyData;
 
   // Rename all root field names into Redux friendly names.

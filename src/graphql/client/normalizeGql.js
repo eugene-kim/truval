@@ -117,8 +117,6 @@ module.exports = (operationAST, schemaDoc) => {
   // so we'll have to account for this to normalize data properly.
   const finalNormalizrSchema = {data: normalizrSchema};
 
-  console.log(finalNormalizrSchema);
-
   return finalNormalizrSchema;
 }
 
