@@ -6,7 +6,7 @@ import {addEntity, editEntity, deleteEntity, hydrateEntities} from '../commonRed
 const categoryEntities = function(categoryEntities = {}, action) {
   switch(action.type) {
     case ADD_CATEGORY: {
-      return addEntity(activityEntities, action, 'category');
+      return addEntity(categoryEntities, action, 'category');
     }
     case EDIT_CATEGORY: {
       return editEntity(categoryEntities, action);
@@ -15,7 +15,7 @@ const categoryEntities = function(categoryEntities = {}, action) {
       return deleteEntity(categoryEntities, action);
     }
     case UPDATE_FROM_SERVER: {
-      return hydrateEntities(activityEntities, action, 'category');
+      return hydrateEntities(categoryEntities, action, 'category');
     }
     default:
       return categoryEntities;

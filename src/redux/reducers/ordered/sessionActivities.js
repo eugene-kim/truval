@@ -1,22 +1,18 @@
 import _ from 'lodash';
-import types from '../../actions/types';
+import {DELETE_SESSION, ADD_SESSION, ADD_ACTIVITY} from '../../actions/types';
 
 
 const sessionActivities = function(sessionActivities = {}, action) {
   switch(action.type) {
-    case types.DELETE_SESSION: {
+    case DELETE_SESSION: {
 
     }
 
-    case types.ADD_SESSION: {
+    case ADD_SESSION: {
 
     }
 
-    case types.ADD_ACTIVITY: {
-
-    }
-
-    case types.DELETE_SESSION: {
+    case ADD_ACTIVITY: {
 
     }
 

@@ -14,6 +14,9 @@ import {renameKey} from '~/libs/util/objectUtil';
  */
 const reduxify = (normalizedGqlResponse, operationAST, schemaDoc) => {  
   const reduxFriendlyData = Object.assign({}, normalizedGqlResponse);
+  const {entities} = reduxFriendlyData;
+
+  // Rename all root field names into Redux friendly names.
   const operationName = astReader.getOperationName(operationAST);
   const rootFieldNames = astReader.getOperationRootFieldNames(operationAST);
   const rootFieldNameTypes = rootFieldNames.map(rootFieldName => ({
@@ -24,10 +27,29 @@ const reduxify = (normalizedGqlResponse, operationAST, schemaDoc) => {
   rootFieldNameTypes.map(rootFieldNameType => {
     const {name, type} = rootFieldNameType;
     const reduxEntityName = getReduxEntityName(type);
-    console.log(reduxEntityName);
-    const {entities} = reduxFriendlyData;
 
-    renameKey(entities, reduxEntityName, name);
+    renameKey(entities, name, reduxEntityName);
+  });
+
+  // Make all plural entity keys singular.
+  // If both singular and plural keys exist, merge plural into singular.
+  Object.keys(entities).map(key => {
+    if (pluralize.isPlural(key)) {
+      const reduxEntityName = getReduxEntityName(key);
+
+      if (!entities.hasOwnProperty(reduxEntityName)) {
+
+        // Singular doesn't exist. Simply rename the property on the object.
+        renameKey(entities, key, reduxEntityName);
+      } else {
+        const reduxEntities = entities[reduxEntityName];
+        const pluralEntities = entities[key];
+
+        entities[reduxEntities] = _.merge({}, pluralEntities, reduxEntities);
+
+        delete entities[key];
+      }
+    }
   });
 
   return reduxFriendlyData;

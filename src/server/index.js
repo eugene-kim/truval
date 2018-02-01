@@ -70,13 +70,11 @@ app.get('/testQuery', async (req, res) => {
         id,
         name,
         start,
-        isComplete,
         activities {
           id,
           isComplete,
           session {
             id,
-            start,
             end,
             isComplete,
             activities {

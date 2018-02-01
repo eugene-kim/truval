@@ -5,7 +5,7 @@
 /**
  * Renames a key on an object and ensures that behavior of the new property is identical.
  */
-export function renameKey(object, newKey, oldKey) {
+export function renameKey(object, oldKey, newKey) {
   if (newKey !== oldKey) {
     Object.defineProperty(
       object,
