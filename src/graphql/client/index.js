@@ -9,6 +9,8 @@ import gqlSchema from '../schema';
 import reduxify from './reduxify';
 import containsQueryData from './containsQueryData';
 
+import {UPDATE_FROM_SERVER} from '~/redux/actions/types';
+
 
 export default {
 
@@ -36,6 +38,14 @@ export default {
         const normalizedData = normalize(responseObject, normalizrSchema);
         const reduxFriendlyData = reduxify(normalizedData, gqlOperationAST, schemaDoc);
 
+        store.dispatch({
+          type: UPDATE_FROM_SERVER,
+          payload: reduxFriendlyData,
+        });
+
+        // TODO: We don't need to be returning back this data when we're using the client.
+        // We'll probably we sending back something like a response object indicating the status
+        // of the GraphQL request.
         return reduxFriendlyData;
       } catch(error) {
         console.log(error);
