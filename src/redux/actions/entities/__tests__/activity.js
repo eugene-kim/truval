@@ -1,5 +1,5 @@
 import {addActivity, editActivity, deleteActivity} from '../activity';
-import types from '../../types';
+import {ADD_ACTIVITY, EDIT_ACTIVITY, DELETE_ACTIVITY} from '../../types';
 
 
 describe('activity actions', () => {
@@ -18,7 +18,7 @@ describe('activity actions', () => {
   describe('add activity', () => {
     it('should create an action to add a activity', () => {
       const expected = {
-        type: types.ADD_ACTIVITY,
+        type: ADD_ACTIVITY,
         payload: {activity},
       };
       const addActivityAction = addActivity(activity);
@@ -34,7 +34,7 @@ describe('activity actions', () => {
 
     it('should create an action to edit a activity', () => {
       const expected = {
-        type: types.EDIT_ACTIVITY,
+        type: EDIT_ACTIVITY,
         payload: {newProps, id},
       };
       const editActivityAction = editActivity(id, newProps);
@@ -46,7 +46,7 @@ describe('activity actions', () => {
   describe('delete activity', () => {
     it('should create an action to delete a activity', () => {
       const expected = {
-        type: types.DELETE_ACTIVITY,
+        type: DELETE_ACTIVITY,
         payload: id
       };
       const deleteActivityAction = deleteActivity(id);

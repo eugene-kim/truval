@@ -1,36 +1,21 @@
 import _ from 'lodash';
-import types from '../../actions/types';
+import {ADD_USER, EDIT_USER, DELETE_USER, UPDATE_FROM_SERVER} from '../../actions/types';
+import {addEntity, editEntity, deleteEntity, hydrateEntities} from '../commonReducers';
 
 
 const reduceUserEntities = function(userEntities = {}, action) {
   switch(action.type) {
-    case types.ADD_USER: {
-      const {payload} = action;
-      const {user} = payload;
-
-      return _.merge({}, userEntities, {[user.id]: user});
+    case ADD_USER: {
+      return addEntity(userEntities, action, 'user');
     }
-    case types.EDIT_USER: {
-      const {payload} = action;
-      const {id, newProps} = payload;
-      const user = userEntities[id];
-      const updatedUser = _.merge({}, user, newProps);
-
-      return _.merge({}, userEntities, {[id]: updatedUser});
+    case EDIT_USER: {
+      return editEntity(userEntities, action);
     }
-    case types.DELETE_USER: {
-      const deleteUserId = action.payload;
-      const remainingEntities = {};
-
-      _.mapKeys(userEntities, (user, userId) => {
-        if (deleteUserId !== parseInt(userId)) {
-          const user = userEntities[deleteUserId];
-
-          remainingEntities[userId] = user;
-        }
-      });
-
-      return remainingEntities;
+    case DELETE_USER: {
+      return deleteEntity(userEntities, action);
+    }
+    case UPDATE_FROM_SERVER: {
+      return hydrateEntities(userEntities, action, 'user');
     }
     default:
       return userEntities;

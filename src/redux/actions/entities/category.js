@@ -1,23 +1,23 @@
-import types from '../types';
+import {ADD_CATEGORY, EDIT_CATEGORY, DELETE_CATEGORY} from '../types';
 
 
 const addCategory = (category = {}) => {
   return {
-    type: types.ADD_CATEGORY,
+    type: ADD_CATEGORY,
     payload: {category},
   };
 };
 
 const editCategory = (id, newProps = {}) => {
   return {
-    type: types.EDIT_CATEGORY,
+    type: EDIT_CATEGORY,
     payload: {id, newProps},
   };
 };
 
 const deleteCategory = id => {
   return {
-    type: types.DELETE_CATEGORY,
+    type: DELETE_CATEGORY,
     payload: id,
   };
 };

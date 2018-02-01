@@ -1,0 +1,186 @@
+{
+  "entities": {
+    "activities": {
+      "1": {
+        "id": "1",
+        "name": "Write seed data"
+      },
+      "2": {
+        "id": "2",
+        "name": "Lunch"
+      },
+      "3": {
+        "id": "3",
+        "name": "Poop"
+      },
+      "4": {
+        "id": "4",
+        "name": "Write test cases"
+      },
+      "5": {
+        "id": "5",
+        "name": "Cheer up girlfriend"
+      },
+      "6": {
+        "id": "6",
+        "name": "Reddit"
+      },
+      "7": {
+        "id": "7",
+        "name": "Write seed data"
+      },
+      "8": {
+        "id": "8",
+        "name": "Cheer up girlfriend"
+      },
+      "9": {
+        "id": "9",
+        "name": "Write seed data"
+      },
+      "10": {
+        "id": "10",
+        "name": "Lunch"
+      },
+      "11": {
+        "id": "11",
+        "name": "Poop"
+      },
+      "12": {
+        "id": "12",
+        "name": "Write test cases"
+      },
+      "13": {
+        "id": "13",
+        "name": "Cheer up girlfriend"
+      },
+      "14": {
+        "id": "14",
+        "name": "Reddit"
+      },
+      "15": {
+        "id": "15",
+        "name": "Write seed data"
+      },
+      "16": {
+        "id": "16",
+        "name": "Cheer up girlfriend"
+      },
+      "17": {
+        "id": "17",
+        "name": "Write seed data"
+      },
+      "18": {
+        "id": "18",
+        "name": "Lunch"
+      },
+      "19": {
+        "id": "19",
+        "name": "Poop"
+      },
+      "20": {
+        "id": "20",
+        "name": "Write test cases"
+      },
+      "21": {
+        "id": "21",
+        "name": "Cheer up girlfriend"
+      },
+      "22": {
+        "id": "22",
+        "name": "Reddit"
+      },
+      "23": {
+        "id": "23",
+        "name": "Write seed data"
+      },
+      "24": {
+        "id": "24",
+        "name": "Cheer up girlfriend"
+      }
+    },
+    "sessions": {
+      "1": {
+        "id": "1",
+        "name": "Study Session 1",
+        "start": "2017-10-21T15:51:09.489-07:00",
+        "activities": [
+          "1",
+          "2",
+          "3",
+          "4",
+          "5",
+          "6",
+          "7",
+          "8"
+        ]
+      },
+      "2": {
+        "id": "2",
+        "name": "Study Session 2",
+        "start": "2017-10-21T15:51:09.489-07:00",
+        "activities": [
+          "9",
+          "10",
+          "11",
+          "12",
+          "13",
+          "14",
+          "15",
+          "16"
+        ]
+      },
+      "3": {
+        "id": "3",
+        "name": "Study Session 3",
+        "start": "2017-10-21T15:51:09.489-07:00",
+        "activities": [
+          "17",
+          "18",
+          "19",
+          "20",
+          "21",
+          "22",
+          "23",
+          "24"
+        ]
+      },
+      "7": {
+        "id": "7",
+        "name": "new session",
+        "start": "2017-10-21T15:51:09.489-07:00",
+        "activities": []
+      },
+      "8": {
+        "id": "8",
+        "name": "new session",
+        "start": "2017-10-21T15:51:09.489-07:00",
+        "activities": []
+      },
+      "9": {
+        "id": "9",
+        "name": "new session",
+        "start": "2017-10-21T15:51:09.489-07:00",
+        "activities": []
+      }
+    },
+    "updateUser": {
+      "1": {
+        "id": "1",
+        "username": "the hugest",
+        "sessions": [
+          "1",
+          "2",
+          "3",
+          "7",
+          "8",
+          "9"
+        ]
+      }
+    }
+  },
+  "result": {
+    "data": {
+      "updateUser": "1"
+    }
+  }
+}

@@ -1,5 +1,5 @@
 import {addSession, editSession, deleteSession} from '../session';
-import types from '../../types';
+import {ADD_SESSION, EDIT_SESSION, DELETE_SESSION} from '../../types';
 
 
 describe('session actions', () => {
@@ -16,7 +16,7 @@ describe('session actions', () => {
   describe('add session', () => {
     it('should create an action to add a session', () => {
       const expected = {
-        type: types.ADD_SESSION,
+        type: ADD_SESSION,
         payload: {session},
       };
       const addSessionAction = addSession(session);
@@ -32,7 +32,7 @@ describe('session actions', () => {
 
     it('should create an action to edit a session', () => {
       const expected = {
-        type: types.EDIT_SESSION,
+        type: EDIT_SESSION,
         payload: {newProps, id},
       };
       const editSessionAction = editSession(id, newProps);
@@ -44,7 +44,7 @@ describe('session actions', () => {
   describe('delete session', () => {
     it('should create an action to delete a session', () => {
       const expected = {
-        type: types.DELETE_SESSION,
+        type: DELETE_SESSION,
         payload: id
       };
       const deleteSessionAction = deleteSession(id);

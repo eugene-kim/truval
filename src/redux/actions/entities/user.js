@@ -1,23 +1,23 @@
-import types from '../types';
+import {ADD_USER, EDIT_USER, DELETE_USER} from '../types';
 
 
 const addUser = (user = {}) => {
   return {
-    type: types.ADD_USER,
+    type: ADD_USER,
     payload: {user},
   };
 };
 
 const editUser = (id, newProps = {}) => {
   return {
-    type: types.EDIT_USER,
+    type: EDIT_USER,
     payload: {id, newProps},
   };
 };
 
 const deleteUser = id => {
   return {
-    type: types.DELETE_USER,
+    type: DELETE_USER,
     payload: id,
   };
 };

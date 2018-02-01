@@ -1,34 +1,21 @@
 import _ from 'lodash';
-import types from '../../actions/types';
+import {ADD_CATEGORY, EDIT_CATEGORY, DELETE_CATEGORY, UPDATE_FROM_SERVER} from '../../actions/types';
+import {addEntity, editEntity, deleteEntity, hydrateEntities} from '../commonReducers';
 
 
 const categoryEntities = function(categoryEntities = {}, action) {
   switch(action.type) {
-    case types.ADD_CATEGORY: {
-      const {category} = action.payload;
-
-      return _.merge({}, categoryEntities, {[category.id]: category});
+    case ADD_CATEGORY: {
+      return addEntity(categoryEntities, action, 'category');
     }
-    case types.EDIT_CATEGORY: {
-      const {id, newProps} = action.payload;
-      const category = categoryEntities[id];
-      const updatedCategory = _.merge({}, category, newProps);
-
-      return _.merge({}, categoryEntities, {[id]: updatedCategory});
+    case EDIT_CATEGORY: {
+      return editEntity(categoryEntities, action);
     }
-    case types.DELETE_CATEGORY: {
-      const {id} = action.payload;
-      const remainingEntities = {};
-
-      _.mapKeys(sessionEntities, (category, categoryId) => {
-        if (id !== parseInt(categoryId)) {
-          const category = categoryEntities[categoryId];
-
-          remainingEntities[categoryId] = category;
-        }
-      });
-
-      return remainingEntities;
+    case DELETE_CATEGORY: {
+      return deleteEntity(categoryEntities, action);
+    }
+    case UPDATE_FROM_SERVER: {
+      return hydrateEntities(categoryEntities, action, 'category');
     }
     default:
       return categoryEntities;

@@ -1,5 +1,5 @@
 import {addCategory, editCategory, deleteCategory} from '../category';
-import types from '../../types';
+import {ADD_CATEGORY, EDIT_CATEGORY, DELETE_CATEGORY} from '../../types';
 
 
 describe('category actions', () => {
@@ -15,7 +15,7 @@ describe('category actions', () => {
   describe('add category', () => {
     it('should create an action to add a category', () => {
       const expected = {
-        type: types.ADD_CATEGORY,
+        type: ADD_CATEGORY,
         payload: {category},
       };
       const addCategoryAction = addCategory(category);
@@ -31,7 +31,7 @@ describe('category actions', () => {
 
     it('should create an action to edit a category', () => {
       const expected = {
-        type: types.EDIT_CATEGORY,
+        type: EDIT_CATEGORY,
         payload: {newProps, id},
       };
       const editCategoryAction = editCategory(id, newProps);
@@ -43,7 +43,7 @@ describe('category actions', () => {
   describe('delete category', () => {
     it('should create an action to delete a category', () => {
       const expected = {
-        type: types.DELETE_CATEGORY,
+        type: DELETE_CATEGORY,
         payload: id
       };
       const deleteCategoryAction = deleteCategory(id);

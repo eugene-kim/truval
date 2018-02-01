@@ -1,34 +1,21 @@
 import _ from 'lodash';
-import types from '../../actions/types';
+import {ADD_ACTIVITY, EDIT_ACTIVITY, DELETE_ACTIVITY, UPDATE_FROM_SERVER} from '../../actions/types';
+import {addEntity, editEntity, deleteEntity, hydrateEntities} from '../commonReducers';
 
 
 const activityEntities = function(activityEntities = {}, action) {
   switch(action.type) {
-    case types.ADD_ACTIVITY: {
-      const {activity} = action.payload;
-
-      return _.merge({}, activityEntities, {[activity.id]: activity});
+    case ADD_ACTIVITY: {
+      return addEntity(activityEntities, action, 'activity');
     }
-    case types.EDIT_ACTIVITY: {
-      const {id, newProps} = action.payload;
-      const activity = activityEntities[id];
-      const updatedActivity = _.merge({}, activity, newProps);
-
-      return _.merge({}, activityEntities, {[id]: updatedActivity});
+    case EDIT_ACTIVITY: {
+      return editEntity(activityEntities, action);
     }
-    case types.DELETE_ACTIVITY: {
-      const deleteActivityId = action.payload;
-      const remainingEntities = {};
-
-      _.mapKeys(sessionEntities, (activity, activityId) => {
-        if (deleteActivityId !== parseInt(activityId)) {
-          const activity = activityEntities[activityId];
-
-          remainingEntities[activityId] = activity;
-        }
-      });
-
-      return remainingEntities;
+    case DELETE_ACTIVITY: {
+      return deleteEntity(activityEntities, action);
+    }
+    case UPDATE_FROM_SERVER: {
+      return hydrateEntities(activityEntities, action, 'activity');
     }
     default:
       return activityEntities;

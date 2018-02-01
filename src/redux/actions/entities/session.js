@@ -1,23 +1,23 @@
-import types from '../types';
+import {ADD_SESSION, EDIT_SESSION, DELETE_SESSION} from '../types';
 
 
 const addSession = (session = {}) => {
   return {
-    type: types.ADD_SESSION,
+    type: ADD_SESSION,
     payload: {session},
   };
 };
 
 const editSession = (id, newProps = {}) => {
   return {
-    type: types.EDIT_SESSION,
+    type: EDIT_SESSION,
     payload: {id, newProps},
   };
 };
 
 const deleteSession = (id) => {
   return {
-    type: types.DELETE_SESSION,
+    type: DELETE_SESSION,
     payload: id,
   };
 };
