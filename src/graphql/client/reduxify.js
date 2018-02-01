@@ -15,7 +15,7 @@ import {renameKey} from '~/libs/util/objectUtil';
 const reduxify = (normalizedGqlResponse, operationAST, schemaDoc) => {
 
   // TODO: If the normalized response is too big, we might want to use an immutable library
-  // like Immutable.js to increase our performance.
+  // like Immutable.js to increase performance.
   const reduxFriendlyData = _.cloneDeep(normalizedGqlResponse);
   const {entities} = reduxFriendlyData;
 
@@ -40,6 +40,7 @@ const reduxify = (normalizedGqlResponse, operationAST, schemaDoc) => {
     if (pluralize.isPlural(key)) {
       const reduxEntityName = getReduxEntityName(key);
 
+      // plural and redux entity name exist. Merge the two together and delete plural key.
       if (entities.hasOwnProperty(reduxEntityName)) {
         const reduxEntities = entities[reduxEntityName];
         const pluralEntities = entities[key];
