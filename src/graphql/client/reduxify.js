@@ -37,17 +37,15 @@ const reduxify = (normalizedGqlResponse, operationAST, schemaDoc) => {
     if (pluralize.isPlural(key)) {
       const reduxEntityName = getReduxEntityName(key);
 
-      if (!entities.hasOwnProperty(reduxEntityName)) {
-
-        // Singular doesn't exist. Simply rename the property on the object.
-        renameKey(entities, key, reduxEntityName);
-      } else {
+      if (entities.hasOwnProperty(reduxEntityName)) {
         const reduxEntities = entities[reduxEntityName];
         const pluralEntities = entities[key];
 
-        entities[reduxEntities] = _.merge({}, pluralEntities, reduxEntities);
+        entities[reduxEntityName] = _.merge({}, pluralEntities, reduxEntities);
 
         delete entities[key];
+      } else { // Only plural key exists. Simply rename the property on the object.
+        renameKey(entities, key, reduxEntityName);
       }
     }
   });

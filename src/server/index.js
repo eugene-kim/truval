@@ -60,6 +60,38 @@ app.get('/testMutation', async (req, res) => {
   }
 });
 app.get('/testQuery', async (req, res) => {
+  // const queryString = `query {
+  //   user(id:1) {
+  //     id,
+  //     username,
+  //     email,
+  //     password,
+  //     sessions {
+  //       id,
+  //       name,
+  //       start,
+  //       activities {
+  //         id,
+  //         isComplete,
+  //         session {
+  //           id,
+  //           end,
+  //           isComplete,
+  //           activities {
+  //             id,
+  //             start,
+  //             end,
+  //           }
+  //         },
+  //         category {
+  //           id,
+  //           color,
+  //           name
+  //         }
+  //       }
+  //     }
+  //   }
+  // }`;
   const queryString = `query {
     user(id:1) {
       id,
@@ -83,11 +115,6 @@ app.get('/testQuery', async (req, res) => {
               end,
             }
           },
-          category {
-            id,
-            color,
-            name
-          }
         }
       }
     }
