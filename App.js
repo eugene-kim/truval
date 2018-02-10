@@ -1,23 +1,34 @@
+// Module Imports
 import React, {Component} from 'react'; 
-import SessionScreen from 'src/View/SessionScreen/SessionScreen';
+import PropTypes from 'prop-types';
+import { createStore } from 'redux';
+import { Provider } from 'react-redux';
 
-import { ApolloProvider } from 'react-apollo';
-import { ApolloClient } from 'apollo-client';
-import { HttpLink } from 'apollo-link-http';
-import { InMemoryCache } from 'apollo-cache-inmemory';
-import gql from 'graphql-tag';
+// Local Imports
+import SessionScreen from './src/view/SessionScreen/SessionScreen';
+import getGqlClient from './src/graphql/client';
+import rootReducer from './src/redux/reducers/root';
 
-const client = new ApolloClient({
-  link: new HttpLink({uri: 'http://localhost:3000/graphql'}),
-  cache: new InMemoryCache(),
-});
+
+const gqlClient = getGqlClient();
+const store = createStore(rootReducer);
 
 class FocusApp extends Component {
+  static childContextTypes = {
+    gqlClient: PropTypes.object.isRequired,
+  }
+
+  getChildContext() {
+    return {
+      gqlClient,
+    };
+  }
+
   render() {
     return (
-  		<ApolloProvider client={client}>
+      <Provider store={store}>
         <SessionScreen sessionId={1} />
-      </ApolloProvider>
+      </Provider>
     );
   }
 };

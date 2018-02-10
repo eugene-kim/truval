@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import astReader from './astReader';
 import pluralize from 'pluralize';
-import {renameKey} from '~/libs/util/objectUtil';
+import {renameKey} from 'libs/util/objectUtil';
 
 
 /**

@@ -1,38 +1,64 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {StyleSheet, View, Text} from 'react-native';
-import gql from 'graphql-tag';
-import { graphql } from 'react-apollo';
+import { connect } from 'react-redux'
+
+// Containers
+import GqlContainer from '../containers/GraphQLContainer';
 
 // Components
 import AddActivityInput from './AddActivityInput/AddActivityInput';
 import ActivityList from './ActivityList';
 
+// Naive implementation.
+@GraphQLContainer(state => {
+  const sessionId = state.current.session;
 
-export const SessionActivitiesQuery = gql`
-  query SessionActivities($sessionId: ID!){
-    session(id: $sessionId) {
-      id,
-      name,
-      start,
-      end,
-      isComplete,
-      activities {
+  return (
+    `query {
+      session(id: ${sessionId}) {
         id,
         name,
         start,
         end,
         isComplete,
-        duration,
-        categoryId
+        activities {
+          id,
+          name,
+          start,
+          end,
+          isComplete,
+          duration,
+          categoryId
+        }
       }
-    }
-  }
-`;
-@graphql(SessionActivitiesQuery, {
-  options: props => ({id: props.sessionId}),
-  props: ({data: {loading, session}}) => ({loading, session}),
+    }`
+  );
 })
+@connect(
+  (() => {
+    const mapStateToProps = state => {
+      const sessionId = state.current.session;
+
+      return {
+        session: state.entities.session[sessionId],
+        activities: getSessionActivities(state, sessionId),
+      }
+    };
+
+    const getSessionActivities = (state, sessionId) => {
+      const activityIds = state.entities.session[sessionId].activities;
+
+      return activityIds.reduce((accum, activityId) => {
+        const activity = state.entities.activity[activityId];
+
+        return activity ? accum.concat(activity) : accum;
+      }, []);
+    };
+
+    return mapStateToProps;
+  })()
+)
 class SessionScreen extends Component {
 
   static propTypes = {
@@ -40,6 +66,9 @@ class SessionScreen extends Component {
     // Not sure if I should make this required when it might not be
     // available on screen load.
     session: PropTypes.object,
+
+    // TODO: Use a proper proptype later
+    activities: PropType.array,
     loading: PropTypes.bool.isRequired,
   };
 

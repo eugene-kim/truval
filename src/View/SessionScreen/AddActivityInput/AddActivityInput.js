@@ -4,7 +4,7 @@ import {StyleSheet, Text, View} from 'react-native';
 import gql from 'graphql-tag';
 import { graphql } from 'react-apollo';
 
-import Datetime from 'library/util/Datetime';
+import Datetime from 'libs/util/Datetime';
 
 // Components
 import ActivityTimeInput from './ActivityTimeInput';
