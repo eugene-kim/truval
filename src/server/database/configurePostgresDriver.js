@@ -1,5 +1,8 @@
-const _ = require('lodash');
-const pgTypes = require('pg').types;
+import _ = from 'lodash';
+import pg = from 'pg';
+
+
+const pgTypes = pg.types;
 
 /**
  * Configures the Postgres driver.
@@ -52,4 +55,4 @@ const configurePostgresDriver = _.once(() => {
 });
 
 
-module.exports = configurePostgresDriver;
+export default configurePostgresDriver;

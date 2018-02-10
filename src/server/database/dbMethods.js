@@ -1,5 +1,6 @@
-const _ = require('lodash');
-const knex = require('./index.js');
+import _ from 'lodash';
+import knex from './index';
+
 
 /**
  * Creates an instance of a GraphQL Type in Postgres and returns the newly
@@ -113,7 +114,7 @@ const toCamelCaseKeys = object => _.mapKeys(object, (value, key) => _.camelCase(
 const toSnakeCaseKeys = object => _.mapKeys(object, (value, key) => _.snakeCase(key));
 
 
-module.exports = {
+export default {
   createModelInstance,
   updateModelInstance,
   getModelInstance,

@@ -1,4 +1,3 @@
-
 exports.seed = async function(knex, Promise) {
   const table = 'user';
 
