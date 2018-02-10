@@ -31,6 +31,16 @@ const focusApp = function(state = {}, action) {
       },
     },
 
+    // Contains pointers to the currently rendered or selected object.
+    current: {
+      user: undefined,
+
+      // TODO: Remove after finishing testing.
+      session: 1,
+      activity: undefined,
+      category: undefined,
+    },
+
     ordered: {
       sessionActivities: reduceSessionActivities(sessionActivities, action),
     },

@@ -4,7 +4,7 @@ import {StyleSheet, View, Text} from 'react-native';
 import { connect } from 'react-redux'
 
 // Containers
-import GqlContainer from '../containers/GraphQLContainer';
+import GraphQLContainer from '../containers/GraphQLContainer';
 
 // Components
 import AddActivityInput from './AddActivityInput/AddActivityInput';
@@ -41,13 +41,13 @@ import ActivityList from './ActivityList';
       const sessionId = state.current.session;
 
       return {
-        session: state.entities.session[sessionId],
+        session: state.entities.session.entities[sessionId],
         activities: getSessionActivities(state, sessionId),
       }
     };
 
     const getSessionActivities = (state, sessionId) => {
-      const activityIds = state.entities.session[sessionId].activities;
+      const activityIds = state.entities.session.entities[sessionId].activities;
 
       return activityIds.reduce((accum, activityId) => {
         const activity = state.entities.activity[activityId];
@@ -68,19 +68,19 @@ class SessionScreen extends Component {
     session: PropTypes.object,
 
     // TODO: Use a proper proptype later
-    activities: PropType.array,
-    loading: PropTypes.bool.isRequired,
+    activities: PropTypes.array,
+    isLoading: PropTypes.bool.isRequired,
   };
 
   // --------------------------------------------------
   // Render
   // --------------------------------------------------
   render() {
-    const {loading, session} = this.props;
-    const isLoaded = !loading && session;
+    const {isLoading, session} = this.props;
+    const didLoad = !isLoading && session;
 
     // TODO: Come up with a proper solution for loading.
-    if (!isLoaded) {
+    if (!didLoad) {
       return (
         <Text>
           {'Loading...'}
@@ -97,7 +97,7 @@ class SessionScreen extends Component {
           sessionId={parseInt(id)}
         />
         <ActivityList
-          isLoading={loading}
+          isLoading={isLoading}
           activities={activities}
         />
       </View>

@@ -1,10 +1,9 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {StyleSheet, Text, View} from 'react-native';
-import gql from 'graphql-tag';
-import { graphql } from 'react-apollo';
 
 import Datetime from 'libs/util/Datetime';
+import bind from 'libs/decorators/bind';
 
 // Components
 import ActivityTimeInput from './ActivityTimeInput';
@@ -12,75 +11,8 @@ import ActivityCategoryInput from './ActivityCategoryInput';
 import ActivityNameInput from './ActivityNameInput';
 import ActivitySubmitButton from './ActivitySubmitButton';
 
-import {SessionActivitiesQuery} from '../SessionScreen';
 
-
-const createActivityMutation = gql`
-  mutation createActivity(
-    $sessionId: ID!,
-    $name: String!,
-    $start: String!,
-    $categoryId: ID!,
-    $isComplete: Boolean!,
-
-    # Optional
-    $end: String,
-    $duration: Int,
-  ) {
-    createActivity(
-      name: $name,
-      start: $start,
-      categoryId: $categoryId,
-      sessionId: $sessionId,
-      isComplete: $isComplete,
-
-      # Optional
-      end: $end,
-      duration: $duration,
-    ) {
-      name, start, categoryId
-    }
-  }
-`;
-
-@graphql(createActivityMutation, {
-  props: ({mutate}) => ({
-
-    // Generates a submit handler based on the provided activity.
-    // TODO: This should fire off another mutaiton that completes currently running event.
-    generateOnSubmit: (newActivity = {}) => () => { 
-      const {name, start, isComplete, categoryId, sessionId} = newActivity;
-
-      mutate({
-        variables: {
-          ...newActivity,
-          isComplete,
-          end: null,
-          duration: null,
-        },
-        update: (store, {data: { createActivity }}) => {
-          const data = store.readQuery({
-            query: SessionActivitiesQuery,
-            variables: {sessionId},
-          });
-          console.log('data retrieved from store');
-          console.log(data);
-          const {activities} = data.session;
-
-          activities.unshift(newActivity);
-
-          store.writeQuery({
-            query: SessionActivitiesQuery,
-            variables: {sessionId},
-            data,
-          });
-        },
-      });
-    },
-  }),
-})
 class AddActivityInput extends Component {
-
   constructor(props) {
     super(props);
 
@@ -95,7 +27,6 @@ class AddActivityInput extends Component {
   // Props
   // --------------------------------------------------
   static propTypes = {
-    generateOnSubmit: PropTypes.func.isRequired,
     sessionId: PropTypes.number.isRequired,
   };
 
@@ -119,26 +50,30 @@ class AddActivityInput extends Component {
     datetime.isNewMinute() && this.setState({activityStartTime: datetime.toString()});
   }
 
-  extractValueFromEvent = event => event.nativeEvent.text
+  extractValueFromEvent(event) {
+    return event.nativeEvent.text;
+  }
 
   // --------------------------------------------------
   // Callbacks
   // --------------------------------------------------
 
-  // TODO: Make newTime a datetime object instead of a String.
-  handleTimeChange = event => {
+  @bind
+  handleTimeChange (event) {
     const activityStartTime = this.extractValueFromEvent(event);
 
     this.setState({activityStartTime});
   }
 
-  handleCategoryChange = event => {
+  @bind
+  handleCategoryChange (event) {
     const activityCategory = this.extractValueFromEvent(event);
 
     this.setState({activityCategory});
   }
 
-  handleNameChange = event => {
+  @bind
+  handleNameChange (event) {
     const activityName = this.extractValueFromEvent(event);
 
     this.setState({activityName});
@@ -148,8 +83,7 @@ class AddActivityInput extends Component {
   // Render
   // --------------------------------------------------
   render() {
-    console.log('SessionActivitiesQuery', SessionActivitiesQuery);
-    const {generateOnSubmit, sessionId} = this.props;
+    const {sessionId} = this.props;
     const {activityStartTime, activityCategory, activityName} = this.state;
     const newActivity = {
       sessionId,
@@ -158,8 +92,8 @@ class AddActivityInput extends Component {
       categoryId: parseInt(activityCategory),
       isComplete: false,
     };
-    const onSubmit = generateOnSubmit(newActivity);
 
+    // Not rendering the submit button for now
     return (
       <View style={styles.container}>
         <View style={styles.inputContainer}>
@@ -179,9 +113,6 @@ class AddActivityInput extends Component {
             style={styles.categoryInput}
           />
         </View>
-        <ActivitySubmitButton
-          onSubmit={onSubmit}
-        />
       </View>
     );
   }

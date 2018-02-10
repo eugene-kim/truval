@@ -8,13 +8,16 @@ import { Provider } from 'react-redux';
 import SessionScreen from './src/view/SessionScreen/SessionScreen';
 import getGqlClient from './src/graphql/client';
 import rootReducer from './src/redux/reducers/root';
+import initialState from './src/redux/store/initialState';
 
 
 const gqlClient = getGqlClient();
-const store = createStore(rootReducer);
+const store = createStore(rootReducer, initialState);
 
 class FocusApp extends Component {
   static childContextTypes = {
+
+    // TODO: Create a proper proptype
     gqlClient: PropTypes.object.isRequired,
   }
 
