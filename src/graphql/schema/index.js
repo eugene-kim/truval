@@ -4,7 +4,10 @@ import resolvers from './resolvers';
 import typeDefs from './types/typeDefs';
 
 
-export default makeExecutableSchema({
+const schema = makeExecutableSchema({
   typeDefs,
   resolvers,
 });
+
+
+export default schema;

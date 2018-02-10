@@ -4,11 +4,11 @@ import {parse} from 'graphql/language/parser';
 import {introspectionQuery} from 'graphql/utilities';
 
 import normalizeGql from './normalizeGql';
-import gqlSchema from '../schema';
+import gqlSchema from '../schema/typeDefSchema';
 import reduxify from './reduxify';
 import containsQueryData from './containsQueryData';
 
-import {UPDATE_FROM_SERVER} from 'redux/actions/types';
+import { UPDATE_FROM_SERVER } from 'redux/actions/types';
 
 
 export default ({endpoint = 'http://localhost:3000/graphql'} = {}) => {

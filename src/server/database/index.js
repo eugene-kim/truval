@@ -7,4 +7,5 @@ const knexInstance = knex(config[env]);
 
 knexInstance.migrate.latest(config);
 
+
 export default knexInstance;

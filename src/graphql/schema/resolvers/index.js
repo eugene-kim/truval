@@ -1,9 +1,9 @@
-const {merge} = require('lodash');
+import { merge } from 'lodash';
 
-const UserResolvers = require('./UserResolvers');
-const SessionResolvers = require('./SessionResolvers');
-const ActivityResolvers = require('./ActivityResolvers');
-const CategoryResolvers = require('./CategoryResolvers');
+import UserResolvers from './UserResolvers';
+import SessionResolvers from './SessionResolvers';
+import ActivityResolvers from './ActivityResolvers';
+import CategoryResolvers from './CategoryResolvers';
 
 
 export default merge(UserResolvers, SessionResolvers, ActivityResolvers, CategoryResolvers);

@@ -1,5 +1,5 @@
-import _ = from 'lodash';
-import pg = from 'pg';
+import _ from 'lodash';
+import pg from 'pg';
 
 
 const pgTypes = pg.types;

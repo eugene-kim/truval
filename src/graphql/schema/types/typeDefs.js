@@ -32,7 +32,7 @@ const typeDefs = `
     end: String
     isComplete: Boolean!
     duration: Int
-    categoryId: Int!
+    category: Category!
     session: Session!
   }
 

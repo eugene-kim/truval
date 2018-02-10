@@ -13,7 +13,7 @@ import configurePostgresDriver from './database/configurePostgresDriver';
 configurePostgresDriver();
 
 import db from './database';
-import schema from '../graphql/schema';
+import schema from 'graphql/schema';
 
 import {createStore} from 'redux';
 import reducer from 'redux/reducers';
@@ -51,7 +51,7 @@ app.get('/testMutation', async (req, res) => {
   }`;
 
   try {
-    const normalizedData = await gqlClient.query(mutationString, store);
+    const normalizedData = await gqlClient().query(mutationString, store);
 
     res.setHeader('Content-Type', 'application/json');
     res.send(JSON.stringify(normalizedData));
@@ -126,7 +126,7 @@ app.get('/testQuery', async (req, res) => {
   // }`;
 
   try {
-    const normalizedData = await gqlClient.query(queryString, store);
+    const normalizedData = await gqlClient().query(queryString, store);
 
     res.setHeader('Content-Type', 'application/json');
     res.send(JSON.stringify(normalizedData));
