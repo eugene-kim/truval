@@ -25,7 +25,7 @@ export default {
     session: 1,
     activity: undefined,
     category: undefined,
-  }
+  },
 
   // Contains items that need to be ordered in some way, such as a Session's activities
   // or sessions.

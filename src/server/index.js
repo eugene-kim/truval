@@ -16,7 +16,7 @@ import db from './database';
 import schema from 'graphql/schema';
 
 import {createStore} from 'redux';
-import reducer from 'redux/reducers';
+import reducer from 'redux/reducers/root';
 import initialState from 'redux/store/initialState';
 
 var app = express();
