@@ -1,9 +1,7 @@
-'use strict';
+import Activity from 'server/models/Activity';
 
 
-const Activity = require('../../../server/models/Activity');
-
-const activityResolvers = {
+export default {
   Query: {
     activity: (root, {id}) => Activity.getActivity(id),
   },
@@ -29,6 +27,3 @@ const activityResolvers = {
     session: (activity, args) => Activity.getSession(activity.id),
   },
 };
-
-
-module.exports = activityResolvers;

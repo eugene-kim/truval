@@ -20,4 +20,4 @@ const userTypeDef = `
 `;
 
 
-module.exports = userTypeDef;
+export default userTypeDef;

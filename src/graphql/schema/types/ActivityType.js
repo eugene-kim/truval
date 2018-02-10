@@ -48,4 +48,4 @@ const activityTypeDef = `
 `;
 
 
-module.exports = activityTypeDef
+export default activityTypeDef;

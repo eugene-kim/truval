@@ -1,10 +1,9 @@
-'use strict';
+import User from 'server/models/User';
+import Session from 'server/models/Session';
+import Category from 'server/models/Category';
 
-const User = require('../../../server/models/User');
-const Session = require('../../../server/models/Session');
-const Category = require('../../../server/models/Category');
 
-const userResolvers = {
+export default {
   Query: {
     user: (root, {id}) => User.getUser(id),
   },
@@ -25,6 +24,3 @@ const userResolvers = {
     categories: (user, args) => Category.getUserCategories(user.id),
   },
 };
-
-
-module.exports = userResolvers;

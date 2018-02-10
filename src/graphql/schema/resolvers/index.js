@@ -6,4 +6,4 @@ const ActivityResolvers = require('./ActivityResolvers');
 const CategoryResolvers = require('./CategoryResolvers');
 
 
-module.exports = merge(UserResolvers, SessionResolvers, ActivityResolvers, CategoryResolvers);
+export default merge(UserResolvers, SessionResolvers, ActivityResolvers, CategoryResolvers);
