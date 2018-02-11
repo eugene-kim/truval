@@ -51,7 +51,7 @@ export default ({endpoint = 'http://localhost:3000/graphql', store} = {}) => {
           }
 
           const gqlResponse = JSON.parse(responseBody);
-          const reduxFriendlyData = reduxify(gqlResponse, gqlOperationAST, schemaDoc);
+          const reduxFriendlyData = await reduxify(gqlResponse, gqlOperationAST, schemaDoc);
 
           store.dispatch({
             type: UPDATE_FROM_SERVER,

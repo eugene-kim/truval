@@ -71,6 +71,8 @@ class FocusApp extends Component {
 
     this.client.query(initialAppQuery)
     .then(response => {
+      console.log(store === this.client.getStore());
+
       this.setState({isLoading: false});
 
       console.log('Got response from server for initial query.');
