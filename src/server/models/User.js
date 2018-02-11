@@ -1,9 +1,9 @@
-const {
+import {
   createModelInstance,
   updateModelInstance,
   getModelInstance,
   deleteModelInstance,
-} = require('../database/dbMethods');
+} from '../database/dbMethods';
 
 const USER_COLUMNS = ['id', 'username', 'email', 'password'];
 const USER_TABLE = 'user';
@@ -16,4 +16,4 @@ const User = {
 };
 
 
-module.exports = User;
+export default User;

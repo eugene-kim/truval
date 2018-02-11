@@ -1,7 +1,7 @@
 import {schema} from 'normalizr';
 import {visit} from 'graphql/language/visitor';
-import astReader, {GQL_FIELD_TYPES} from './astReader';
 import _ from 'lodash';
+import astReader, {GQL_FIELD_TYPES} from '../astReader';
 
 const NORMALIZR_SCHEMA_TYPES = {
   ARRAY: 'ArraySchema',
@@ -12,7 +12,7 @@ const NORMALIZR_SCHEMA_TYPES = {
 };
 
 
-module.exports = (operationAST, schemaDoc) => {
+const normalizeGql = (operationAST, schemaDoc) => {
   const normalizrSchema = {};
   const stack = [];
   let operationSchema;
@@ -156,3 +156,6 @@ const createNormalizrSchema = (fieldName, {kind, name, ofType}) => {
       throw `Unknown field kind: ${kind}. Unable to create normalizr schema.`;
   }
 }
+
+
+export default normalizeGql;

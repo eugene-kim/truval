@@ -1,21 +1,22 @@
 {
-  "plugins": [
-    "transform-decorators-legacy",
-    "transform-class-properties",
-    ["babel-plugin-root-import", {
-      "rootPathSuffix": "src"
-    }],
-    [
-      "module-resolver",
-      {
-        "root": ["../../src"],
-        "extensions": [".js", ".ios.js", ".android.js"]
-      }
-    ]
-  ],
-
   // For more details:
   // https://github.com/facebook/react-native/blob/master/babel-preset/configs/main.js#L21
-  "presets": ["react-native", "babel-preset-env"],
-  "retainLines": true,
+  "presets": ["react-native"],
+
+  "plugins": [
+    [
+      "babel-plugin-module-resolver", {
+        "root": ["./src"],
+        "extensions": [
+          ".js",
+          ".ios.js",
+          ".android.js"
+        ]
+      }
+    ],
+    "transform-class-properties",
+    "transform-decorators-legacy",
+  ],
+
+  "retainLines": true
 }

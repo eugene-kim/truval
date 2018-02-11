@@ -1,4 +1,3 @@
-
 exports.seed = async function(knex, Promise) {
   const table = 'activity';
   // Deletes ALL existing entries

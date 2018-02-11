@@ -35,4 +35,4 @@ const categoryTypeDef = `
 `;
 
 
-module.exports = categoryTypeDef;
+export default categoryTypeDef;

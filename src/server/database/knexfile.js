@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   directory: 'src/server/database/migrations',
   development: {
     client: 'pg',

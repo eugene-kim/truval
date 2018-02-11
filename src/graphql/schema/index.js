@@ -1,16 +1,13 @@
-const { mergeTypes } = require('merge-graphql-schemas');
-const { makeExecutableSchema } = require('graphql-tools');
-const resolvers = require('./resolvers');
+import { makeExecutableSchema } from 'graphql-tools';
 
-const UserType = require('./types/UserType');
-const SessionType = require('./types/SessionType');
-const CategoryType = require('./types/CategoryType');
-const ActivityType = require('./types/ActivityType');
-
-const typeDefs = mergeTypes([UserType, SessionType, CategoryType, ActivityType]);
+import resolvers from './resolvers';
+import typeDefs from './types/typeDefs';
 
 
-module.exports = makeExecutableSchema({
+const schema = makeExecutableSchema({
   typeDefs,
   resolvers,
 });
+
+
+export default schema;

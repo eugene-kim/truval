@@ -5,13 +5,13 @@ import {parse} from 'graphql/language/parser';
 import _ from 'lodash';
 
 // Local imports
-import reduxify from '../reduxify';
-import gqlSchema from '../../schema';
+import makeReduxFriendly from '../makeReduxFriendly';
+import gqlSchema from 'graphql/schema/typeDefSchema';
 import normalizedQueryData from './resources/normalizedQueryData';
 import normalizedMutationData from './resources/normalizedMutationData';
 
 
-describe('test reduxify', () => {
+describe('test makeReduxFriendly', () => {
   let schemaDocumentWhole;
   let schemaDoc;
 
@@ -51,7 +51,7 @@ describe('test reduxify', () => {
       }`
     });
     set('queryAST', () => parse(query));
-    set('reduxFriendlyData', () => reduxify(normalizedQueryData, queryAST, schemaDoc));
+    set('reduxFriendlyData', () => makeReduxFriendly(normalizedQueryData, queryAST, schemaDoc));
     set('entities', () => reduxFriendlyData.entities);
 
     it('plural key sessions doesn\'t exist in reduxified data', () => {
@@ -99,7 +99,7 @@ describe('test reduxify', () => {
       }`
     });
     set('mutationAST', () => parse(mutation));
-    set('reduxFriendlyData', () => reduxify(normalizedMutationData, mutationAST, schemaDoc));
+    set('reduxFriendlyData', () => makeReduxFriendly(normalizedMutationData, mutationAST, schemaDoc));
     set('entities', () => reduxFriendlyData.entities);
 
     it('updateUser property has been replaced with redux entity name `user`', () => {

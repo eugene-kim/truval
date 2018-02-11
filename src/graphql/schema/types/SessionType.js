@@ -42,4 +42,4 @@ const sessionTypeDef = `
 `;
 
 
-module.exports = sessionTypeDef;
+export default sessionTypeDef;

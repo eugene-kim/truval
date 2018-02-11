@@ -1,9 +1,7 @@
-'use strict';
+import Category from 'server/models/Category';
 
 
-const Category = require('../../../server/models/Category');
-
-const resolvers = {
+export default {
   Query: {
     category: (obj, {id}) => Category.getCategory(id),
   },
@@ -18,6 +16,3 @@ const resolvers = {
     deleteCategory: (root, {id}) => Category.deleteCategory(id),
   },
 };
-
-
-module.exports = resolvers;

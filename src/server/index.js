@@ -13,11 +13,11 @@ import configurePostgresDriver from './database/configurePostgresDriver';
 configurePostgresDriver();
 
 import db from './database';
-import schema from '../graphql/schema';
+import schema from 'graphql/schema';
 
 import {createStore} from 'redux';
-import reducer from '~/redux/reducers';
-import initialState from '~/redux/store/initialState';
+import reducer from 'redux/reducers/root';
+import initialState from 'redux/store/initialState';
 
 var app = express();
 
@@ -33,107 +33,107 @@ app.use('/graphiql', graphiqlExpress({
 // Blank store for testing
 const store = createStore(reducer, initialState);
 
-app.get('/testMutation', async (req, res) => {
-  const mutationString = `mutation {
-    updateUser(id:1, username:"the hugest") {
-      id,
-      username,
-      sessions {
-        id,
-        name,
-        start,
-        activities {
-          id,
-          name
-        }
-      }
-    }
-  }`;
+// app.get('/testMutation', async (req, res) => {
+//   const mutationString = `mutation {
+//     updateUser(id:1, username:"the hugest") {
+//       id,
+//       username,
+//       sessions {
+//         id,
+//         name,
+//         start,
+//         activities {
+//           id,
+//           name
+//         }
+//       }
+//     }
+//   }`;
 
-  try {
-    const normalizedData = await gqlClient.query(mutationString, store);
+//   try {
+//     const normalizedData = await gqlClient().query(mutationString, store);
 
-    res.setHeader('Content-Type', 'application/json');
-    res.send(JSON.stringify(normalizedData));
-  } catch(error) {
-    console.log(error);
-  }
-});
-app.get('/testQuery', async (req, res) => {
-  // const queryString = `query {
-  //   user(id:1) {
-  //     id,
-  //     username,
-  //     email,
-  //     password,
-  //     sessions {
-  //       id,
-  //       name,
-  //       start,
-  //       activities {
-  //         id,
-  //         isComplete,
-  //         session {
-  //           id,
-  //           end,
-  //           isComplete,
-  //           activities {
-  //             id,
-  //             start,
-  //             end,
-  //           }
-  //         },
-  //         category {
-  //           id,
-  //           color,
-  //           name
-  //         }
-  //       }
-  //     }
-  //   }
-  // }`;
-  const queryString = `query {
-    user(id:1) {
-      id,
-      username,
-      email,
-      password,
-      sessions {
-        id,
-        name,
-        start,
-        activities {
-          id,
-          isComplete,
-          session {
-            id,
-            end,
-            isComplete,
-            activities {
-              id,
-              start,
-              end,
-            }
-          },
-        }
-      }
-    }
-  }`;
-  // const queryString = `query {
-  //   sessions(userId:1) {
-  //     id, name
-  //   }
-  // }`;
+//     res.setHeader('Content-Type', 'application/json');
+//     res.send(JSON.stringify(normalizedData));
+//   } catch(error) {
+//     console.log(error);
+//   }
+// });
+// app.get('/testQuery', async (req, res) => {
+//   // const queryString = `query {
+//   //   user(id:1) {
+//   //     id,
+//   //     username,
+//   //     email,
+//   //     password,
+//   //     sessions {
+//   //       id,
+//   //       name,
+//   //       start,
+//   //       activities {
+//   //         id,
+//   //         isComplete,
+//   //         session {
+//   //           id,
+//   //           end,
+//   //           isComplete,
+//   //           activities {
+//   //             id,
+//   //             start,
+//   //             end,
+//   //           }
+//   //         },
+//   //         category {
+//   //           id,
+//   //           color,
+//   //           name
+//   //         }
+//   //       }
+//   //     }
+//   //   }
+//   // }`;
+//   const queryString = `query {
+//     user(id:1) {
+//       id,
+//       username,
+//       email,
+//       password,
+//       sessions {
+//         id,
+//         name,
+//         start,
+//         activities {
+//           id,
+//           isComplete,
+//           session {
+//             id,
+//             end,
+//             isComplete,
+//             activities {
+//               id,
+//               start,
+//               end,
+//             }
+//           },
+//         }
+//       }
+//     }
+//   }`;
+//   // const queryString = `query {
+//   //   sessions(userId:1) {
+//   //     id, name
+//   //   }
+//   // }`;
 
-  try {
-    const normalizedData = await gqlClient.query(queryString, store);
+//   try {
+//     const normalizedData = await gqlClient().query(queryString, store);
 
-    res.setHeader('Content-Type', 'application/json');
-    res.send(JSON.stringify(normalizedData));
-  } catch(error) {
-    console.log(error);
-  }
-})
+//     res.setHeader('Content-Type', 'application/json');
+//     res.send(JSON.stringify(normalizedData));
+//   } catch(error) {
+//     console.log(error);
+//   }
+// })
 
 const PORT = 3000
 app.listen(PORT, () => {

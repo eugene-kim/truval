@@ -8,7 +8,7 @@ import util from 'util';
 
 // Local imports
 import normalizeGql from '../normalizeGql';
-import gqlSchema from '../../schema';
+import gqlSchema from 'graphql/schema/typeDefSchema';
 
 
 let schemaDocumentWhole;

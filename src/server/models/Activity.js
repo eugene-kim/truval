@@ -1,13 +1,13 @@
-const {
+import {
   createModelInstance,
   updateModelInstance,
   getModelInstance,
   getModelInstances,
   deleteModelInstance,
-} = require('../database/dbMethods');
+} from '../database/dbMethods';
 
-const Session = require('./Session');
-const Category = require('./Category');
+import Session from './Session';
+import Category from './Category';
 
 const ACTIVITY_TABLE = 'activity';
 const ACTIVITY_COLUMNS = [
@@ -55,4 +55,4 @@ const Activity = {
 };
 
 
-module.exports = Activity;
+export default Activity;

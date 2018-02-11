@@ -1,10 +1,10 @@
-const {
+import {
   createModelInstance,
   updateModelInstance,
   getModelInstance,
   getModelInstances,
   deleteModelInstance,
-} = require('../database/dbMethods');
+} from '../database/dbMethods';
 
 const SESSION_COLUMNS = [
   'id',
@@ -37,4 +37,4 @@ const Session = {
 };
 
 
-module.exports = Session;
+export default Session;

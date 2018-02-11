@@ -8,13 +8,14 @@ import ActivityRow from './ActivityRow';
 
 const ActivityList = ({isLoading, activities}) => {
   return _.map(activities, activity => {
-    const {id, name, start, isComplete, categoryId} = activity;
+    const {id, name, start, isComplete, category} = activity;
+    const categoryId = parseInt(category);
 
     return (
       <ActivityRow
         key={id}
         name={name}
-        time={start}
+        start={start}
         category={categoryId}
       />
     );

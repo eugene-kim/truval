@@ -1,7 +1,10 @@
 import _ from 'lodash';
-import astReader from './astReader';
 import pluralize from 'pluralize';
-import {renameKey} from '~/libs/util/objectUtil';
+
+// Utility
+import {renameKey} from 'libs/util/objectUtil';
+import astReader from '../astReader';
+import {getReduxEntityName} from '../reduxify';
 
 
 /**
@@ -12,7 +15,7 @@ import {renameKey} from '~/libs/util/objectUtil';
  * In this case, `createUser` will become `user`. Should a user entity already exist,
  * we'll merge the two objects.`
  */
-const reduxify = (normalizedGqlResponse, operationAST, schemaDoc) => {
+const makeReduxFriendly = (normalizedGqlResponse, operationAST, schemaDoc) => {
 
   // TODO: If the normalized response is too big, we might want to use an immutable library
   // like Immutable.js to increase performance.
@@ -57,13 +60,5 @@ const reduxify = (normalizedGqlResponse, operationAST, schemaDoc) => {
   return reduxFriendlyData;
 }
 
-/**
- * Formats a String to be lowercase and singular.
- * 
- * This is useful when accessing our redux store since a GraphQL type can be represented in multiple ways
- * (e.g. get a single session with `session` or get all of a user's sessions via `sessions`) while
- * an entity in our Redux store will exist in a single location.
- */
-export const getReduxEntityName = name => pluralize.singular(_.toLower(name));
 
-export default reduxify;
+export default makeReduxFriendly;

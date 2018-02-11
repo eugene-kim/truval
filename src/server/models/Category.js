@@ -1,10 +1,10 @@
-const {
+import {
   createModelInstance,
   updateModelInstance,
   getModelInstance,
   getModelInstances,
   deleteModelInstance,
-} = require('../database/dbMethods');
+} from '../database/dbMethods';
 
 const CATEGORY_TABLE = 'category';
 const CATEGORY_COLUMNS = ['id', 'name', 'color', 'is_primary', 'user_id'];
@@ -23,4 +23,4 @@ const Category = {
 };
 
 
-module.exports = Category;
+export default Category;
