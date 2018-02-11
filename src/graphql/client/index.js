@@ -3,7 +3,6 @@ import {graphql} from 'graphql';
 import {parse} from 'graphql/language/parser';
 import {introspectionQuery} from 'graphql/utilities';
 
-import normalizeGql from './normalizeGql';
 import gqlSchema from '../schema/typeDefSchema';
 import reduxify from './reduxify';
 import containsQueryData from './containsQueryData';
@@ -32,8 +31,6 @@ export default ({endpoint = 'http://localhost:3000/graphql', store} = {}) => {
       } else {
         console.log('Store does not contain query data - making a request to the GraphQL server.');
 
-        const normalizrSchema = await normalizeGql(gqlOperationAST, schemaDoc);
-
         try {
           const response = await fetch(endpoint, {
             method: 'POST',
@@ -47,12 +44,14 @@ export default ({endpoint = 'http://localhost:3000/graphql', store} = {}) => {
           const responseBody = response._bodyText;
 
           if (status !== 200) {
-            throw `GraphQL operation failed! Status: ${status}; ${responseBody}`;
+            throw `
+              GraphQL operation failed! Status: ${status}
+              Reason:${responseBody}
+            `;
           }
 
           const gqlResponse = JSON.parse(responseBody);
-          const normalizedData = normalize(gqlResponse, normalizrSchema);
-          const reduxFriendlyData = reduxify(normalizedData, gqlOperationAST, schemaDoc);
+          const reduxFriendlyData = reduxify(gqlResponse, gqlOperationAST, schemaDoc);
 
           store.dispatch({
             type: UPDATE_FROM_SERVER,

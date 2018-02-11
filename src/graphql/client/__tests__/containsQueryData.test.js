@@ -4,10 +4,10 @@ import {parse} from 'graphql/language/parser';
 import {createStore} from 'redux';
 import _ from 'lodash';
 
-import gqlSchema from '../../schema';
+import gqlSchema from 'graphql/schema/typeDefSchema';
 import containsQueryData from '../containsQueryData';
-import initialState from '~/redux/store/initialState';
-import reducer from '~/redux/reducers';
+import initialState from 'redux/store/initialState';
+import reducer from 'redux/reducers/root';
 
 describe('test containsQueryData()', () => {
   let schemaDocumentWhole;
