@@ -11,11 +11,15 @@ import containsQueryData from './containsQueryData';
 import { UPDATE_FROM_SERVER } from 'redux/actions/types';
 
 
-export default ({endpoint = 'http://localhost:3000/graphql'} = {}) => {
+export default ({endpoint = 'http://localhost:3000/graphql', store} = {}) => {
+
+  if (!store) {
+    throw `A Redux store must be provided to construct the client!`;
+  }
 
   return {
     // TODO: Consider being able to dynamically determine if query or mutation.
-    query: async (query, store, options = {}) => {
+    query: async function(query, options = {}) {
       const schemaDocumentWhole = await graphql(gqlSchema, introspectionQuery);
       const schemaDoc = schemaDocumentWhole.data.__schema;
       const gqlOperationAST = parse(query);
@@ -63,6 +67,10 @@ export default ({endpoint = 'http://localhost:3000/graphql'} = {}) => {
           console.error(error);
         }
       }
+    },
+
+    getStore: function() {
+      return store;
     },
   };
 }

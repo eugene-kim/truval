@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import { StyleSheet, Text, TextInput, View } from 'react-native';
 
-import CustomPropTypes from 'view/propTypes/CustomPropTypes';
+import CustomPropTypes from 'view/util/propTypes/CustomPropTypes';
 
 
 export default (getOperationString, options) => ChildComponent => {
@@ -18,15 +18,15 @@ export default (getOperationString, options) => ChildComponent => {
 
     static contextTypes = {
       gqlClient: PropTypes.object.isRequired,
-      store: CustomPropTypes.storeShape.isRequired,
     }
 
-    componentWillMount() {
-      const {gqlClient, store} = this.context;
+    componentDidMount() {
+      const {gqlClient} = this.context;
+      const store = gqlClient.getStore();
       const state = store.getState();
       const operationString = getOperationString(state);
 
-      gqlClient.query(operationString, store, options)
+      gqlClient.query(operationString, options)
       .then(response => this.setState({isLoading: false}))
       .catch(error => {
         this.setState({
