@@ -10,6 +10,7 @@ import getGqlClient from './src/graphql/client';
 import rootReducer from './src/redux/reducers/root';
 import initialState from './src/redux/store/initialState';
 
+const store = createStore(rootReducer, initialState);
 
 class FocusApp extends Component {
   static childContextTypes = {
@@ -26,7 +27,7 @@ class FocusApp extends Component {
 
   render() {
     return (
-      <Provider store={createStore(rootReducer, initialState)}>
+      <Provider store={store}>
         <SessionScreen sessionId={1} />
       </Provider>
     );

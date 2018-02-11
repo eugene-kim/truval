@@ -21,7 +21,13 @@ export default ({endpoint = 'http://localhost:3000/graphql'} = {}) => {
       const gqlOperationAST = parse(query);
       const storeContainsQueryData = containsQueryData(gqlOperationAST, schemaDoc, store);
 
-      if (!storeContainsQueryData) {
+      if (storeContainsQueryData) {
+        console.log('Store contains query data - no need to make GraphQL request.');
+
+        return {};
+      } else {
+        console.log('Store does not contain query data - making a request to the GraphQL server.');
+
         const normalizrSchema = await normalizeGql(gqlOperationAST, schemaDoc);
 
         try {
@@ -33,7 +39,13 @@ export default ({endpoint = 'http://localhost:3000/graphql'} = {}) => {
             body: JSON.stringify({query}),
           });
 
+          const {status} = response;
           const responseBody = response._bodyText;
+
+          if (status !== 200) {
+            throw `GraphQL operation failed! Status: ${status}; ${responseBody}`;
+          }
+
           const gqlResponse = JSON.parse(responseBody);
           const normalizedData = normalize(gqlResponse, normalizrSchema);
           const reduxFriendlyData = reduxify(normalizedData, gqlOperationAST, schemaDoc);

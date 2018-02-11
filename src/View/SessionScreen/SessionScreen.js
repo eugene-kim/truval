@@ -29,6 +29,9 @@ import ActivityList from './ActivityList';
           end,
           isComplete,
           duration,
+          category {
+            id
+          }
         }
       }
     }`
@@ -49,7 +52,7 @@ import ActivityList from './ActivityList';
       const activityIds = state.entities.session.entities[sessionId].activities;
 
       return activityIds.reduce((accum, activityId) => {
-        const activity = state.entities.activity[activityId];
+        const activity = state.entities.activity.entities[activityId];
 
         return activity ? accum.concat(activity) : accum;
       }, []);
@@ -75,7 +78,7 @@ class SessionScreen extends Component {
   // Render
   // --------------------------------------------------
   render() {
-    const {isLoading, session} = this.props;
+    const {isLoading, session, activities} = this.props;
     const didLoad = !isLoading && session;
 
     // TODO: Come up with a proper solution for loading.
@@ -88,7 +91,6 @@ class SessionScreen extends Component {
     }
 
     const id = parseInt(session.id);
-    const {activities} = session;
 
     return (
       <View style={styles.container}>

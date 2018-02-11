@@ -3,12 +3,12 @@ import PropTypes from 'prop-types';
 import {StyleSheet, Text, TextInput, View} from 'react-native';
 
 
-const ActivityRow = ({name, category, time}) => {
+const ActivityRow = ({name, category, start}) => {
   return (
     <View
       style={styles.container}>
-      <Text style={styles.time}>
-        {time}
+      <Text style={styles.start}>
+        {start}
       </Text>
       <Text style={styles.name}>
         {name}
@@ -23,7 +23,7 @@ const ActivityRow = ({name, category, time}) => {
 ActivityRow.propTypes = {
   name: PropTypes.string.isRequired,
   category: PropTypes.number.isRequired,
-  time: PropTypes.string.isRequired,
+  start: PropTypes.string.isRequired,
 }
 
 const styles = StyleSheet.create({
