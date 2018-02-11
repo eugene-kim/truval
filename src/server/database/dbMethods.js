@@ -6,7 +6,7 @@ import knex from './index';
  * Creates an instance of a GraphQL Type in Postgres and returns the newly
  * created object.
  */
-const createModelInstance = (requiredParams, optionalParams, tableName, columnNames) => {
+export const createModelInstance = (requiredParams, optionalParams, tableName, columnNames) => {
   optionalParams = removeUndefinedProperties(optionalParams);
   const newModelInstance = _.merge(requiredParams, optionalParams);
 
@@ -28,7 +28,7 @@ const createModelInstance = (requiredParams, optionalParams, tableName, columnNa
  * Updates an already existing instance of a GraphQL type in Postgres and
  * returns the updated object.
  */
-const updateModelInstance = (mutationParams, tableName, columnNames) => {
+export const updateModelInstance = (mutationParams, tableName, columnNames) => {
   const id = mutationParams.id;
   const dbPropertiesToUpdate = makeDbCompatible(mutationParams);
 
@@ -44,19 +44,19 @@ const updateModelInstance = (mutationParams, tableName, columnNames) => {
   .catch(error => console.log(error));
 }
 
-const getModelInstance = (keyValue, tableName, keyName='id') => {
+export const getModelInstance = (keyValue, tableName, keyName='id') => {
   return knex(tableName).first().where(keyName, '=', keyValue)
   .then(tableRow => toCamelCaseKeys(tableRow))
   .catch(error => console.log(error));
 }
 
-const getModelInstances = (foreignKeyValue, foreignKeyName, tableName) => {
+export const getModelInstances = (foreignKeyValue, foreignKeyName, tableName) => {
   return knex(tableName).select().where(foreignKeyName, '=', foreignKeyValue)
   .then(rows => rows.map(row => toCamelCaseKeys(row)))
   .catch(error => console.log(error));
 }
 
-const deleteModelInstance = (id, tableName) => {
+export const deleteModelInstance = (id, tableName) => {
   return knex(tableName).del().where('id', '=', id)
   .catch(error => console.log(error));
 }

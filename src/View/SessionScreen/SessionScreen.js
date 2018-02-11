@@ -29,7 +29,6 @@ import ActivityList from './ActivityList';
           end,
           isComplete,
           duration,
-          categoryId
         }
       }
     }`
@@ -88,13 +87,13 @@ class SessionScreen extends Component {
       );
     }
 
-    const {id} = session;
+    const id = parseInt(session.id);
     const {activities} = session;
 
     return (
       <View style={styles.container}>
         <AddActivityInput
-          sessionId={parseInt(id)}
+          sessionId={id}
         />
         <ActivityList
           isLoading={isLoading}

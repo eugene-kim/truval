@@ -25,15 +25,17 @@ export default ({endpoint = 'http://localhost:3000/graphql'} = {}) => {
         const normalizrSchema = await normalizeGql(gqlOperationAST, schemaDoc);
 
         try {
-          const gqlResponse = await fetch(endpoint, {
+          const response = await fetch(endpoint, {
             method: 'POST',
             headers: {
               'Content-Type':'application/json',  
             },
             body: JSON.stringify({query}),
           });
-          const responseObject = JSON.parse(gqlResponse);
-          const normalizedData = normalize(responseObject, normalizrSchema);
+
+          const responseBody = response._bodyText;
+          const gqlResponse = JSON.parse(responseBody);
+          const normalizedData = normalize(gqlResponse, normalizrSchema);
           const reduxFriendlyData = reduxify(normalizedData, gqlOperationAST, schemaDoc);
 
           store.dispatch({

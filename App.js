@@ -11,9 +11,6 @@ import rootReducer from './src/redux/reducers/root';
 import initialState from './src/redux/store/initialState';
 
 
-const gqlClient = getGqlClient();
-const store = createStore(rootReducer, initialState);
-
 class FocusApp extends Component {
   static childContextTypes = {
 
@@ -23,13 +20,13 @@ class FocusApp extends Component {
 
   getChildContext() {
     return {
-      gqlClient,
+      gqlClient: getGqlClient(),
     };
   }
 
   render() {
     return (
-      <Provider store={store}>
+      <Provider store={createStore(rootReducer, initialState)}>
         <SessionScreen sessionId={1} />
       </Provider>
     );
