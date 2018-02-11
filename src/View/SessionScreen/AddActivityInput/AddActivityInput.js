@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
-import PropTypes from 'prop-types';
+import PropTypes from 'view/util/PropTypes';
 import {StyleSheet, Text, View} from 'react-native';
 
+// Util
 import Datetime from 'libs/util/Datetime';
 import bind from 'libs/decorators/bind';
 
@@ -28,6 +29,10 @@ class AddActivityInput extends Component {
   // --------------------------------------------------
   static propTypes = {
     sessionId: PropTypes.number.isRequired,
+  };
+
+  static contextTypes = {
+    gqlClient: PropTypes.gqlClient,
   };
 
   // --------------------------------------------------

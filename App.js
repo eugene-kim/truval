@@ -1,7 +1,6 @@
 // Module Imports
 import React, {Component} from 'react';
 import {StyleSheet, Text, TextInput, View} from 'react-native';
-import PropTypes from 'prop-types';
 import { createStore } from 'redux';
 import { Provider } from 'react-redux';
 
@@ -10,7 +9,7 @@ import SessionScreen from './src/view/SessionScreen/SessionScreen';
 import getGqlClient from './src/graphql/client';
 import rootReducer from './src/redux/reducers/root';
 import initialState from './src/redux/store/initialState';
-import CustomPropTypes from './src/view/util/propTypes/CustomPropTypes'
+import PropTypes from './src/view/util/PropTypes'
 
 const store = createStore(rootReducer, initialState);
 
@@ -26,7 +25,7 @@ class FocusApp extends Component {
   }
 
   static childContextTypes = {
-    gqlClient: CustomPropTypes.gqlClient.isRequired,
+    gqlClient: PropTypes.gqlClient,
   }
 
   componentDidMount() {
