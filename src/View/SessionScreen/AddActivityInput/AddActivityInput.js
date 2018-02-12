@@ -36,7 +36,7 @@ class AddActivityInput extends Component {
 
   static contextTypes = {
     gqlClient: PropTypes.gqlClient,
-  };
+  }
 
   // --------------------------------------------------
   // Lifecycle Methods
@@ -90,9 +90,9 @@ class AddActivityInput extends Component {
   @bind
   handleSubmit() {
     debugger
+    const {activityStartTime, activityCategory, activityName} = this.state;
     const {gqlClient} = this.context;
     const {sessionId} = this.props;
-    const {activityStartTime, activityCategory, activityName} = this.state;
     const categoryId = parseInt(activityCategory);
     const mutationString = `
       mutation {
@@ -117,7 +117,7 @@ class AddActivityInput extends Component {
 
     gqlClient.mutate(
       mutationString,
-      addActivity(addActivity)
+      activityActions.addActivity(activity)
     );
   }
 

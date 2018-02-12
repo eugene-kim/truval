@@ -11,11 +11,11 @@ export default (getOperationString, options) => ChildComponent => {
       this.state = {
         isLoading: true,
         didError: false,
-      }
+      };
     }
 
     static contextTypes = {
-      gqlClient: PropTypes.gqlClient.isRequired,
+      gqlClient: PropTypes.gqlClient,
     }
 
     componentDidMount() {

@@ -1,11 +1,26 @@
-export default function (target, name, descriptor) {
-  const decorated = descriptor.value;
+/**
+ * ES7 Decorator that binds functions automatically. This is useful for passing
+ * functions around as props in React components.
+ */
+function bind(target, name, descriptor) {
+  const {value} = descriptor;
 
-  if (typeof descriptor.value === 'function') {
-    descriptor.value = function(...args) {
-      decorated.apply(target, args);
-    }
-  }
+  return {
+    configurable: true,
 
-  return descriptor;
-};
+    get() {
+      const boundValue = value.bind(this);
+
+      Object.defineProperty(this, name, {
+        value: boundValue,
+        configurable: true,
+        writable: true,
+      });
+
+      return boundValue;
+    },
+  };
+}
+
+
+export default bind;
