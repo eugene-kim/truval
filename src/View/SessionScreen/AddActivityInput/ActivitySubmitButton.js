@@ -15,7 +15,7 @@ const ActivitySubmitButton = ({onSubmit}) => {
 }
 
 
-ActivitySubmitButton.PropTypes = {
+ActivitySubmitButton.propTypes = {
   onSubmit: PropTypes.func.isRequired,
 }
 

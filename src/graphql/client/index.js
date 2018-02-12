@@ -17,12 +17,11 @@ export default ({endpoint = 'http://localhost:3000/graphql', store} = {}) => {
   }
 
   return {
-    // TODO: Consider being able to dynamically determine if query or mutation.
-    query: async function(query, options = {}) {
+    query: async function(queryString, options = {}) {
       const schemaDocumentWhole = await graphql(gqlSchema, introspectionQuery);
       const schemaDoc = schemaDocumentWhole.data.__schema;
-      const gqlOperationAST = parse(query);
-      const storeContainsQueryData = containsQueryData(gqlOperationAST, schemaDoc, store);
+      const queryAST = parse(queryString);
+      const storeContainsQueryData = containsQueryData(queryAST, schemaDoc, store);
 
       if (storeContainsQueryData) {
         console.log('Store contains query data - no need to make GraphQL request.');
@@ -37,9 +36,9 @@ export default ({endpoint = 'http://localhost:3000/graphql', store} = {}) => {
             headers: {
               'Content-Type':'application/json',  
             },
-            body: JSON.stringify({query}),
+            body: JSON.stringify({query: queryString}),
           });
-
+          
           const {status} = response;
           const responseBody = response._bodyText;
 
@@ -51,7 +50,7 @@ export default ({endpoint = 'http://localhost:3000/graphql', store} = {}) => {
           }
 
           const gqlResponse = JSON.parse(responseBody);
-          const reduxFriendlyData = await reduxify(gqlResponse, gqlOperationAST, schemaDoc);
+          const reduxFriendlyData = await reduxify(gqlResponse, queryAST, schemaDoc);
 
           store.dispatch({
             type: UPDATE_FROM_SERVER,
@@ -65,6 +64,55 @@ export default ({endpoint = 'http://localhost:3000/graphql', store} = {}) => {
         } catch(error) {
           console.error(error);
         }
+      }
+    },
+
+    mutate: async function(mutationString, action, options = {}) {
+      if (!action) {
+        throw `A Redux action must be provided to mutate().`;
+      }
+
+      const schemaDocumentWhole = await graphql(gqlSchema, introspectionQuery);
+      const schemaDoc = schemaDocumentWhole.data.__schema;
+      const mutationAST = parse(mutationString);
+
+      try {
+        const response = await fetch(endpoint, {
+          method: 'POST',
+          headers: {
+            'Content-Type':'application/json',  
+          },
+          body: JSON.stringify({query: mutationString}),
+        });
+
+        const {status} = response;
+        const responseBody = response._bodyText;
+
+        if (status !== 200) {
+          throw `
+            GraphQL operation failed! Status: ${status}
+            Reason:${responseBody}
+          `;
+        }
+
+        const gqlResponse = JSON.parse(responseBody);
+        const reduxFriendlyData = await reduxify(gqlResponse, mutationAST, schemaDoc);
+
+        // Dispatch the action explicitly associated with the mutation.
+        store.dispatch(action);
+
+        // We might as well update the store with the data we retrieved.
+        store.dispatch({
+          type: UPDATE_FROM_SERVER,
+          payload: reduxFriendlyData,
+        });
+
+        // TODO: We don't need to be returning back this data when we're using the client.
+        // We'll probably we sending back something like a response object indicating the status
+        // of the GraphQL request.
+        return reduxFriendlyData;
+      } catch(error) {
+        console.error(error);
       }
     },
 
