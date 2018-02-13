@@ -1,7 +1,8 @@
 // Module Imports
 import React, {Component} from 'react';
 import {StyleSheet, Text, TextInput, View} from 'react-native';
-import { createStore } from 'redux';
+import { applyMiddleware, createStore } from 'redux';
+import logger from 'redux-logger';
 import { Provider } from 'react-redux';
 
 // Local Imports
@@ -11,7 +12,11 @@ import rootReducer from './src/redux/reducers/root';
 import initialState from './src/redux/store/initialState';
 import PropTypes from './src/view/util/PropTypes'
 
-const store = createStore(rootReducer, initialState);
+const store = createStore(
+  rootReducer,
+  initialState,
+  applyMiddleware(logger),
+);
 
 class FocusApp extends Component {
   constructor(props) {

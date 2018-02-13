@@ -3,7 +3,7 @@ import PropTypes from 'view/util/PropTypes';
 import {StyleSheet, Text, View} from 'react-native';
 
 // Redux
-import {activityActions} from 'redux/actions/entities/activity';
+import {addActivity} from 'redux/actions/entities/activity';
 
 // Util
 import Datetime from 'libs/util/Datetime';
@@ -89,7 +89,6 @@ class AddActivityInput extends Component {
 
   @bind
   handleSubmit() {
-    debugger
     const {activityStartTime, activityCategory, activityName} = this.state;
     const {gqlClient} = this.context;
     const {sessionId} = this.props;
@@ -97,11 +96,11 @@ class AddActivityInput extends Component {
     const mutationString = `
       mutation {
         createActivity(
-          name: ${activityName},
-          start: ${activityStartTime},
+          name: "${activityName}",
+          start: "${activityStartTime}",
           isComplete: false,
-          sessionId: ${sessionId},
-          categoryId: ${categoryId}
+          sessionId: "${sessionId}",
+          categoryId: "${categoryId}"
         ) {
           id
         }
@@ -117,7 +116,7 @@ class AddActivityInput extends Component {
 
     gqlClient.mutate(
       mutationString,
-      activityActions.addActivity(activity)
+      addActivity(activity),
     );
   }
 
