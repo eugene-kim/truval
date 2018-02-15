@@ -19,9 +19,5 @@ ActivitySubmitButton.propTypes = {
   onSubmit: PropTypes.func.isRequired,
 }
 
-ActivitySubmitButton.contextTypes = {
-  gqlClient: PropTypes.gqlClient,
-}
-
 
 export default ActivitySubmitButton;
