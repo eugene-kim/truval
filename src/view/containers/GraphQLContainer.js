@@ -1,8 +1,6 @@
 import React, {Component} from 'react';
-import PropTypes from 'prop-types';
+import PropTypes from 'view/util/PropTypes';
 import { StyleSheet, Text, TextInput, View } from 'react-native';
-
-import CustomPropTypes from 'view/util/propTypes/CustomPropTypes';
 
 
 export default (getOperationString, options) => ChildComponent => {
@@ -13,11 +11,11 @@ export default (getOperationString, options) => ChildComponent => {
       this.state = {
         isLoading: true,
         didError: false,
-      }
+      };
     }
 
     static contextTypes = {
-      gqlClient: PropTypes.object.isRequired,
+      gqlClient: PropTypes.gqlClient,
     }
 
     componentDidMount() {

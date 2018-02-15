@@ -1,7 +1,11 @@
 import React, {Component} from 'react';
-import PropTypes from 'prop-types';
+import PropTypes from 'view/util/PropTypes';
 import {StyleSheet, Text, View} from 'react-native';
 
+// Redux
+import {addActivity} from 'redux/actions/entities/activity';
+
+// Util
 import Datetime from 'libs/util/Datetime';
 import bind from 'libs/decorators/bind';
 
@@ -29,6 +33,10 @@ class AddActivityInput extends Component {
   static propTypes = {
     sessionId: PropTypes.number.isRequired,
   };
+
+  static contextTypes = {
+    gqlClient: PropTypes.gqlClient,
+  }
 
   // --------------------------------------------------
   // Lifecycle Methods
@@ -59,39 +67,64 @@ class AddActivityInput extends Component {
   // --------------------------------------------------
 
   @bind
-  handleTimeChange (event) {
+  handleTimeChange(event) {
     const activityStartTime = this.extractValueFromEvent(event);
 
     this.setState({activityStartTime});
   }
 
   @bind
-  handleCategoryChange (event) {
+  handleCategoryChange(event) {
     const activityCategory = this.extractValueFromEvent(event);
 
     this.setState({activityCategory});
   }
 
   @bind
-  handleNameChange (event) {
+  handleNameChange(event) {
     const activityName = this.extractValueFromEvent(event);
 
     this.setState({activityName});
+  }
+
+  @bind
+  handleSubmit() {
+    const {activityStartTime, activityCategory, activityName} = this.state;
+    const {gqlClient} = this.context;
+    const {sessionId} = this.props;
+    const categoryId = parseInt(activityCategory);
+    const mutationString = `
+      mutation {
+        createActivity(
+          name: "${activityName}",
+          start: "${activityStartTime}",
+          isComplete: false,
+          sessionId: "${sessionId}",
+          categoryId: "${categoryId}"
+        ) {
+          id
+        }
+      }`;
+
+    const activity = {
+      name: activityName,
+      start: activityStartTime,
+      isComplete: false,
+      sessionId,
+      categoryId,
+    };
+
+    gqlClient.mutate(
+      mutationString,
+      addActivity(activity),
+    );
   }
 
   // --------------------------------------------------
   // Render
   // --------------------------------------------------
   render() {
-    const {sessionId} = this.props;
     const {activityStartTime, activityCategory, activityName} = this.state;
-    const newActivity = {
-      sessionId,
-      name: activityName,
-      start: activityStartTime,
-      categoryId: parseInt(activityCategory),
-      isComplete: false,
-    };
 
     // Not rendering the submit button for now
     return (
@@ -113,6 +146,9 @@ class AddActivityInput extends Component {
             style={styles.categoryInput}
           />
         </View>
+        <ActivitySubmitButton
+          onSubmit={this.handleSubmit}
+        />
       </View>
     );
   }

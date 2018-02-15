@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import PropTypes from 'prop-types';
+import PropTypes from 'view/util/PropTypes';
 import {StyleSheet, Text, TextInput, View} from 'react-native';
 import {FormInput} from 'react-native-elements';
 

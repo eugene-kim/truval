@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import PropTypes from 'prop-types';
+import PropTypes from 'view/util/PropTypes';
 import {StyleSheet, View, Text} from 'react-native';
 import { connect } from 'react-redux'
 
