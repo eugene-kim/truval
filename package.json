@@ -3,7 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "config": {
-    "server_path": "src/server/index.js"
+    "server_path": "src/server/index.js",
+    "knexfile_path": "src/server/database/knexfile.js"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
@@ -29,7 +30,9 @@
     "ios": "react-native run-ios -- --reset-cache",
     "test": "jest --verbose",
     "test_debug": "node --inspect-brk node_modules/.bin/jest --runInBand",
-    "seed": "knex --knexfile=src/server/database/knexfile.js seed:run",
+    "migrate": "knex migrate:latest --knexfile=$npm_package_config_knexfile_path",
+    "create_migration": "knex migrate:make --knexfile=$npm_package_config_knexfile_path",
+    "seed": "knex seed:run --knexfile=$npm_package_config_knexfile_path",
     "compile": "npx babel src --out-dir lib --source-maps",
     "react-devtools": "react-devtools"
   },
