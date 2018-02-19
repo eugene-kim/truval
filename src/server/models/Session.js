@@ -14,7 +14,7 @@ const SESSION_COLUMNS = [
   'is_complete',
   'user_id',
 ];
-const SESSION_TABLE = 'session';
+const SESSION_TABLE = 'Session';
 const Session = {
   createSession: (requiredParams, optionalParams) => createModelInstance(
     requiredParams,

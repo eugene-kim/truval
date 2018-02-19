@@ -1,5 +1,5 @@
 import Session from 'server/models/Session';
-import Activity from 'server/models/Activity';
+import ActivityInstance from 'server/models/ActivityInstance';
 
 
 export default {
@@ -20,6 +20,6 @@ export default {
 
   // GraphQL Type Resolvers
   Session: {
-    activities: (session, args) => Activity.getSessionActivities(session.id),
+    activityInstances: (session, args) => ActivityInstance.getSessionActivityInstances(session.id),
   },
 };

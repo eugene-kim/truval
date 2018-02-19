@@ -23,18 +23,11 @@ exports.seed = async function(knex, Promise) {
   ]);
 
   await knex(userTable).insert(users);
-
-  console.log('inserted users');
-
   await Promise.all([
     knex(sessionTable).insert(sessions),
     knex(categoryTable).insert(categories),
   ]);
-
-  console.log('inserted sessions and categories');
-
+  
   await knex(activityTypeTable).insert(activityTypes);
-  console.log('inserted activity types');
   await knex(activityInstanceTable).insert(activityInstances);
-  console.log('inserted activity instances');
 };

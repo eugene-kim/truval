@@ -6,7 +6,7 @@ import {
 } from '../database/dbMethods';
 
 const USER_COLUMNS = ['id', 'username', 'email', 'password'];
-const USER_TABLE = 'user';
+const USER_TABLE = 'User';
 
 const User = {
   getUser: id => getModelInstance(id, USER_TABLE),

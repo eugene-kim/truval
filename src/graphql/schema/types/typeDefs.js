@@ -6,6 +6,7 @@ const typeDefs = `
     password: String!
     sessions: [Session]
     categories: [Category]
+    activityTypes: [ActivityType]
   }
 
   type Session {
@@ -18,10 +19,10 @@ const typeDefs = `
     # Datetime String in ISO 8601 format.
     end: String
     isComplete: Boolean!
-    activities: [Activity]!
+    activityInstances: [ActivityInstance]!
   }
 
-  type Activity {
+  type ActivityInstance {
     id: ID!
     name: String!
 
@@ -32,8 +33,18 @@ const typeDefs = `
     end: String
     isComplete: Boolean!
     duration: Int
-    category: Category!
     session: Session!
+    sessionId: ID!
+    activityType: ActivityType!
+    activityTypeId: ID!
+  }
+
+  type ActivityType {
+    id: ID!
+    name: String!
+    activityCount: Int!
+    category: Category!
+    categoryId: ID!
   }
 
   type Category {
@@ -41,6 +52,7 @@ const typeDefs = `
     name: String!
     color: String!
     isPrimary: Boolean!
+    userId: ID!
     user: User!
   }
 
@@ -50,16 +62,24 @@ const typeDefs = `
     sessions(userId: ID!): [Session]
     session(id: ID!): Session
 
-    activity(id: ID!): Activity
+    activityType(id: ID!): ActivityType
+    activityInstance(id: ID!): ActivityInstance
 
     categories(userId: ID!): [Category]
     category(id: ID!): Category
   }
 
   type Mutation {
+
+    # User
+
     createUser(username: String!, email: String!, password: String!): User
+    
     updateUser(id: ID!, username: String, email: String, password: String): User
+    
     deleteUser(id: ID!): String!
+
+    # Session
 
     createSession(
       name: String!,
@@ -80,32 +100,56 @@ const typeDefs = `
       end: String,
       isComplete: Boolean
     ): Session
+
     deleteSession(id: ID!): String!
 
-    createActivity(
+    # ActivityType
+
+    createActivityType(
       name: String!,
-      start: String!,
+      userId: ID!,
       categoryId: ID!,
+
+      # Optional
+      activityCount: Int,
+    ): ActivityType
+
+    updateActivityType(
+      id: ID!,
+      categoryId: ID,
+      name: String,
+      activityCount: Int,
+    ): ActivityType
+    
+    deleteActivityType(id: ID!): String!
+
+    # ActivityInstance
+
+    createActivityInstance(
+      start: String!,
       sessionId: ID!,
+      activityInstanceId: ID!,
 
       # Optional
       end: String,
       isComplete: Boolean,
       duration: Int,
-    ): Activity
+    ): ActivityInstance
 
-    # You shouldn't be able to move an Activity from one Session to another,
+    # You shouldn't be able to move an ActivityInstance from one Session to another,
     # so sessionId is not allowed in the updateActivity mutation.
-    updateActivity(
+    updateActivityInstance(
       id: ID!,
-      name: String,
       start: String,
       categoryId: ID,
       end: String,
       isComplete: Boolean,
       duration: Int,
-    ): Activity
-    deleteActivity(id: ID!): String!
+    ): ActivityInstance
+    
+    deleteActivityInstance(id: ID!): String!
+
+    # Category
 
     createCategory(
       name: String!,

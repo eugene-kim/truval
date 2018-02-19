@@ -17,8 +17,7 @@ exports.up = async function(knex, Promise) {
       table.timestamps(true, true);
 
       // Foreign Keys
-      table.uuid('user_id').notNullable();
-      table.foreign('user_id').references('id').inTable('User').onDelete('CASCADE');
+      table.uuid('user_id').notNullable().references('id').inTable('User').onDelete('CASCADE');
     }),
 
     knex.schema.createTable('Category', table => {
@@ -27,12 +26,10 @@ exports.up = async function(knex, Promise) {
       table.string('color').notNullable();
       table.boolean('is_primary').notNullable().defaultTo(false);
       table.timestamps(true, true);
+      table.unique(['name', 'user_id']);
 
       // Foreign Keys
-      table.uuid('user_id').notNullable();
-      table.foreign('user_id').references('id').inTable('User').onDelete('CASCADE');
-
-      table.unique(['name', 'user_id']);
+      table.uuid('user_id').notNullable().references('id').inTable('User').onDelete('CASCADE');
     }),
   ]);
 
@@ -42,15 +39,13 @@ exports.up = async function(knex, Promise) {
 
     // When an ActivityType is created, it's created with an ActivityInstance, so
     // the starting value should be 1.
-    table.integer('activity_count').defaultTo(1);
+    table.integer('activity_count').notNullable().defaultTo(1);
     table.timestamps(true, true);
     table.unique(['name', 'user_id']);
 
     // Foreign Keys
-    table.uuid('category_id');
-    table.foreign('category_id').references('id').inTable('Category').onDelete('SET NULL');
-    table.uuid('user_id').notNullable();
-    table.foreign('user_id').references('id').inTable('User').onDelete('CASCADE');
+    table.uuid('category_id').references('id').inTable('Category').onDelete('SET NULL');
+    table.uuid('user_id').notNullable().references('id').inTable('User').onDelete('CASCADE');
   }),
 
   await knex.schema.createTable('ActivityInstance', table => {
@@ -62,9 +57,8 @@ exports.up = async function(knex, Promise) {
     table.timestamps(true, true);
 
     // Foreign Keys
-    table.uuid('activity_type_id').references('id').inTable('ActivityType');
-    table.uuid('session_id').notNullable();
-    table.foreign('session_id').references('id').inTable('Session').onDelete('CASCADE');
+    table.uuid('activity_type_id').notNullable().references('id').inTable('ActivityType');
+    table.uuid('session_id').notNullable().references('id').inTable('Session').onDelete('CASCADE');
   });
 }
 

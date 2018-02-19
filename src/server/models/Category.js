@@ -6,7 +6,7 @@ import {
   deleteModelInstance,
 } from '../database/dbMethods';
 
-const CATEGORY_TABLE = 'category';
+const CATEGORY_TABLE = 'Category';
 const CATEGORY_COLUMNS = ['id', 'name', 'color', 'is_primary', 'user_id'];
 
 const Category = {
