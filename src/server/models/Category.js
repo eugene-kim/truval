@@ -1,7 +1,7 @@
 import {
   createModelInstance,
   updateModelInstance,
-  getModelInstance,
+  getModelInstanceById,
   getModelInstances,
   deleteModelInstance,
 } from '../database/dbMethods';
@@ -16,7 +16,7 @@ const Category = {
     CATEGORY_TABLE,
     CATEGORY_COLUMNS,
   ),
-  getCategory: id => getModelInstance(id, CATEGORY_TABLE),
+  getCategory: id => getModelInstanceById(id, CATEGORY_TABLE),
   getUserCategories: userId => getModelInstances(userId, 'user_id', CATEGORY_TABLE),
   updateCategory: mutationParams => updateModelInstance(mutationParams, CATEGORY_TABLE, CATEGORY_COLUMNS),
   deleteCategory: id => deleteModelInstance(id, CATEGORY_TABLE),

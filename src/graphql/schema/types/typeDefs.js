@@ -24,27 +24,31 @@ const typeDefs = `
 
   type ActivityInstance {
     id: ID!
-    name: String!
 
     # Datetime String in ISO 8601 format.
     start: String!
 
-    # Datetime String in ISO 8601 format.
-    end: String
     isComplete: Boolean!
-    duration: Int
     session: Session!
     sessionId: ID!
     activityType: ActivityType!
     activityTypeId: ID!
+
+    # Datetime String in ISO 8601 format.
+    end: String
+    duration: Int
   }
 
   type ActivityType {
     id: ID!
     name: String!
     activityCount: Int!
-    category: Category!
-    categoryId: ID!
+
+    # Can be null if the related category was deleted.
+    category: Category
+
+    # Can be null if the related category was deleted.
+    categoryId: ID
   }
 
   type Category {
@@ -60,12 +64,15 @@ const typeDefs = `
     user(id: ID!): User
 
     sessions(userId: ID!): [Session]
+
     session(id: ID!): Session
 
     activityType(id: ID!): ActivityType
+
     activityInstance(id: ID!): ActivityInstance
 
     categories(userId: ID!): [Category]
+
     category(id: ID!): Category
   }
 
@@ -73,9 +80,21 @@ const typeDefs = `
 
     # User
 
-    createUser(username: String!, email: String!, password: String!): User
+    createUser(
+      username: String!,
+      email: String!,
+      password: String!
+    ): User
     
-    updateUser(id: ID!, username: String, email: String, password: String): User
+    updateUser(
+      id: ID!,
+
+      # Optional
+
+      username: String,
+      email: String,
+      password: String
+    ): User
     
     deleteUser(id: ID!): String!
 
@@ -87,6 +106,7 @@ const typeDefs = `
       userId: ID!
 
       # Optional
+
       end: String,
       isComplete: Boolean,
     ): Session
@@ -95,6 +115,9 @@ const typeDefs = `
     # userId is not included in the updateSession mutation.
     updateSession(
       id: ID!,
+
+      # Optional
+
       name: String,
       start: String,
       end: String,
@@ -105,32 +128,38 @@ const typeDefs = `
 
     # ActivityType
 
-    createActivityType(
-      name: String!,
-      userId: ID!,
-      categoryId: ID!,
-
-      # Optional
-      activityCount: Int,
-    ): ActivityType
-
     updateActivityType(
       id: ID!,
+
+      # Optional
+
       categoryId: ID,
       name: String,
       activityCount: Int,
     ): ActivityType
     
+    # Not sure if we need this mutation - I haven't decided whether we want to delete
+    # entries or just keep them in the database with activityCount set to 0,
+    # which we can use to determine whether we want to render a particular
+    # ActivityType or not.
     deleteActivityType(id: ID!): String!
 
     # ActivityInstance
 
     createActivityInstance(
+      name: String!,
       start: String!,
       sessionId: ID!,
-      activityInstanceId: ID!,
+
+      # Needed if a new ActivityType is created alongside the new ActivityInstance.
+      categoryId: ID!,
+      userId: ID!,
 
       # Optional
+
+      # The activityType may not exist for a new ActivityInstance. If it doesn't,
+      # it will be created alongside the ActivityInstance.
+      activityTypeId: ID,
       end: String,
       isComplete: Boolean,
       duration: Int,
@@ -140,11 +169,18 @@ const typeDefs = `
     # so sessionId is not allowed in the updateActivity mutation.
     updateActivityInstance(
       id: ID!,
+
+      # Optional
+
+      # name is technically an ActivityType field, but on ActivityInstance
+      # creation in our app, the name is a field that will be submitted.
+      name: String,
       start: String,
-      categoryId: ID,
       end: String,
       isComplete: Boolean,
       duration: Int,
+      activityTypeId: ID,
+      categoryId: ID,
     ): ActivityInstance
     
     deleteActivityInstance(id: ID!): String!
@@ -157,6 +193,7 @@ const typeDefs = `
       userId: ID!,
 
       # Optional
+
       isPrimary: Boolean,
     ): Category
 
@@ -164,10 +201,14 @@ const typeDefs = `
     # so userId is not included in the updateCategory mutation.
     updateCategory(
       id: ID!,
+
+      # Optional
+
       name: String,
       color: String,
       isPrimary: Boolean,
     ): Category
+
     deleteCategory(id: ID!): String!
   }
 `;

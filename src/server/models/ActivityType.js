@@ -2,6 +2,7 @@ import {
   createModelInstance,
   updateModelInstance,
   getModelInstance,
+  getModelInstanceById,
   getModelInstances,
   deleteModelInstance,
 } from '../database/dbMethods';
@@ -22,10 +23,10 @@ const ActivityType = {
     ACTIVITY_TYPE_TABLE,
     ACTIVITY_TYPE_COLUMNS,
   ),
-  getActivityType: id => getModelInstance(id, ACTIVITY_TYPE_TABLE),
+  getActivityType: id => getModelInstanceById(id, ACTIVITY_TYPE_TABLE),
+  getActivityTypeByName: name => getModelInstance('name', name, ACTIVITY_TYPE_TABLE),
   updateActivityType: mutationParams => updateModelInstance(mutationParams, ACTIVITY_TYPE_TABLE, ACTIVITY_TYPE_COLUMNS),
   deleteActivityType: id => deleteModelInstance(id, ACTIVITY_TYPE_TABLE),
-
   getUserActivityTypes: userId => getModelInstances(userId, 'user_id', ACTIVITY_TYPE_TABLE),
 };
 
