@@ -73,15 +73,36 @@ const ActivityInstanceResolvers = {
       return ActivityInstance.updateActivityInstance(args);
     },
 
-    deleteActivityInstance(root, {id}) {
-      return ActivityInstance.deleteActivityInstance(id);
+    async deleteActivityInstance(root, {id, activityTypeId}) {
+      try {
+        const rowsDeleted = await ActivityInstance.deleteActivityInstance(id);
+
+        if (rowsDeleted === 0) {
+          return rowsDeleted;
+        }
+
+        const activityType = await ActivityType.getActivityType(activityTypeId);
+        const {activityCount} = activityType;
+        const updatedCount = activityCount > 0 ? activityCount - 1 : activityCount;
+
+        await ActivityType.updateActivityType({
+          id: activityTypeId,
+          activityCount: updatedCount,
+        });
+
+        return rowsDeleted;
+      } catch (error) {
+        console.log(error);
+
+        throw error;
+      }
     },
   },
 
   // GraphQL Type Resolvers
   ActivityInstance: {
-    activityType: (activityInstance, args) => ActivityType.getActivityType(activity.activityTypeId),
-    session: (activityInstance, args) => Session.getSession(activity.sessionId),
+    activityType: (activityInstance, args) => ActivityType.getActivityType(activityInstance.activityTypeId),
+    session: (activityInstance, args) => Session.getSession(activityInstance.sessionId),
   },
 };
 

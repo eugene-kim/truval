@@ -183,7 +183,11 @@ const typeDefs = `
       categoryId: ID,
     ): ActivityInstance
     
-    deleteActivityInstance(id: ID!): String!
+    # Not sure what I should be returning.
+    deleteActivityInstance(
+      id: ID!
+      activityTypeId: ID!
+    ): String
 
     # Category
 

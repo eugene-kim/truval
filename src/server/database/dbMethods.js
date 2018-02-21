@@ -75,9 +75,12 @@ export const getModelInstances = (foreignKeyValue, foreignKeyName, tableName) =>
   .catch(error => console.log(error));
 }
 
-export const deleteModelInstance = (id, tableName) => {
-  return knex(tableName).del().where('id', '=', id)
-  .catch(error => console.log(error));
+export const deleteModelInstance = async (id, tableName) => {
+  try {
+    return knex(tableName).del().where('id', id);
+  } catch (error) {
+    throw error;
+  }
 }
 
 /**
