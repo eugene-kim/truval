@@ -4,7 +4,8 @@ import types from '../actions/types';
 // Entities reducers
 import reduceUserEntities from './entities/user';
 import reduceSessionEntities from './entities/session';
-import reduceActivityEntities from './entities/activity';
+import reduceActivityTypeEntities from './entities/activityType';
+import reduceActivityInstanceEntities from './entities/activityInstance';
 import reduceCategoryEntities from './entities/category';
 
 // Ordered reducers
@@ -23,8 +24,11 @@ const focusApp = function(state = {}, action) {
       session: {
         entities: reduceSessionEntities(session.entities, action),
       },
-      activity: {
-        entities: reduceActivityEntities(activity.entities, action),
+      activityType: {
+        entities: reduceActivityTypeEntities(activity.entities, action),
+      },
+      activityInstance: {
+        entities: reduceActivityInstanceEntities(activity.entities, action),
       },
       category: {
         entities: reduceCategoryEntities(category.entities, action),

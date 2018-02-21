@@ -2,6 +2,7 @@ import {normalize} from 'normalizr';
 import {graphql} from 'graphql';
 import {parse} from 'graphql/language/parser';
 import {introspectionQuery} from 'graphql/utilities';
+import invariant from 'invariant';
 
 import gqlSchema from '../schema/typeDefSchema';
 import reduxify from './reduxify';
@@ -12,9 +13,10 @@ import { UPDATE_FROM_SERVER } from 'redux/actions/types';
 
 export default ({endpoint = 'http://localhost:3000/graphql', store} = {}) => {
 
-  if (!store) {
-    throw `A Redux store must be provided to construct the client!`;
-  }
+  invariant(
+    store,
+    `A Redux store must be provided to construct the client!`,
+  );
 
   return {
     query: async function(queryString, options = {}) {
@@ -42,12 +44,10 @@ export default ({endpoint = 'http://localhost:3000/graphql', store} = {}) => {
           const {status} = response;
           const responseBody = response._bodyText;
 
-          if (status !== 200) {
-            throw `
-              GraphQL operation failed! Status: ${status}
-              Reason:${responseBody}
-            `;
-          }
+          invariant(
+            status === 200,
+            `GraphQL operation failed! Status: ${status}\nReason:${responseBody}`,
+          );
 
           const gqlResponse = JSON.parse(responseBody);
           const reduxFriendlyData = await reduxify(gqlResponse, queryAST, schemaDoc);
@@ -68,9 +68,7 @@ export default ({endpoint = 'http://localhost:3000/graphql', store} = {}) => {
     },
 
     mutate: async function(mutationString, action, options = {}) {
-      if (!action) {
-        throw `A Redux action must be provided to mutate().`;
-      }
+      invariant(action, `A Redux action must be provided to mutate().`);
 
       const schemaDocumentWhole = await graphql(gqlSchema, introspectionQuery);
       const schemaDoc = schemaDocumentWhole.data.__schema;
@@ -88,12 +86,10 @@ export default ({endpoint = 'http://localhost:3000/graphql', store} = {}) => {
         const {status} = response;
         const responseBody = response._bodyText;
 
-        if (status !== 200) {
-          throw `
-            GraphQL operation failed! Status: ${status}
-            Reason:${responseBody}
-          `;
-        }
+        invariant(
+          status === 200,
+          `GraphQL operation failed! Status: ${status}\nReason:${responseBody}`,
+        );
 
         const gqlResponse = JSON.parse(responseBody);
         const reduxFriendlyData = await reduxify(gqlResponse, mutationAST, schemaDoc);

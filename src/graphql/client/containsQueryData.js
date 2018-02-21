@@ -1,4 +1,5 @@
 import {visit, BREAK} from 'graphql/language/visitor';
+import invariant from 'invariant';
 import astReader from './astReader';
 import {getReduxEntityName} from './reduxify';
 import pluralize from 'pluralize';
@@ -35,9 +36,10 @@ export default (operationAST, schemaDoc, store) => {
 
         operationName = schemaDoc[operationKey].name;
 
-        if (!operationName) {
-          throw `${operationKey} is not a valid operation!`;
-        }
+        invariant(
+          operationName,
+          `${operationKey} is not a valid operation`,
+        );
 
         operationSchema = schemaDoc.types.find(type => type.name === operationName);
       },
@@ -47,9 +49,10 @@ export default (operationAST, schemaDoc, store) => {
         const fieldName = astReader.getFieldName(node);
 
         if (astReader.isEntityNode(node)) {
-          if (!astReader.entityContainsId(node)) {
-            throw `Every non scalar field must include the id field in order for normalizr to work properly.`;
-          }
+          invariant(
+            astReader.entityContainsId(node),
+            `Every non scalar field must include the id field in order for normalizr to work properly.`,
+          );
 
           // An operation root field is a field that directly follows an operation name (query, mutation, subscription).
           const operationRootField = astReader.getOpRootField(node, operationSchema);
@@ -89,9 +92,11 @@ export default (operationAST, schemaDoc, store) => {
             } else { // Look for an alternative argument containing `Id`, e.g. `userId`.
               const typeIdArgument = astReader.getTypeIdArgument(node);
 
-              if (!typeIdArgument) {
-                throw `Root field must contain an argument containing an id or an entity id.`;
-              }
+
+              invariant(
+                typeIdArgument,
+                `Root field must contain an argument containing an id or an entity id.`,
+              );
 
               const typeIdName = typeIdArgument.name.value;
               const typeIdValue = typeIdArgument.value.value;

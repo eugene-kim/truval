@@ -1,9 +1,16 @@
 import _ from 'lodash';
+import invariant from 'invariant';
 
 
 export function addEntity(entities, action, entityTypeName) {
   const {payload} = action;
   const entity = payload[entityTypeName];
+
+  invariant (
+    entity,
+    `${entityTypeName} is a required property in ${action.type}'s payload.`,
+  );
+
   const {id} = entity;
 
   return _.merge({}, entities, {[id]: entity});
@@ -12,6 +19,12 @@ export function addEntity(entities, action, entityTypeName) {
 export function editEntity(entities, action) {
   const {payload} = action;
   const {id, propsToEdit} = payload;
+
+  invariant(
+    id || propsToEdit,
+    `id and propsToEdit are required properties in the action ${action.type}'s' payload.`,
+  );
+
   const entity = entities[id];
   const updatedEntity = _.merge({}, entity, propsToEdit);
 
@@ -21,6 +34,9 @@ export function editEntity(entities, action) {
 export function deleteEntity(entities, action) {
   const {payload} = action;
   const {id} = payload;
+
+  invariant(id, `id is a required property in the action ${action.type}'s' payload.`);
+
   const remainingEntities = {};
 
   Object.keys(entities).map(entityId => {

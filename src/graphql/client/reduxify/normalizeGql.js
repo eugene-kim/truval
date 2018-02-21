@@ -1,6 +1,7 @@
 import {schema} from 'normalizr';
 import {visit} from 'graphql/language/visitor';
 import _ from 'lodash';
+import invariant from 'invariant';
 import astReader, {GQL_FIELD_TYPES} from '../astReader';
 
 const NORMALIZR_SCHEMA_TYPES = {
@@ -40,9 +41,10 @@ const normalizeGql = (operationAST, schemaDoc) => {
         
         operationName = schemaDoc[operationKey].name;
 
-        if (!operationName) {
-          throw `${operationKey} is not a valid operation!`;
-        }
+        invariant(
+          operationName,
+          `${operationKey} is not a valid operation!`,
+        );
 
         operationSchema = schemaDoc.types.find(type => type.name === operationName);
       },
@@ -54,9 +56,10 @@ const normalizeGql = (operationAST, schemaDoc) => {
           return false;
         }
 
-        if (!astReader.entityContainsId(node)) {
-          throw `Every non scalar field must include the id field in order for normalizr to work properly.`;
-        }
+        invariant(
+          astReader.entityContainsId(node),
+          `Every non scalar field must include the id field in order for normalizr to work properly.`,
+        );
 
         const fieldName = astReader.getFieldName(node);
 

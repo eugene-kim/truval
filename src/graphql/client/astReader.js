@@ -84,16 +84,18 @@ const astReader = {
     const operationType = this.getOperationType(operationName, schemaDoc);
     const operationTypeName = operationType.name;
 
-    if (!operationType) {
-      throw `No operation of type ${operationTypeName} found.`;
-    }
+    invariant(
+      operationType,
+      `No operation of type ${operationTypeName} found.`,
+    );
 
     const operationFields = operationType.fields;
     const operationField = operationFields.find(operationField => operationField.name === fieldName);
 
-    if (!operationField) {
-      throw `No field with name ${fieldName} found under the fields of ${operationTypeName}`;
-    }
+    invariant(
+      operationField,
+      `No field with name ${fieldName} found under the fields of ${operationTypeName}`,
+    );
 
     return this.getNodeFieldType(operationField.type);
   },
@@ -111,7 +113,7 @@ const astReader = {
       case GQL_FIELD_TYPES.OBJECT:
         return name;
       default:
-        throw `Unknown field kind: ${kind}. Unable to grab node type name.`;
+        throw new Error(`Unknown field kind: ${kind}. Unable to grab node type name.`);
     }
   },
 

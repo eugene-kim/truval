@@ -8,10 +8,10 @@ const addCategory = (category = {}) => {
   };
 };
 
-const editCategory = (id, newProps = {}) => {
+const editCategory = (id, propsToEdit = {}) => {
   return {
     type: EDIT_CATEGORY,
-    payload: {id, newProps},
+    payload: {id, propsToEdit},
   };
 };
 

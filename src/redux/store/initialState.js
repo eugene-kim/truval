@@ -8,7 +8,11 @@ export default {
       entities: {},
     },
 
-    activity: {
+    activityType: {
+      entities: {},
+    },
+
+    activityInstance: {
       entities: {},
     },
 
@@ -23,7 +27,7 @@ export default {
 
     // TODO: Remove after finishing testing.
     session: 1,
-    activity: undefined,
+    activityInstance: undefined,
     category: undefined,
   },
 

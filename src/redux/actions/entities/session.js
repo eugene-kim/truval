@@ -8,10 +8,10 @@ const addSession = (session = {}) => {
   };
 };
 
-const editSession = (id, newProps = {}) => {
+const editSession = (id, propsToEdit = {}) => {
   return {
     type: EDIT_SESSION,
-    payload: {id, newProps},
+    payload: {id, propsToEdit},
   };
 };
 
