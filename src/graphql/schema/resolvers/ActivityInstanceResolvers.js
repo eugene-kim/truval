@@ -17,13 +17,11 @@ const getNewActivityTypeId = async args => {
     return activityType.id;
   } catch (error) {
 
-    console.log(error.message);
-
     if (error.message.includes('duplicate key value violates unique constraint')) {
-      console.log(`ActivityType with name ${name} already exists.`);
+      console.log(`ActivityType with name '${name}' already exists. Grabbing from DB.`);
 
       try {
-        const activityType = await ActivityType.getActivityTypeByName(name);
+        const activityType = await ActivityType.getActivityTypeByName({userId, name});
 
         return activityType.id;
       } catch (error) {

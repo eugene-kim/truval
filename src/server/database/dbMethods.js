@@ -50,9 +50,10 @@ export const updateModelInstance = (mutationParams, tableName, columnNames) => {
   .catch(error => console.log(error));
 }
 
-export const getModelInstance = async (columnName, columnValue, tableName) => {
+export const getModelInstance = async (matchProps, tableName) => {
   try {
-    const tableRow = await knex(tableName).first().where(columnName, '=', columnValue);
+    const dbFriendlyProps = makeDbCompatible(matchProps);
+    const tableRow = await knex(tableName).first().where(dbFriendlyProps);
 
     return toCamelCaseKeys(tableRow);
   } catch (error) {
@@ -62,7 +63,7 @@ export const getModelInstance = async (columnName, columnValue, tableName) => {
 
 export const getModelInstanceById = async (id, tableName) => {
   try {
-    return getModelInstance('id', id, tableName);
+    return getModelInstance({id}, tableName);
   } catch (error) {
     throw error;
   }
@@ -104,7 +105,7 @@ const makeDbCompatible = object => {
  * TODO: Add tests.
  */
 const removeUndefinedProperties = object => {
-  if (!object) {
+  if (!object || typeof object !== 'object') {
     return {};
   }
 
