@@ -81,7 +81,7 @@ const astReader = {
     return schemaDoc.types.find(schemaType => schemaType.name === operationName);
   },
 
-  getOperationFieldType(operationName, fieldName, schemaDoc) {
+  getOperationRootFieldType(operationName, fieldName, schemaDoc) {
     const operationType = this.getOperationType(operationName, schemaDoc);
     const operationTypeName = operationType.name;
 

@@ -21,6 +21,6 @@ const reduxify = async (gqlResponse, operationAST, schemaDoc) => {
  * (e.g. get a single session with `session` or get all of a user's sessions via `sessions`) while
  * an entity in our Redux store will exist in a single location.
  */
-export const getReduxEntityName = name => pluralize.singular(_.toLower(name));
+export const getReduxEntityName = name => pluralize.singular(_.camelCase(name));
 
 export default reduxify;
