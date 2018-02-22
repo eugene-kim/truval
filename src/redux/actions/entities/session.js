@@ -1,21 +1,21 @@
 import {ADD_SESSION, EDIT_SESSION, DELETE_SESSION} from '../types';
 
 
-const addSession = (session = {}) => {
+export const addSession = (session = {}) => {
   return {
     type: ADD_SESSION,
     payload: {session},
   };
 };
 
-const editSession = (id, propsToEdit = {}) => {
+export const editSession = (id, propsToEdit = {}) => {
   return {
     type: EDIT_SESSION,
     payload: {id, propsToEdit},
   };
 };
 
-const deleteSession = (id) => {
+export const deleteSession = (id) => {
   return {
     type: DELETE_SESSION,
     payload: id,
@@ -23,7 +23,7 @@ const deleteSession = (id) => {
 };
 
 
-export {
+export default {
   addSession,
   editSession,
   deleteSession,

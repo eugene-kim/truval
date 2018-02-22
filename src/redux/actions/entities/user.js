@@ -23,7 +23,7 @@ export const deleteUser = id => {
 };
 
 
-export {
+export default {
   addUser,
   editUser,
   deleteUser,

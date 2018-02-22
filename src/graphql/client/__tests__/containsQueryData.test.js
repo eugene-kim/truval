@@ -404,7 +404,7 @@ describe('test containsQueryData()', () => {
       expect(storeContainsData).toBe(false);
     });
 
-    it.only('should return true with a store containing all entities and all scalar fields', () => {
+    it('should return true with a store containing all entities and all scalar fields', () => {
       const initialStoreState = _.merge(
         {},
         initialState,

@@ -5,21 +5,21 @@ import {
 } from '../types';
 
 
-const addActivityInstance = (activity = {}) => {
+export const addActivityInstance = (activity = {}) => {
   return {
     type: ADD_ACTIVITY_INSTANCE,
     payload: {activity},
   };
 };
 
-const editActivityInstance = (id, propsToEdit = {}) => {
+export const editActivityInstance = (id, propsToEdit = {}) => {
   return {
     type: EDIT_ACTIVITY_INSTANCE,
     payload: {id, propsToEdit},
   };
 };
 
-const deleteActivityInstance = ({id, activityTypeId}) => {
+export const deleteActivityInstance = ({id, activityTypeId}) => {
   return {
     type: DELETE_ACTIVITY_INSTANCE,
     payload: {id, activityTypeId},
@@ -27,7 +27,7 @@ const deleteActivityInstance = ({id, activityTypeId}) => {
 };
 
 
-export {
+export default {
   addActivityInstance,
   editActivityInstance,
   deleteActivityInstance,

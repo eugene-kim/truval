@@ -177,6 +177,7 @@ export default (operationAST, schemaDoc, store) => {
           const parent = astReader.getCurrentParent(stack);
           const entityName = getReduxEntityName(parent.name);
           const entityIds = parent.ids;
+
           const scalarsExists = entityIds.every(entityId => {
 
             // We know the entity exists by virtue of getting to this block withing the function

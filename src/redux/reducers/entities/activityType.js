@@ -9,7 +9,7 @@ import {
 
   DELETE_ACTIVITY_INSTANCE
 } from '../../actions/types';
-
+import {editActivityType} from '../../actions/entities/activityType';
 
 import {addEntity, editEntity, deleteEntity, hydrateEntities} from '../commonReducers';
 
@@ -29,6 +29,7 @@ const activityTypeEntities = function(activityTypeEntities = {}, action) {
       return hydrateEntities(activityTypeEntities, action, 'activityType');
     }
     case DELETE_ACTIVITY_INSTANCE: {
+      debugger
       const {payload} = action;
       const {id, activityTypeId} = payload;
 
@@ -37,10 +38,10 @@ const activityTypeEntities = function(activityTypeEntities = {}, action) {
         `id and activityTypeId are required properties on ${action.type}'s payload.`,
       );
 
-      const activityType = activityTypeEntities.entities[activityTypeId];
-      const {activityCount} = activitiyType;
+      const activityType = activityTypeEntities[activityTypeId];
+      const {activityCount} = activityType;
       const updatedCount = activityCount - 1;
-      const editActivityTypeAction = editActivityType(id, {activityCount: updatedCount});
+      const editActivityTypeAction = editActivityType(activityTypeId, {activityCount: updatedCount});
 
       return editEntity(activityTypeEntities, editActivityTypeAction);
     }
