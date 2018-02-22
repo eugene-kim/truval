@@ -59,81 +59,53 @@ const store = createStore(reducer, initialState);
 //     console.log(error);
 //   }
 // });
-// app.get('/testQuery', async (req, res) => {
-//   // const queryString = `query {
-//   //   user(id:1) {
-//   //     id,
-//   //     username,
-//   //     email,
-//   //     password,
-//   //     sessions {
-//   //       id,
-//   //       name,
-//   //       start,
-//   //       activities {
-//   //         id,
-//   //         isComplete,
-//   //         session {
-//   //           id,
-//   //           end,
-//   //           isComplete,
-//   //           activities {
-//   //             id,
-//   //             start,
-//   //             end,
-//   //           }
-//   //         },
-//   //         category {
-//   //           id,
-//   //           color,
-//   //           name
-//   //         }
-//   //       }
-//   //     }
-//   //   }
-//   // }`;
-//   const queryString = `query {
-//     user(id:1) {
-//       id,
-//       username,
-//       email,
-//       password,
-//       sessions {
-//         id,
-//         name,
-//         start,
-//         activities {
-//           id,
-//           isComplete,
-//           session {
-//             id,
-//             end,
-//             isComplete,
-//             activities {
-//               id,
-//               start,
-//               end,
-//             }
-//           },
-//         }
-//       }
-//     }
-//   }`;
-//   // const queryString = `query {
-//   //   sessions(userId:1) {
-//   //     id, name
-//   //   }
-//   // }`;
+app.get('/testQuery', async (req, res) => {
+  const queryString = `query {
+    user(id:"cb39dbb5-caa8-4323-93a5-13450b875887") {
+      id,
+      username,
+      categories {
+        id,
+        name,
+        color,
+      },
+      sessions {
+        id,
+        name,
+        start,
+        end,
+        activityInstances {
+          id,
+          start,
+          end,
+          isComplete,
+          activityType {
+            id,
+            category {
+              id,
+              name,
+              color
+            }
+          }
+        }
+      },
+      activityTypes {
+        id,
+        name,
+        activityCount,
+      }
+    }
+  }`;
 
-//   try {
-//     const normalizedData = await gqlClient().query(queryString, store);
+  try {
+    const normalizedData = await gqlClient({store: createStore(reducer, initialState)}).query(queryString);
 
-//     res.setHeader('Content-Type', 'application/json');
-//     res.send(JSON.stringify(normalizedData));
-//   } catch(error) {
-//     console.log(error);
-//   }
-// })
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify(normalizedData));
+  } catch(error) {
+    console.log(error);
+  }
+})
 
 const PORT = 3000
 app.listen(PORT, () => {

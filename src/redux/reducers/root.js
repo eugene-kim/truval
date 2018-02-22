@@ -13,7 +13,7 @@ import reduceSessionActivities from './ordered/sessionActivities';
 
 
 const focusApp = function(state = {}, action) {
-  const {user, session, activity, category} = state.entities;
+  const {user, session, activityType, activityInstance, category} = state.entities;
   const {sessionActivities} = state.ordered;
 
   return {
@@ -25,10 +25,10 @@ const focusApp = function(state = {}, action) {
         entities: reduceSessionEntities(session.entities, action),
       },
       activityType: {
-        entities: reduceActivityTypeEntities(activity.entities, action),
+        entities: reduceActivityTypeEntities(activityType.entities, action),
       },
       activityInstance: {
-        entities: reduceActivityInstanceEntities(activity.entities, action),
+        entities: reduceActivityInstanceEntities(activityInstance.entities, action),
       },
       category: {
         entities: reduceCategoryEntities(category.entities, action),
@@ -41,7 +41,7 @@ const focusApp = function(state = {}, action) {
 
       // TODO: Remove after finishing testing.
       session: 1,
-      activity: undefined,
+      activityInstance: undefined,
       category: undefined,
     },
 

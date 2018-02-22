@@ -1,6 +1,6 @@
 {
   "entities": {
-    "activities": {
+    "activityInstances": {
       "1": {
         "id": "1",
         "start": "2017-10-20T17:00:00.000-07:00",
@@ -175,7 +175,7 @@
         "id": "1",
         "end": null,
         "isComplete": false,
-        "activities": [
+        "activityInstances": [
           "1",
           "2",
           "3",
@@ -190,7 +190,7 @@
         "id": "2",
         "end": null,
         "isComplete": false,
-        "activities": [
+        "activityInstances": [
           "9",
           "10",
           "11",
@@ -205,7 +205,7 @@
         "id": "3",
         "end": "2017-10-22T15:51:09.489-07:00",
         "isComplete": true,
-        "activities": [
+        "activityInstances": [
           "17",
           "18",
           "19",
@@ -222,7 +222,7 @@
         "id": "1",
         "name": "Study Session 1",
         "start": "2017-10-21T15:51:09.489-07:00",
-        "activities": [
+        "activityInstances": [
           "1",
           "2",
           "3",
@@ -237,7 +237,7 @@
         "id": "2",
         "name": "Study Session 2",
         "start": "2017-10-21T15:51:09.489-07:00",
-        "activities": [
+        "activityInstances": [
           "9",
           "10",
           "11",
@@ -252,7 +252,7 @@
         "id": "3",
         "name": "Study Session 3",
         "start": "2017-10-21T15:51:09.489-07:00",
-        "activities": [
+        "activityInstances": [
           "17",
           "18",
           "19",
@@ -267,19 +267,19 @@
         "id": "7",
         "name": "new session",
         "start": "2017-10-21T15:51:09.489-07:00",
-        "activities": []
+        "activityInstances": []
       },
       "8": {
         "id": "8",
         "name": "new session",
         "start": "2017-10-21T15:51:09.489-07:00",
-        "activities": []
+        "activityInstances": []
       },
       "9": {
         "id": "9",
         "name": "new session",
         "start": "2017-10-21T15:51:09.489-07:00",
-        "activities": []
+        "activityInstances": []
       }
     },
     "user": {

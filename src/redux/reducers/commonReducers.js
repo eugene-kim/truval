@@ -21,7 +21,7 @@ export function editEntity(entities, action) {
   const {id, propsToEdit} = payload;
 
   invariant(
-    id || propsToEdit,
+    id && propsToEdit,
     `id and propsToEdit are required properties in the action ${action.type}'s' payload.`,
   );
 

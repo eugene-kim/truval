@@ -72,60 +72,75 @@ describe('test normalizeGql', () => {
     });
 
     it('five level nested query with circular reference', () => {
-      const query = `query {
-        user(id:1) {
-          id,
-          username,
-          email,
-          password,
-          sessions {
+      const query = `
+        query {
+          user(id:"cb39dbb5-caa8-4323-93a5-13450b875887") {
             id,
-            name,
-            start,
-            isComplete,
-            activities {
+            username,
+            categories {
               id,
+              name,
+              color,
+            },
+            sessions {
+              id,
+              name,
               start,
               end,
-              isComplete,
-              session {
+              activityInstances {
                 id,
                 start,
                 end,
                 isComplete,
-                activities {
+                session {
                   id,
-                  start,
-                  end,
+                  name,
+                  activityInstances {
+                    id,
+                  }
                 }
-              },
-              category {
-                id,
-                color,
-                name
+                activityType {
+                  id,
+                  category {
+                    id,
+                    name,
+                    color
+                  }
+                }
               }
+            },
+            activityTypes {
+              id,
+              name,
+              activityCount,
             }
           }
-        }
-      }`;
+        }`;
       const queryAST = parse(query);
       const resultNormalizrSchema = normalizeGql(queryAST, schemaDoc);
       const expectedNormalizrSchema = {
         data: {
           user: new schema.Entity('user', {
+            categories: new schema.Array(new schema.Entity('categories')),
             sessions: new schema.Array(new schema.Entity('sessions', {
-              activities: new schema.Array(new schema.Entity('activities', {
+              activityInstances: new schema.Array(new schema.Entity('activityInstances', {
                 session: new schema.Entity('session', {
-                  activities: new schema.Array(new schema.Entity('activities')),
+                  activityInstances: new schema.Array(new schema.Entity('activityInstances')),
                 }),
-                category: new schema.Entity('category'),
+                activityType: new schema.Entity('activityType', {
+                  category: new schema.Entity('category'),
+                }),
               })),
             })),
+            activityTypes: new schema.Array(new schema.Entity('activityTypes')),
           }),
         }
       };
+
       const resultSchemaString = JSON.stringify(resultNormalizrSchema);
       const expectedSchemaString = JSON.stringify(expectedNormalizrSchema);
+
+      debugger
 
       expect(resultSchemaString === expectedSchemaString).toBe(true);
     });
@@ -188,7 +203,7 @@ describe('test normalizeGql', () => {
             id,
             name,
             start,
-            activities {
+            activityInstances {
               id,
               name
             }
@@ -201,7 +216,7 @@ describe('test normalizeGql', () => {
         data: {
           updateUser: new schema.Entity('updateUser', {
             sessions: new schema.Array(new schema.Entity('sessions', {
-              activities: new schema.Array(new schema.Entity('activities')),
+              activityInstances: new schema.Array(new schema.Entity('activityInstances')),
             })),
           }),
         },

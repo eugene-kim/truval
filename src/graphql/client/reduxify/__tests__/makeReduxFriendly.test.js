@@ -32,14 +32,14 @@ describe('test makeReduxFriendly', () => {
             id,
             name,
             start,
-            activities {
+            activityInstances {
               id,
               isComplete,
               session {
                 id,
                 end,
                 isComplete,
-                activities {
+                activityInstances {
                   id,
                   start,
                   end,

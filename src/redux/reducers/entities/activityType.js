@@ -33,7 +33,7 @@ const activityTypeEntities = function(activityTypeEntities = {}, action) {
       const {id, activityTypeId} = payload;
 
       invariant(
-        id || activityTypeId,
+        id && activityTypeId,
         `id and activityTypeId are required properties on ${action.type}'s payload.`,
       );
 

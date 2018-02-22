@@ -359,38 +359,37 @@ describe('test containsQueryData()', () => {
     set('query', () => {
       return `
         query {
-          user(id:1) {
-            id,
+          user(id:"cb39dbb5-caa8-4323-93a5-13450b875887") {
             username,
-            email,
-            password,
+            categories {
+              id,
+              name,
+              color,
+            },
             sessions {
               id,
               name,
               start,
-              isComplete,
-              activities {
+              end,
+              activityInstances {
                 id,
                 start,
                 end,
                 isComplete,
-                session {
+                activityType {
                   id,
-                  start,
-                  end,
-                  isComplete,
-                  activities {
+                  category {
                     id,
-                    start,
-                    end,
+                    name,
+                    color
                   }
-                },
-                category {
-                  id,
-                  color,
-                  name
                 }
               }
+            },
+            activityTypes {
+              id,
+              name,
+              activityCount,
             }
           }
         }`;
@@ -429,7 +428,7 @@ describe('test containsQueryData()', () => {
                   start: '2017-10-21T15:51:09.489-07:00',
                   end: '2017-10-21T15:51:09.489-07:00',
                   isComplete: false,
-                  activities: [1,2],
+                  activitieInstances: [1,2],
                 },
                 '2': {
                   id: '2',
@@ -437,7 +436,7 @@ describe('test containsQueryData()', () => {
                   start: '2017-10-21T15:51:09.489-07:00',
                   end: '2017-10-21T15:51:09.489-07:00',
                   isComplete: false,
-                  activities: [3,4],
+                  activitieInstances: [3,4],
                 },
                 '3': {
                   id: '3',
@@ -445,11 +444,11 @@ describe('test containsQueryData()', () => {
                   start: '2017-10-21T15:51:09.489-07:00',
                   end: '2017-10-21T15:51:09.489-07:00',
                   isComplete: false,
-                  activities: [5,6],
+                  activitieInstances: [5,6],
                 },
               },
             },
-            activity: {
+            activityInstance: {
               entities: {
                 '1': {
                   'id': '1',
