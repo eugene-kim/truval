@@ -30,24 +30,29 @@ export const createModelInstance = async (requiredParams, optionalParams, tableN
   }
 }
 
-/**1
+/**
  * Updates an already existing instance of a GraphQL type in Postgres and
  * returns the updated object.
  */
-export const updateModelInstance = (mutationParams, tableName, columnNames) => {
-  const id = mutationParams.id;
-  const dbPropertiesToUpdate = makeDbCompatible(mutationParams);
+export const updateModelInstance = async (mutationParams, tableName, columnNames) => {
+  try {
+    const id = mutationParams.id;
+    const dbPropertiesToUpdate = makeDbCompatible(mutationParams);
+    const dbResults = await knex(tableName)
+      .returning(columnNames)
+      .update(dbPropertiesToUpdate)
+      .where('id', id);
 
-  return knex(tableName)
-  .update(dbPropertiesToUpdate).where('id', '=', id).returning(columnNames)
-  .then(dbResults => {
     const dbResult = dbResults[0];
 
     console.log(dbResult);
 
     return toCamelCaseKeys(dbResult);
-  })
-  .catch(error => console.log(error));
+  } catch (error) {
+    console.error(error);
+    
+    throw error;
+  }
 }
 
 export const getModelInstance = async (matchProps, tableName) => {
@@ -125,14 +130,14 @@ const removeUndefinedProperties = object => {
  * Useful when returning an object returned by Postgres that's in snake_case
  * into a properly formatted GraphQL response.
  */
-const toCamelCaseKeys = object => _.mapKeys(object, (value, key) => _.camelCase(key));
+export const toCamelCaseKeys = object => _.mapKeys(object, (value, key) => _.camelCase(key));
 
 /**
  * Returns an object whose keys are in snake case.
  *
  * Useful when formatting an object to be put into Postgres.
  */
-const toSnakeCaseKeys = object => _.mapKeys(object, (value, key) => _.snakeCase(key));
+export const toSnakeCaseKeys = object => _.mapKeys(object, (value, key) => _.snakeCase(key));
 
 
 export default {

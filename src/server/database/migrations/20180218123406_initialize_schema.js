@@ -36,10 +36,7 @@ exports.up = async function(knex, Promise) {
   await knex.schema.createTable('ActivityType', table => {
     table.uuid('id').primary();
     table.string('name').notNullable();
-
-    // When an ActivityType is created, it's created with an ActivityInstance, so
-    // the starting value should be 1.
-    table.integer('activity_count').notNullable().defaultTo(1);
+    table.integer('activity_count').notNullable().defaultTo(0);
     table.timestamps(true, true);
     table.unique(['name', 'user_id']);
 

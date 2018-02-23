@@ -1,29 +1,45 @@
 import _ from 'lodash';
 
+import knex from 'server/database/index';
 import ActivityInstance from 'server/models/ActivityInstance';
 import ActivityType from 'server/models/ActivityType';
 import Session from 'server/models/Session';
 
-const getNewActivityTypeId = async args => {
+
+/**
+ * Increments the related activityType's activityCount property. If an activityType
+ * doesn't exist, one will be created and returned.
+
+ * Note: I'm not happy that this method is doing multiple things at once, but I'd
+ * rather reduce the number of calls made to the database.
+ */
+const incrementActivityTypeCount = async args => {
   const {activityTypeId, name, categoryId, userId} = args;
 
   if (activityTypeId) {
-    return activityTypeId;
+    const activityType = ActivityType.incrementActivityCount({id: activityTypeId});
+
+    return activityType;
   }
 
   try {
-    const activityType = await ActivityType.createActivityType({name, categoryId, userId});
+    const activityType = await ActivityType.createActivityType({
+      name,
+      categoryId,
+      userId,
+      activityCount: 1,
+    });
 
-    return activityType.id;
+    return activityType;
   } catch (error) {
 
     if (error.message.includes('duplicate key value violates unique constraint')) {
       console.log(`ActivityType with name '${name}' already exists. Grabbing from DB.`);
 
       try {
-        const activityType = await ActivityType.getActivityTypeByName({userId, name});
+        const activityType = await ActivityType.incrementActivityCount({name});
 
-        return activityType.id;
+        return activityType;
       } catch (error) {
         throw error;
       }
@@ -59,7 +75,9 @@ const ActivityInstanceResolvers = {
           duration,
           isComplete,
         } = args;
-        const activityTypeId = await getNewActivityTypeId(args);
+
+        const activityType = await incrementActivityTypeCount(args);
+        const activityTypeId = activityType.id;
         const requiredParams = {start, activityTypeId, sessionId};
         const optionalParams = {end, duration, isComplete};
 
@@ -77,18 +95,7 @@ const ActivityInstanceResolvers = {
       try {
         const rowsDeleted = await ActivityInstance.deleteActivityInstance(id);
 
-        if (rowsDeleted === 0) {
-          return rowsDeleted;
-        }
-
-        const activityType = await ActivityType.getActivityType(activityTypeId);
-        const {activityCount} = activityType;
-        const updatedCount = activityCount > 0 ? activityCount - 1 : activityCount;
-
-        await ActivityType.updateActivityType({
-          id: activityTypeId,
-          activityCount: updatedCount,
-        });
+        ActivityType.decrementActivityCount({id: activityTypeId});
 
         return rowsDeleted;
       } catch (error) {
