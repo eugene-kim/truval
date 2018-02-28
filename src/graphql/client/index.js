@@ -67,13 +67,7 @@ export default ({endpoint = 'http://localhost:3000/graphql', store} = {}) => {
       }
     },
 
-    mutate: async function(mutationString, action, options = {}) {
-      invariant(action, `A Redux action must be provided to mutate().`);
-
-      const schemaDocumentWhole = await graphql(gqlSchema, introspectionQuery);
-      const schemaDoc = schemaDocumentWhole.data.__schema;
-      const mutationAST = parse(mutationString);
-
+    mutate: async function(mutationString, options = {}) {
       try {
         const response = await fetch(endpoint, {
           method: 'POST',
@@ -92,23 +86,21 @@ export default ({endpoint = 'http://localhost:3000/graphql', store} = {}) => {
         );
 
         const gqlResponse = JSON.parse(responseBody);
-        const reduxFriendlyData = await reduxify(gqlResponse, mutationAST, schemaDoc);
 
-        // Dispatch the action explicitly associated with the mutation.
-        store.dispatch(action);
+        if (options.shouldNormalizeData) {
+          const schemaDocumentWhole = await graphql(gqlSchema, introspectionQuery);
+          const schemaDoc = schemaDocumentWhole.data.__schema;
+          const mutationAST = parse(mutationString);
+          const normalizedData = await reduxify(gqlResponse, mutationAST, schemaDoc);
+          
+          return normalizedData;  
+        }
 
-        // We might as well update the store with the data we retrieved.
-        store.dispatch({
-          type: UPDATE_FROM_SERVER,
-          payload: reduxFriendlyData,
-        });
-
-        // TODO: We don't need to be returning back this data when we're using the client.
-        // We'll probably we sending back something like a response object indicating the status
-        // of the GraphQL request.
-        return reduxFriendlyData;
+        return gqlResponse;
       } catch(error) {
         console.error(error);
+
+        throw error;
       }
     },
 

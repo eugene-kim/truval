@@ -32,7 +32,6 @@ describe('activityInstance entity reducer tests', () => {
     set('activityTypeEntities', () => initialStoreState.entities.activityType.entities);
 
     it(`Related activityType activityCount is reduced by 1.`, () => {
-      debugger
       const updatedActivityTypeEntities = activityTypeReducer(activityTypeEntities, deleteActivityInstanceAction);
       const updatedActivityType = updatedActivityTypeEntities['1982f070-704c-4054-beb4-ea188399fc10'];
       const updatedActivityCount = updatedActivityType.activityCount;

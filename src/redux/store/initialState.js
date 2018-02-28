@@ -1,9 +1,5 @@
 export default {
   entities: {
-    user: {
-      entities: {},
-    },
-
     session: {
       entities: {},
     },
@@ -23,12 +19,18 @@ export default {
 
   // Contains pointers to the currently rendered or selected object.
   current: {
-    user: undefined,
 
     // TODO: Remove after finishing testing.
     session: 1,
     activityInstance: undefined,
     category: undefined,
+  },
+
+  app: {
+    user: {
+      id: '',
+      isFetching: false,
+    },
   },
 
   // Contains items that need to be ordered in some way, such as a Session's activities

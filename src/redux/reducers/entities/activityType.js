@@ -7,10 +7,10 @@ import {
   DELETE_ACTIVITY_TYPE,
   UPDATE_FROM_SERVER,
 
-  DELETE_ACTIVITY_INSTANCE
+  ADD_ACTIVITY_INSTANCE,
+  DELETE_ACTIVITY_INSTANCE,
 } from '../../actions/types';
 import {editActivityType} from '../../actions/entities/activityType';
-
 import {addEntity, editEntity, deleteEntity, hydrateEntities} from '../commonReducers';
 
 
@@ -29,7 +29,6 @@ const activityTypeEntities = function(activityTypeEntities = {}, action) {
       return hydrateEntities(activityTypeEntities, action, 'activityType');
     }
     case DELETE_ACTIVITY_INSTANCE: {
-      debugger
       const {payload} = action;
       const {id, activityTypeId} = payload;
 
@@ -44,6 +43,9 @@ const activityTypeEntities = function(activityTypeEntities = {}, action) {
       const editActivityTypeAction = editActivityType(activityTypeId, {activityCount: updatedCount});
 
       return editEntity(activityTypeEntities, editActivityTypeAction);
+    }
+    case ADD_ACTIVITY_INSTANCE: {
+
     }
     default:
       return activityTypeEntities;

@@ -2,6 +2,7 @@
 import React, {Component} from 'react';
 import {StyleSheet, Text, TextInput, View} from 'react-native';
 import { applyMiddleware, createStore } from 'redux';
+import thunk from 'redux-thunk';
 import logger from 'redux-logger';
 import { Provider } from 'react-redux';
 
@@ -15,7 +16,10 @@ import PropTypes from './src/view/util/PropTypes'
 const store = createStore(
   rootReducer,
   initialState,
-  applyMiddleware(logger),
+  applyMiddleware(
+    logger,
+    thunk,
+  ),
 );
 
 class FocusApp extends Component {
