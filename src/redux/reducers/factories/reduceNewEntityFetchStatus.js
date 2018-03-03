@@ -2,7 +2,7 @@ import _ from 'libs/dash';
 import {FAILED, LOADING, LOADED} from 'fetchStatus';
 
 
-const reduceNewEntityFetchStatus = entityName => (entityNew = '', action) => {
+const reduceNewEntityFetchStatus = entityName => (newFetchStatus = '', action) => {
   const {type} = action;
   const entityNameCaps = _.toSnakeUpper(entityName);
   const createEntityRequest = `CREATE_${entityNameCaps}_REQUEST`;
@@ -20,7 +20,7 @@ const reduceNewEntityFetchStatus = entityName => (entityNew = '', action) => {
       return FAILED;
     }
     default:
-      return entityNew;
+      return newFetchStatus;
   }
 };
 

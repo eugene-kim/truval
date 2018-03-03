@@ -11,15 +11,15 @@ import {
   DELETE_ACTIVITY_INSTANCE_FAILURE,
 } from '../types';
 import {addActivityType} from './activityType';
-import {getSingleNormalizedEntity} from '../responseUtils';
+import {getLoneNormalizedEntity} from '../responseUtils';
 
 
-export const createActivityInstance = async (activity = {}, client) => dispatch => {
-  dispatch(createActivityInstanceRequest(activity));
+export const createActivityInstance = async (activityInstance = {}, client) => dispatch => {
+  dispatch(createActivityInstanceRequest(activityInstance));
 
   const createActivityInstanceMutation = `
     mutation {
-      createActivityInstance(${getGqlParamString(activity)}) {
+      createActivityInstance(${getGqlParamString(activityInstance)}) {
         id, isComplete, start, end
         activityType {
           id, name, activityCount, categoryId,
@@ -35,8 +35,8 @@ export const createActivityInstance = async (activity = {}, client) => dispatch 
       },
     );
 
-    const activityInstance = getSingleNormalizedEntity('activityInstance', response);
-    const activityType = getSingleNormalizedEntity('activityType', response);
+    const activityInstance = getLoneNormalizedEntity('activityInstance', response);
+    const activityType = getLoneNormalizedEntity('activityType', response);
 
     dispatch(addActivityType(activityType));    
     dispatch(createActivityInstanceSuccess(activityInstance);
@@ -47,15 +47,15 @@ export const createActivityInstance = async (activity = {}, client) => dispatch 
   }
 };
 
-const createActivityInstanceRequest = (activity = {}) => ({
+const createActivityInstanceRequest = (activityInstance = {}) => ({
   type: ADD_ACTIVITY_INSTANCE_REQUEST,
-  payload: {activity},
+  payload: {activityInstance},
 });
 
-const createActivityInstanceSuccess = (activity = {}) => {
+const createActivityInstanceSuccess = (activityInstance = {}) => {
   return {
     type: ADD_ACTIVITY_INSTANCE_SUCCESS,
-    payload: {activity},
+    payload: {activityInstance},
   };
 };
 
@@ -66,7 +66,9 @@ const createActivityInstanceFailure = errorMessage => {
   };
 };
 
-export const editActivityInstance = (id, propsToEdit = {}) => {
+
+// TODO - do this later!
+export const updateActivityInstance = (id, propsToEdit = {}) => {
   return {
     type: EDIT_ACTIVITY_INSTANCE,
     payload: {id, propsToEdit},
@@ -83,6 +85,6 @@ export const deleteActivityInstance = ({id, activityTypeId}) => {
 
 export default {
   addActivityInstance,
-  editActivityInstance,
+  updateActivityInstance,
   deleteActivityInstance,
 };
