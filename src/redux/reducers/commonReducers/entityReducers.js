@@ -2,6 +2,10 @@ import _ from 'lodash';
 import invariant from 'invariant';
 
 
+
+export const addEntity = (action, entityTypeName) => entities =>
+  createEntity(action, entityTypeName)(entities);
+
 /**
  * We use currying so that we can compose this function with other reducers that simply take in
  * `entities` as the param.

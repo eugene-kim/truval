@@ -6,6 +6,9 @@ import fetchStatusReducerFactory from './factories/fetchStatusReducerFactory';
 import entitiesReducerFactory from './factories/entitiesReducerFactory';
 import reduceNewEntityFetchStatus from './entities/reduceNewEntity';
 
+import activityTypeEntitiesReducer from './entities/activityTypeEntitiesReducer';
+
+// User
 import reduceUserProps from './app/reduceUserProps';
 import reduceUserFetchStatus from './app/reduceUserFetchStatus';
 
@@ -43,7 +46,7 @@ const focusApp = function(state = {}, action) {
         }
       },
       activityType: {
-        entities: entitiesReducerFactory('activityType')(getActivityTypeEntities(state), action),
+        entities: activityTypeEntitiesReducer(getActivityTypeEntities(state), action),
         fetchStatus: fetchStatusReducerFactory('activityType')(getActivityTypeFetchStatus(state), action),
         new: {
           fetchStatus: reduceNewEntityFetchStatus('activityType')(getNewActivityTypeFetchStatus(state), action),

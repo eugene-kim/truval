@@ -10,6 +10,8 @@ import {
   DELETE_ACTIVITY_INSTANCE_SUCCESS,
   DELETE_ACTIVITY_INSTANCE_FAILURE,
 } from '../types';
+import {addActivityType} from './activityType';
+import {getSingleNormalizedEntity} from '../responseUtils';
 
 
 export const createActivityInstance = async (activity = {}, client) => dispatch => {
@@ -33,17 +35,10 @@ export const createActivityInstance = async (activity = {}, client) => dispatch 
       },
     );
 
-    // TODO: Put this in its own method.
-    const activityInstanceEntities = response.entities.activityInstance;
-    const activityInstanceId = Object.keys(activityInstanceEntities)[0];
-    const activityInstance = activityInstanceEntities[activityInstanceId];
+    const activityInstance = getSingleNormalizedEntity('activityInstance', response);
+    const activityType = getSingleNormalizedEntity('activityType', response);
 
-    const activityTypeEntities = response.entities.activityType;
-    const activityTypeId = Object.keys(activityTypeEntities)[0];
-    const activityType = activityTypeEntities[activityTypeId];
-
-    // Dispatch some add / update activityTask.
-    
+    dispatch(addActivityType(activityType));    
     dispatch(createActivityInstanceSuccess(activityInstance);
   } catch (error) {
     const {message} = error;
