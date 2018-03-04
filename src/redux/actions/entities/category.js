@@ -12,7 +12,7 @@ import {
 } from '../types';
 
 
-export const createCategory = async (category = {}, client) => dispatch => {
+export const createCategory = async (category = {}, client) => async dispatch => {
   dispatch(createCategoryRequest(category));
 
   const createCategoryMutation = `
@@ -51,7 +51,7 @@ const createCategoryFailure = errorMessage => ({
   payload: {errorMessage},
 });
 
-export const updateCategory = async (id, propsToUpdate, client) => dispatch => {
+export const updateCategory = async (id, propsToUpdate, client) => async dispatch => {
   dispatch(updateCategoryRequest(id, propsToUpdate));
 
   const updateCategoryMutation = `
@@ -88,7 +88,7 @@ const updateCategoryFailure = errorMessage => ({
   payload: {errorMessage},
 });
 
-export const deleteCategory = async (id, client) => dispatch => {
+export const deleteCategory = async (id, client) => async dispatch => {
   dispatch(deleteCategoryRequest(id));
 
   const deleteCategoryMutation = `

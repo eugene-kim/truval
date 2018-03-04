@@ -1,5 +1,5 @@
 import _ from 'libs/dash';
-import {FAILED, LOADING, LOADED} from 'fetchStatus';
+import {FAILED, LOADING, LOADED} from '../fetchStatus';
 
 
 const reduceNewEntityFetchStatus = entityName => (newFetchStatus = '', action) => {

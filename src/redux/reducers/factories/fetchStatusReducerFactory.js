@@ -5,7 +5,7 @@ import {
   deleteEntityFetchStatus,
   setEntityFetchStatus,
 } from '../commonReducers/fetchStatusReducers';
-import {FAILED, LOADING, LOADED, UPDATING, DELETING} from 'fetchStatus';
+import {FAILED, LOADING, LOADED, UPDATING, DELETING} from '../fetchStatus';
 import {UPDATE_FROM_SERVER} from '../../actions/types';
 
 
@@ -32,17 +32,17 @@ const fetchStatusReducerFactory = entityName => (fetchStatuses = {}, action) => 
       const {id} = payload;
 
       return setEntityFetchStatus(id, UPDATING)(fetchStatuses);
-    },
+    }
     case updateEntitySuccess: {
       const {id} = payload;
 
       return setEntityFetchStatus(id, LOADED)(fetchStatuses);
-    },
+    }
     case updateEntityFailure: {
       const {id} = payload;
 
       return setEntityFetchStatus(id, FAILED)(fetchStatuses);
-    },
+    }
     case deleteEntityRequest: {
       const {id} = payload;
 
@@ -52,10 +52,10 @@ const fetchStatusReducerFactory = entityName => (fetchStatuses = {}, action) => 
       const {id} = payload;
 
       return deleteEntityFetchStatus(id)(fetchStatuses);
-    },
+    }
     case deleteEntityFailure: {
       return setEntityFetchStatus(id, FAILED)(fetchStatuses);
-    },
+    }
     case UPDATE_FROM_SERVER: {
       return hydrateFetchStatuses(action, entityName)(fetchStatuses);
     }

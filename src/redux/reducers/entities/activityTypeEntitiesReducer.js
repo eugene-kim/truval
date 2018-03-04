@@ -28,7 +28,7 @@ const activityTypeEntitiesReducer = (activityTypeEntities, action) => {
     }
     case UPDATE_FROM_SERVER: {
       return hydrateEntities(entities, action, 'activityType');
-    },
+    }
     default:
       return activityTypeEntities;
   }

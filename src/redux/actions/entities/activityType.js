@@ -17,7 +17,7 @@ export const addActivityType = (activityType = {}) => {
   };
 };
 
-export const updateActivityType = async (id, propsToUpdate, client) => dispatch => {
+export const updateActivityType = async (id, propsToUpdate, client) => async dispatch => {
   dispatch(updateActivityTypeRequest({id, propsToUpdate}));
 
   const updateActivityTypeMutation = `

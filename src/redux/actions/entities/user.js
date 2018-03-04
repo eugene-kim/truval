@@ -27,7 +27,7 @@ const createUserFailure = errorMessage => ({
   payload: {errorMessage},
 });
 
-export const createUser = async ({username, email, password}, client) => dispatch => {
+export const createUser = async ({username, email, password}, client) => async dispatch => {
   dispatch(createUserRequest({username, email, password}));
 
   const createUserMutation = `

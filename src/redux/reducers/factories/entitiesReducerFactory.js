@@ -7,7 +7,7 @@ import {
   hydrateEntities,
 } from '../commonReducers/entityReducers';
 import {UPDATE_FROM_SERVER} from 'redux/actions/types';
-import {FAILED, LOADING, LOADED, UPDATING, DELETING} from 'fetchStatus';
+import {FAILED, LOADING, LOADED, UPDATING, DELETING} from '../fetchStatus';
 
 
 // TODO: creating and deleting should update related entries as well
@@ -21,13 +21,13 @@ const entitiesReducerFactory = entityName => (entities = {}, action) => {
     }
     case `UPDATE_${entityNameCaps}_SUCCESS`: {
       return updateEntity(action)(entities);
-    },
+    }
     case `DELETE_${entityNameCaps}_SUCCESS`: {
       return deleteEntity(action)(entities);
-    },
+    }
     case UPDATE_FROM_SERVER: {
       return hydrateEntities(entities, action, entityName);
-    },
+    }
     default:
       return entities;
   }

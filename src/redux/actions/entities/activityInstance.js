@@ -11,10 +11,10 @@ import {
   DELETE_ACTIVITY_INSTANCE_FAILURE,
 } from '../types';
 import {addActivityType} from './activityType';
-import {getLoneNormalizedEntity} from '../responseUtils';
+import {getLoneNormalizedEntity} from '../responseUtil';
 
 
-export const createActivityInstance = async (activityInstance = {}, client) => dispatch => {
+export const createActivityInstance = (activityInstance = {}, client) => async dispatch => {
   dispatch(createActivityInstanceRequest(activityInstance));
 
   const createActivityInstanceMutation = `
@@ -39,7 +39,7 @@ export const createActivityInstance = async (activityInstance = {}, client) => d
     const activityType = getLoneNormalizedEntity('activityType', response);
 
     dispatch(addActivityType(activityType));    
-    dispatch(createActivityInstanceSuccess(activityInstance);
+    dispatch(createActivityInstanceSuccess(activityInstance));
   } catch (error) {
     const {message} = error;
 
@@ -80,11 +80,4 @@ export const deleteActivityInstance = ({id, activityTypeId}) => {
     type: DELETE_ACTIVITY_INSTANCE,
     payload: {id, activityTypeId},
   };
-};
-
-
-export default {
-  addActivityInstance,
-  updateActivityInstance,
-  deleteActivityInstance,
 };

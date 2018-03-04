@@ -12,7 +12,7 @@ import {
 } from '../types';
 
 
-export const createSession = async (session = {}, client) => dispatch => {
+export const createSession = async (session = {}, client) => async dispatch => {
   dispatch(createSessionRequest(session));
 
   const createSessionMutation = `
@@ -51,7 +51,7 @@ const createSessionFailure = errorMessage => ({
   payload: {errorMessage},
 });
 
-export const updateSession = async (id, propsToUpdate, client) => dispatch => {
+export const updateSession = async (id, propsToUpdate, client) => async dispatch => {
   dispatch(updateSessionRequest(id, propsToUpdate));
 
   const updateSessionMutation = `
@@ -88,7 +88,7 @@ const updateSessionFailure = errorMessage => ({
   payload: {errorMessage},
 });
 
-export const deleteSession = async (id, client) => dispatch => {
+export const deleteSession = async (id, client) => async dispatch => {
   dispatch(deleteSessionRequest(id));
 
   const deleteSessionMutation = `
