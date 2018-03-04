@@ -1,4 +1,10 @@
 import _ from 'libs/dash';
+import {
+  CREATE_USER_SUCCESS,
+  CREATE_USER_FAILURE,
+  UPDATE_USER_SUCCESS,
+  DELETE_USER_SUCCESS,
+} from 'redux/actions/types';
 
 
 const reduceUserProps = (user = {}, action) => {

@@ -13,21 +13,21 @@ import reduceUserProps from './app/reduceUserProps';
 import reduceUserFetchStatus from './app/reduceUserFetchStatus';
 
 
-const getSessionEntities = state => state.session.entities;
-const getSessionFetchStatus = state => state.session.fetchStatus;
-const getNewSessionFetchStatus = state => state.session.new.fetchStatus;
+const getSessionEntities = state => state.entities.session.entities;
+const getSessionFetchStatus = state => state.entities.session.fetchStatus;
+const getNewSessionFetchStatus = state => state.entities.session.new.fetchStatus;
 
-const getCategoryEntities = state => state.category.entities;
-const getCategoryFetchStatus = state => state.category.fetchStatus;
-const getNewCategoryFetchStatus = state => state.category.new.fetchStatus;
+const getCategoryEntities = state => state.entities.category.entities;
+const getCategoryFetchStatus = state => state.entities.category.fetchStatus;
+const getNewCategoryFetchStatus = state => state.entities.category.new.fetchStatus;
 
-const getActivityTypeEntities = state => state.activityType.entities;
-const getActivityTypeFetchStatus = state => state.activityType.fetchStatus;
-const getNewActivityTypeFetchStatus = state => state.activityType.new.fetchStatus;
+const getActivityTypeEntities = state => state.entities.activityType.entities;
+const getActivityTypeFetchStatus = state => state.entities.activityType.fetchStatus;
+const getNewActivityTypeFetchStatus = state => state.entities.activityType.new.fetchStatus;
 
-const getActivityInstanceEntities = state => state.activityInstance.entities;
-const getActivityInstanceFetchStatus = state => state.activityInstance.fetchStatus;
-const getNewActivityInstanceFetchStatus = state => state.activityInstance.new.fetchStatus;
+const getActivityInstanceEntities = state => state.entities.activityInstance.entities;
+const getActivityInstanceFetchStatus = state => state.entities.activityInstance.fetchStatus;
+const getNewActivityInstanceFetchStatus = state => state.entities.activityInstance.new.fetchStatus;
 
 const getUserProps = state => state.app.user.props;
 const getUserFetchStatus = state => state.app.user.fetchStatus;
@@ -76,11 +76,11 @@ const focusApp = function(state = {}, action) {
 
     app: {
       user: {
-        props: reduceUserProps(getUserProps(state)),
-        fetchStatus: reduceUserFetchStatus(getUserFetchStatus(state))
-      }
+        props: reduceUserProps(getUserProps(state), action),
+        fetchStatus: reduceUserFetchStatus(getUserFetchStatus(state), action),
+      },
     },
-  } 
+  }
 }
 
 

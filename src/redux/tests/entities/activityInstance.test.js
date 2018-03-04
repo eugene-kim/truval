@@ -1,5 +1,7 @@
 import sinon from 'sinon';
-import { createStore } from 'redux';
+import { applyMiddleware, createStore } from 'redux';
+import thunk from 'redux-thunk';
+import logger from 'redux-logger';
 import root from 'redux/reducers/root';
 import {
   createActivityInstance,
@@ -7,10 +9,15 @@ import {
   deleteActivityInstance,
 } from 'redux/actions/entities/activityInstance';
 import client from 'graphql/client';
+import initialState from '../initialState';
 
 
 describe('test activityInstance entity actions:', () => {
-  set('store', () => createStore(root));
+  set('store', () => createStore(
+    root,
+    initialState,
+    applyMiddleware(thunk),
+  ));
   set('storeSpy', () => sinon.spy(store, 'dispatch'));
   set('newActivityInstanceNewType', () => ({
     name: 'asdf',
@@ -24,8 +31,8 @@ describe('test activityInstance entity actions:', () => {
 
       store.dispatch(createActivityInstance(newActivityInstanceNewType, client));
 
-      console.log(spy.args[0]);
-      console.log(spy.args[1]);
+      console.log(storeSpy.args[0]);
+      console.log(storeSpy.args[1]);
     });
   });
 });

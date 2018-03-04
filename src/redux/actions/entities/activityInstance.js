@@ -48,20 +48,20 @@ export const createActivityInstance = (activityInstance = {}, client) => async d
 };
 
 const createActivityInstanceRequest = (activityInstance = {}) => ({
-  type: ADD_ACTIVITY_INSTANCE_REQUEST,
+  type: CREATE_ACTIVITY_INSTANCE_REQUEST,
   payload: {activityInstance},
 });
 
 const createActivityInstanceSuccess = (activityInstance = {}) => {
   return {
-    type: ADD_ACTIVITY_INSTANCE_SUCCESS,
+    type: CREATE_ACTIVITY_INSTANCE_SUCCESS,
     payload: {activityInstance},
   };
 };
 
 const createActivityInstanceFailure = errorMessage => {
   return {
-    type: ADD_ACTIVITY_INSTANCE_FAILURE,
+    type: CREATE_ACTIVITY_INSTANCE_FAILURE,
     payload: {errorMessage},
   };
 };
@@ -70,14 +70,14 @@ const createActivityInstanceFailure = errorMessage => {
 // TODO - do this later!
 export const updateActivityInstance = (id, propsToEdit = {}) => {
   return {
-    type: EDIT_ACTIVITY_INSTANCE,
+    type: UPDATE_ACTIVITY_INSTANCE_SUCCESS,
     payload: {id, propsToEdit},
   };
 };
 
 export const deleteActivityInstance = ({id, activityTypeId}) => {
   return {
-    type: DELETE_ACTIVITY_INSTANCE,
+    type: DELETE_ACTIVITY_INSTANCE_SUCCESS,
     payload: {id, activityTypeId},
   };
 };
