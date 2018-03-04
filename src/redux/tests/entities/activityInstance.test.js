@@ -18,7 +18,9 @@ describe('test activityInstance entity actions:', () => {
     initialState,
     applyMiddleware(thunk),
   ));
-  set('storeSpy', () => sinon.spy(store, 'dispatch'));
+
+  beforeEach(() => sinon.spy(store, 'dispatch'));
+
   set('newActivityInstanceNewType', () => ({
     name: 'asdf',
     categoryId: 'asdf',
@@ -31,8 +33,7 @@ describe('test activityInstance entity actions:', () => {
 
       store.dispatch(createActivityInstance(newActivityInstanceNewType, client));
 
-      console.log(storeSpy.args[0]);
-      console.log(storeSpy.args[1]);
+      console.log(store.dispatch.getCall(0).args)
     });
   });
 });
