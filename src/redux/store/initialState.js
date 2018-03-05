@@ -2,18 +2,34 @@ export default {
   entities: {
     session: {
       entities: {},
+      fetchStatus: {},
+      new: {
+        fetchStatus: '',
+      },
     },
 
     activityType: {
       entities: {},
+      fetchStatus: {},
+      new: {
+        fetchStatus: '',
+      },
     },
 
     activityInstance: {
       entities: {},
+      fetchStatus: {},
+      new: {
+        fetchStatus: '',
+      },
     },
 
     category: {
       entities: {},
+      fetchStatus: {},
+      new: {
+        fetchStatus: '',
+      },
     },
   },
 
@@ -28,21 +44,8 @@ export default {
 
   app: {
     user: {
-      id: '',
-      isFetching: false,
-    },
-  },
-
-  // Contains items that need to be ordered in some way, such as a Session's activities
-  // or sessions.
-  ordered: {
-
-    // Each property is a Session ID and the value will be an array
-    // ordered by `startTime` of that session's activities.
-    sessionActivities: {},
-
-    sessions: {
-      entries: [],
+      props: {},
+      fetchStatus: '',
     },
   },
 };

@@ -7,6 +7,7 @@ import invariant from 'invariant';
 import gqlSchema from '../schema/typeDefSchema';
 import reduxify from './reduxify';
 import containsQueryData from './containsQueryData';
+import fetch from 'node-fetch';
 
 import { UPDATE_FROM_SERVER } from 'redux/actions/types';
 
@@ -49,8 +50,7 @@ export default ({endpoint = 'http://localhost:3000/graphql', store} = {}) => {
             `GraphQL operation failed! Status: ${status}\nReason:${responseBody}`,
           );
 
-          const gqlResponse = JSON.parse(responseBody);
-          const reduxFriendlyData = await reduxify(gqlResponse, queryAST, schemaDoc);
+          const reduxFriendlyData = await reduxify(responseBody, queryAST, schemaDoc);
 
           store.dispatch({
             type: UPDATE_FROM_SERVER,
@@ -78,25 +78,23 @@ export default ({endpoint = 'http://localhost:3000/graphql', store} = {}) => {
         });
 
         const {status} = response;
-        const responseBody = response._bodyText;
+        const responseBody = await response.json();
 
         invariant(
           status === 200,
           `GraphQL operation failed! Status: ${status}\nReason:${responseBody}`,
         );
 
-        const gqlResponse = JSON.parse(responseBody);
-
         if (options.shouldNormalizeData) {
           const schemaDocumentWhole = await graphql(gqlSchema, introspectionQuery);
           const schemaDoc = schemaDocumentWhole.data.__schema;
           const mutationAST = parse(mutationString);
-          const normalizedData = await reduxify(gqlResponse, mutationAST, schemaDoc);
+          const normalizedData = await reduxify(responseBody, mutationAST, schemaDoc);
           
           return normalizedData;  
         }
 
-        return gqlResponse;
+        return responseBody;
       } catch(error) {
         console.error(error);
 

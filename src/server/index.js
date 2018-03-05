@@ -33,32 +33,31 @@ app.use('/graphiql', graphiqlExpress({
 // Blank store for testing
 const store = createStore(reducer, initialState);
 
-// app.get('/testMutation', async (req, res) => {
-//   const mutationString = `mutation {
-//     updateUser(id:1, username:"the hugest") {
-//       id,
-//       username,
-//       sessions {
-//         id,
-//         name,
-//         start,
-//         activities {
-//           id,
-//           name
-//         }
-//       }
-//     }
-//   }`;
+app.get('/testMutation', async (req, res) => {
+  const mutation = `mutation {
+    createActivityInstance(
+      name: "Write seed data"
+      start: "2017-10-21T00:00:00.000Z"
+      sessionId: "997a5210-33d1-4198-a4a4-5f1ea477cc01"
+      categoryId:"ca05ca36-805c-4f67-a097-a45988ba82d7"
+      userId:"cb39dbb5-caa8-4323-93a5-13450b875887"
+    ) {
+      id, isComplete, start, end
+      activityType {
+        id, name, activityCount, categoryId,
+      } 
+    }
+  }`;
 
-//   try {
-//     const normalizedData = await gqlClient().query(mutationString, store);
+  try {
+    const normalizedData = await gqlClient({store}).mutate(mutation, {shouldNormalizeData: true});
 
-//     res.setHeader('Content-Type', 'application/json');
-//     res.send(JSON.stringify(normalizedData));
-//   } catch(error) {
-//     console.log(error);
-//   }
-// });
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify(normalizedData));
+  } catch(error) {
+    console.log(error);
+  }
+});
 app.get('/testQuery', async (req, res) => {
   const queryString = `query {
     user(id:"cb39dbb5-caa8-4323-93a5-13450b875887") {

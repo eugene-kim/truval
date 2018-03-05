@@ -140,8 +140,6 @@ describe('test normalizeGql', () => {
       const resultSchemaString = JSON.stringify(resultNormalizrSchema);
       const expectedSchemaString = JSON.stringify(expectedNormalizrSchema);
 
-      debugger
-
       expect(resultSchemaString === expectedSchemaString).toBe(true);
     });
   });
