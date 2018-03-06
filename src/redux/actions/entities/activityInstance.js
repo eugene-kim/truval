@@ -41,8 +41,9 @@ export const createActivityInstance = (activityInstance = {}, client) => async d
     dispatch(addActivityType(activityType));    
     dispatch(createActivityInstanceSuccess(activityInstance));
   } catch (error) {
-    debugger
-    const {message} = error;
+    const {message, stack} = error;
+
+    console.log(stack);
 
     dispatch(createActivityInstanceFailure(message));
   }

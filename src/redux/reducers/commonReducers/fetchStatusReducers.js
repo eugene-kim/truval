@@ -1,3 +1,4 @@
+import _ from 'libs/dash';
 import {LOADED} from '../fetchStatus';
 
 
