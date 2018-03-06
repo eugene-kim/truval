@@ -1,4 +1,4 @@
-import getGqlParamString from 'graphql/util';
+import {getGqlParamString} from 'graphql/util';
 import {
   CREATE_ACTIVITY_INSTANCE_REQUEST,
   CREATE_ACTIVITY_INSTANCE_SUCCESS,
@@ -41,25 +41,26 @@ export const createActivityInstance = (activityInstance = {}, client) => async d
     dispatch(addActivityType(activityType));    
     dispatch(createActivityInstanceSuccess(activityInstance));
   } catch (error) {
+    debugger
     const {message} = error;
 
     dispatch(createActivityInstanceFailure(message));
   }
 };
 
-const createActivityInstanceRequest = (activityInstance = {}) => ({
+export const createActivityInstanceRequest = (activityInstance = {}) => ({
   type: CREATE_ACTIVITY_INSTANCE_REQUEST,
   payload: {activityInstance},
 });
 
-const createActivityInstanceSuccess = (activityInstance = {}) => {
+export const createActivityInstanceSuccess = (activityInstance = {}) => {
   return {
     type: CREATE_ACTIVITY_INSTANCE_SUCCESS,
     payload: {activityInstance},
   };
 };
 
-const createActivityInstanceFailure = errorMessage => {
+export const createActivityInstanceFailure = errorMessage => {
   return {
     type: CREATE_ACTIVITY_INSTANCE_FAILURE,
     payload: {errorMessage},

@@ -27,7 +27,7 @@ const getNewActivityTypeFetchStatus = state => state.entities.activityType.new.f
 
 const getActivityInstanceEntities = state => state.entities.activityInstance.entities;
 const getActivityInstanceFetchStatus = state => state.entities.activityInstance.fetchStatus;
-const getNewActivityInstanceFetchStatus = state => state.entities.activityInstance.new.fetchStatus;
+export const getNewActivityInstanceFetchStatus = state => state.entities.activityInstance.new.fetchStatus;
 
 const getUserProps = state => state.app.user.props;
 const getUserFetchStatus = state => state.app.user.fetchStatus;
