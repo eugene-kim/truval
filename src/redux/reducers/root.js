@@ -13,25 +13,6 @@ import reduceUserProps from './app/reduceUserProps';
 import reduceUserFetchStatus from './app/reduceUserFetchStatus';
 
 
-const getSessionEntities = state => state.entities.session.entities;
-const getSessionFetchStatus = state => state.entities.session.fetchStatus;
-const getNewSessionFetchStatus = state => state.entities.session.new.fetchStatus;
-
-const getCategoryEntities = state => state.entities.category.entities;
-const getCategoryFetchStatus = state => state.entities.category.fetchStatus;
-const getNewCategoryFetchStatus = state => state.entities.category.new.fetchStatus;
-
-const getActivityTypeEntities = state => state.entities.activityType.entities;
-const getActivityTypeFetchStatus = state => state.entities.activityType.fetchStatus;
-const getNewActivityTypeFetchStatus = state => state.entities.activityType.new.fetchStatus;
-
-const getActivityInstanceEntities = state => state.entities.activityInstance.entities;
-const getActivityInstanceFetchStatus = state => state.entities.activityInstance.fetchStatus;
-export const getNewActivityInstanceFetchStatus = state => state.entities.activityInstance.new.fetchStatus;
-
-const getUserProps = state => state.app.user.props;
-const getUserFetchStatus = state => state.app.user.fetchStatus;
-
 const focusApp = function(state = {}, action) {
   return {
     entities: {
@@ -82,6 +63,26 @@ const focusApp = function(state = {}, action) {
     },
   }
 }
+
+// Selectors
+export const getSessionEntities = state => state.entities.session.entities;
+export const getSessionFetchStatus = state => state.entities.session.fetchStatus;
+export const getNewSessionFetchStatus = state => state.entities.session.new.fetchStatus;
+
+export const getCategoryEntities = state => state.entities.category.entities;
+export const getCategoryFetchStatus = state => state.entities.category.fetchStatus;
+export const getNewCategoryFetchStatus = state => state.entities.category.new.fetchStatus;
+
+export const getActivityTypeEntities = state => state.entities.activityType.entities;
+export const getActivityTypeFetchStatus = state => state.entities.activityType.fetchStatus;
+export const getNewActivityTypeFetchStatus = state => state.entities.activityType.new.fetchStatus;
+
+export const getActivityInstanceEntities = state => state.entities.activityInstance.entities;
+export const getActivityInstanceFetchStatus = state => state.entities.activityInstance.fetchStatus;
+export const getNewActivityInstanceFetchStatus = state => state.entities.activityInstance.new.fetchStatus;
+
+export const getUserProps = state => state.app.user.props;
+export const getUserFetchStatus = state => state.app.user.fetchStatus;
 
 
 export default focusApp;

@@ -42,6 +42,17 @@ describe('activityInstance entity actions:', () => {
   set('client', () => client({store}));
   set('mutate', () => jest.fn(() => activityTypeInstanceNormalized));
 
+  // I'm not able to run set() on this for some reason.
+  let spy;
+
+  beforeEach(() => {
+    spy = sinon.spy(store, 'dispatch');
+  });
+
+  afterEach(() => {
+    store.dispatch.restore();
+  });
+
   describe('createActivityInstance', () => {
     set('activityInstance', () => ({
       name: 'asdf',
@@ -49,12 +60,14 @@ describe('activityInstance entity actions:', () => {
       start: 'asdf',
     }));
 
+    /**
+     * An action suffixed by `_REQUEST` will be tested independently since they're called at the
+     * beginning of the thunk and followed by other actions which change the store state and make
+     * it awkward to test for state RIGHT after the `_REQUEST` action was called.
+     */
     describe(`${CREATE_ACTIVITY_INSTANCE_REQUEST}`, () => {
 
       it('was dispatched', async () => {
-
-        // I'm not able to put this in a `set()` block for some reason.
-        const spy = sinon.spy(store, 'dispatch');
         const expectedAction = {
           type: CREATE_ACTIVITY_INSTANCE_REQUEST,
           payload: {activityInstance},
@@ -68,8 +81,6 @@ describe('activityInstance entity actions:', () => {
       });
 
       it(`set the new fetchStatus to '${LOADING}'`, () => {
-        // I'm not able to put this in a `set()` block for some reason.
-        const spy = sinon.spy(store, 'dispatch');
         const oldState = store.getState();
         const oldFetchStatus = getNewActivityInstanceFetchStatus(oldState);
 
