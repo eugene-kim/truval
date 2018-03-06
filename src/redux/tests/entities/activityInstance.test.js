@@ -3,7 +3,11 @@ import { applyMiddleware, createStore } from 'redux';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import logger from 'redux-logger';
-import root, {getNewActivityInstanceFetchStatus} from 'redux/reducers/root';
+import root from 'redux/reducers/root';
+import {
+  getNewActivityInstanceFetchStatus,
+  getEntityByName,
+} from 'redux/reducers/selectors';
 import client from 'graphql/client';
 import initialState from '../initialState';
 
@@ -37,10 +41,6 @@ import {
 } from 'redux/actions/types';
 
 
-// Resources
-import activityTypeInstanceNormalized from '../resources/activityTypeInstanceNormalized';
-
-
 describe('activityInstance entity actions:', () => {
   const middleware = [thunk];
 
@@ -50,13 +50,41 @@ describe('activityInstance entity actions:', () => {
     applyMiddleware(...middleware),
   ));
 
+  // Matching activityType exists
+  set('normalizedCreateActivityInstanceResponse', () => ({
+    "entities": {
+      "activityType": {
+        "1982f070-704c-4054-beb4-ea188399fc10": {
+          "id": "1982f070-704c-4054-beb4-ea188399fc10",
+          "name": "Write seed data",
+          "activityCount": 7,
+          "categoryId": "ca05ca36-805c-4f67-a097-a45988ba82d7"
+        }
+      },
+      "activityInstance": {
+        "cbd0c73a-f877-4ffb-8e7f-736dcd72b5da": {
+          "id": "cbd0c73a-f877-4ffb-8e7f-736dcd72b5da",
+          "isComplete": false,
+          "start": "2017-10-20T17:00:00.000-07:00",
+          "end": null,
+          "activityType": "1982f070-704c-4054-beb4-ea188399fc10"
+        }
+      }
+    },
+    "result": {
+      "data": {
+        "createActivityInstance": "cbd0c73a-f877-4ffb-8e7f-736dcd72b5da"
+      }
+    }
+  }));
+
   set('mockStore', () => configureStore(middleware)(initialState));
-  set('client', () => client({store}));
-  set('mutate', () => jest.fn(() => activityTypeInstanceNormalized));
+  set('gqlClient', () => client({store}));
+  set('mutate', () => jest.fn(() => normalizedCreateActivityInstanceResponse));
 
   describe('createActivityInstance', () => {
 
-    set('activityInstance', () => ({
+    set('createActivityInstancePayload', () => ({
       name: 'Write seed data',
       categoryId: 'ca05ca36-805c-4f67-a097-a45988ba82d7',
       start: '2017-10-20T17:00:00.000-07:00',
@@ -64,7 +92,7 @@ describe('activityInstance entity actions:', () => {
 
     set('createActivityInstanceRequestAction', () => ({
       type: CREATE_ACTIVITY_INSTANCE_REQUEST,
-      payload: {activityInstance},
+      payload: {activityInstance: createActivityInstancePayload},
     }));
 
     /**
@@ -75,8 +103,7 @@ describe('activityInstance entity actions:', () => {
     describe(`${CREATE_ACTIVITY_INSTANCE_REQUEST}`, () => {
 
       it('was dispatched', async () => {
-
-        mockStore.dispatch(createActivityInstanceRequest(activityInstance, client));
+        mockStore.dispatch(createActivityInstanceRequest(createActivityInstancePayload, gqlClient));
 
         const resultAction = mockStore.getActions()[0];
 
@@ -87,7 +114,7 @@ describe('activityInstance entity actions:', () => {
         const oldState = store.getState();
         const oldFetchStatus = getNewActivityInstanceFetchStatus(oldState);
 
-        store.dispatch(createActivityInstanceRequest(activityInstance, client));
+        store.dispatch(createActivityInstanceRequest(createActivityInstancePayload, gqlClient));
 
         const newState = store.getState();
         const newFetchStatus = getNewActivityInstanceFetchStatus(newState);
@@ -101,9 +128,9 @@ describe('activityInstance entity actions:', () => {
       it(`expected actions were dispatched`, async () => {
 
         // Set client mutate to mocked function.
-        client.mutate = mutate;
+        gqlClient.mutate = mutate;
 
-        await mockStore.dispatch(createActivityInstance(activityInstance, client));
+        await mockStore.dispatch(createActivityInstance(createActivityInstancePayload, gqlClient));
 
         const actions = mockStore.getActions();
 
@@ -118,6 +145,74 @@ describe('activityInstance entity actions:', () => {
           ADD_ACTIVITY_TYPE,
           CREATE_ACTIVITY_INSTANCE_SUCCESS,
         ]);
+      });
+
+      describe('updated state', () => {
+        describe('when matching activityType exists', () => {
+          it.only('activityType count was increased by 1', async () => {
+            
+            // Set client mutate to mocked function.
+            gqlClient.mutate = mutate;
+
+            const prevState = store.getState();
+            const prevActivityType = getEntityByName({
+              name: createActivityInstancePayload.name,
+              entityTypeName: 'activityType',
+              state: prevState,
+            });
+            const previousCount = prevActivityType.activityCount;
+
+            await store.dispatch(createActivityInstance(createActivityInstancePayload, gqlClient));
+
+            const newState = store.getState();
+            const updatedActivityType = getEntityByName({
+              name: createActivityInstancePayload.name,
+              entityTypeName: 'activityType',
+              state: newState,
+            });
+            const newCount = updatedActivityType.activityCount;
+
+            debugger
+
+            expect(newCount).toEqual(previousCount + 1);
+          });
+        });
+
+        // describe('when new activityType was created', () => {
+        //   set('activityInstance', () => ({
+        //     name: 'new activity type',
+        //     categoryId: 'ca05ca36-805c-4f67-a097-a45988ba82d7',
+        //     start: '2017-10-20T17:00:00.000-07:00',
+        //   }));
+
+        //   // TODO: Update
+        //   set('normalizedCreateActivityInstanceResponse', () => ({
+        //     "entities": {
+        //       "activityType": {
+        //         "1982f070-704c-4054-beb4-ea188399fc10": {
+        //           "id": "1982f070-704c-4054-beb4-ea188399fc10",
+        //           "name": "Write seed data",
+        //           "activityCount": 7,
+        //           "categoryId": "ca05ca36-805c-4f67-a097-a45988ba82d7"
+        //         }
+        //       },
+        //       "activityInstance": {
+        //         "cbd0c73a-f877-4ffb-8e7f-736dcd72b5da": {
+        //           "id": "cbd0c73a-f877-4ffb-8e7f-736dcd72b5da",
+        //           "isComplete": false,
+        //           "start": "2017-10-20T17:00:00.000-07:00",
+        //           "end": null,
+        //           "activityType": "1982f070-704c-4054-beb4-ea188399fc10"
+        //         }
+        //       }
+        //     },
+        //     "result": {
+        //       "data": {
+        //         "createActivityInstance": "cbd0c73a-f877-4ffb-8e7f-736dcd72b5da"
+        //       }
+        //     }
+        //   }));
+        // });
       });
     });
   });
