@@ -57,42 +57,42 @@ describe('activityInstance entity actions:', () => {
   ));
 
   set('prevState', () => store.getState());
-
-  // Matching activityType exists
-  set('normalizedCreateActivityInstanceResponse', () => ({
-    "entities": {
-      "activityType": {
-        "1982f070-704c-4054-beb4-ea188399fc10": {
-          "id": "1982f070-704c-4054-beb4-ea188399fc10",
-          "name": "Write seed data",
-          "activityCount": 7,
-          "categoryId": "ca05ca36-805c-4f67-a097-a45988ba82d7"
-        }
-      },
-      "activityInstance": {
-        "cbd0c73a-f877-4ffb-8e7f-736dcd72b5da": {
-          "id": "cbd0c73a-f877-4ffb-8e7f-736dcd72b5da",
-          "isComplete": false,
-          "start": "2017-10-20T17:00:00.000-07:00",
-          "end": null,
-          "activityType": "1982f070-704c-4054-beb4-ea188399fc10"
-        }
-      }
-    },
-    "result": {
-      "data": {
-        "createActivityInstance": "cbd0c73a-f877-4ffb-8e7f-736dcd72b5da"
-      }
-    }
-  }));
-
   set('mockStore', () => configureStore(middleware)(initialState));
   set('gqlClient', () => client({store}));
-  set('mutate', () => () => normalizedCreateActivityInstanceResponse);
-
-  beforeEach(() => gqlClient.mutate = mutate);
 
   describe('createActivityInstance', () => {
+
+    // Matching activityType exists
+    set('normalizedCreateActivityInstanceResponse', () => ({
+      "entities": {
+        "activityType": {
+          "1982f070-704c-4054-beb4-ea188399fc10": {
+            "id": "1982f070-704c-4054-beb4-ea188399fc10",
+            "name": "Write seed data",
+            "activityCount": 7,
+            "categoryId": "ca05ca36-805c-4f67-a097-a45988ba82d7"
+          }
+        },
+        "activityInstance": {
+          "cbd0c73a-f877-4ffb-8e7f-736dcd72b5da": {
+            "id": "cbd0c73a-f877-4ffb-8e7f-736dcd72b5da",
+            "isComplete": false,
+            "start": "2017-10-20T17:00:00.000-07:00",
+            "end": null,
+            "activityType": "1982f070-704c-4054-beb4-ea188399fc10"
+          }
+        }
+      },
+      "result": {
+        "data": {
+          "createActivityInstance": "cbd0c73a-f877-4ffb-8e7f-736dcd72b5da"
+        }
+      }
+    }));
+
+    set('mutate', () => () => normalizedCreateActivityInstanceResponse);
+
+    beforeEach(() => gqlClient.mutate = mutate);
 
     set('createActivityInstancePayload', () => ({
       name: 'Write seed data',
@@ -490,6 +490,7 @@ describe('activityInstance entity actions:', () => {
       end: '2017-10-21T05:00:00.000Z',
       isComplete: true,
     }));
+    set('updateActivityInstanceThunk', () => updateActivityInstance({id: updateId, propsToUpdate}));
 
     describe(`${UPDATE_ACTIVITY_INSTANCE_REQUEST}`, () => {
       set('updateActivityInstanceRequestAction', () => updateActivityInstanceRequest({id: updateId, propsToUpdate}));
@@ -515,6 +516,54 @@ describe('activityInstance entity actions:', () => {
 
         expect(newFetchStatus).toEqual(UPDATING);
         expect(newFetchStatus).not.toEqual(oldFetchStatus);
+      });
+    });
+
+    // At the moment, updateActivityInstance doesn't utilize the response and 
+    // if nothing fails, dispatches UPDATE_ACTIVITY_INSTANCE_SUCCESS which 
+    // updates the store.
+    set('mutate', () => () => {});
+
+    beforeEach(() => gqlClient.mutate = mutate);
+
+    describe(`expected actions ${UPDATE_ACTIVITY_INSTANCE_REQUEST} and ${UPDATE_ACTIVITY_INSTANCE_SUCCESS} were dispatched`, async () => {
+      await mockStore.dispatch(updateActivityInstanceThunk);
+
+      const expectedActionTypes = [UPDATE_ACTIVITY_INSTANCE_REQUEST, UPDATE_ACTIVITY_INSTANCE_SUCCESS];
+      const actions = mockStore.getActions();
+      const actionTypes = actions.map(action => action.type);
+
+      expect(actions).toEqual(expectedActionTypes);
+    });
+
+    describe(`successfully updates the activityInstance entity`, async () => {
+      const preUpdateActivityInstances = getActivityInstanceEntities(prevState);
+      const preUpdateActivityInstance = preUpdateActivityInstances[updateId];
+
+      await store.dispatch(updateActivityInstanceThunk);
+
+      const newState = store.getState();
+      const activityInstances = getActivityInstanceEntities(newState);
+      const activityInstance = activityInstances[updateId];
+
+      expect(activityInstance.end).toEqual('2017-10-21T05:00:00.000Z');
+      expect(activityInstance.isComplete).toEqual(true);
+      expect(activityInstance).not.toEqual(preUpdateActivityInstance);
+    });
+
+    describe(`the activityInstance entity fetchStatus is ${LOADED} post update`, async () => {
+      await store.dispatch(updateActivityInstanceThunk);
+
+      const newState = store.getState();
+      const fetchStatuses = getActivityInstanceFetchStatus(newState);
+      const fetchStatus = fetchStatuses(updateId);
+
+      expect(fetchStatus).toEqual(LOADING);
+    });
+
+    describe(`fails to update the activityInstance`, () => {
+      set('mutate', () => {
+        throw new Error('Error updating activityInstance');
       });
     });
   });
