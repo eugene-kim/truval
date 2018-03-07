@@ -21,6 +21,7 @@ import {
   createActivityInstanceSuccess,
   createActivityInstanceFailure,
   updateActivityInstance,
+  updateActivityInstanceRequest,
   deleteActivityInstance,
 } from 'redux/actions/entities/activityInstance';
 
@@ -99,11 +100,6 @@ describe('activityInstance entity actions:', () => {
       start: '2017-10-20T17:00:00.000-07:00',
     }));
 
-    set('createActivityInstanceRequestAction', () => ({
-      type: CREATE_ACTIVITY_INSTANCE_REQUEST,
-      payload: {activityInstance: createActivityInstancePayload},
-    }));
-
     set('createActivityInstanceThunk', () => createActivityInstance(createActivityInstancePayload, gqlClient));
 
     /**
@@ -112,6 +108,11 @@ describe('activityInstance entity actions:', () => {
      * it awkward to validate for state RIGHT after the `_REQUEST` action was called.
      */
     describe(`${CREATE_ACTIVITY_INSTANCE_REQUEST}`, () => {
+
+      set('createActivityInstanceRequestAction', () => ({
+        type: CREATE_ACTIVITY_INSTANCE_REQUEST,
+        payload: {activityInstance: createActivityInstancePayload},
+      }));
 
       it('was dispatched', async () => {
         mockStore.dispatch(createActivityInstanceRequest(createActivityInstancePayload, gqlClient));
@@ -134,7 +135,7 @@ describe('activityInstance entity actions:', () => {
       });
     });
 
-    describe('successful request', () => {
+    describe('successful activityInstance creation', () => {
       it(`expected actions were dispatched`, async () => {
 
         await mockStore.dispatch(createActivityInstance(createActivityInstancePayload, gqlClient));
@@ -373,7 +374,7 @@ describe('activityInstance entity actions:', () => {
       });
     });
 
-    describe('failed request', () => {
+    describe('failed activityInstance creation', () => {
       beforeEach(() => gqlClient.mutate = () => {
         throw new Error('Error creating activityInstance');
       });
@@ -479,6 +480,41 @@ describe('activityInstance entity actions:', () => {
 
           expect(preDispatchActivityTypeEntities.length).toEqual(postDispatchActivityTypeEntities.length);
         });
+      });
+    });
+  });
+
+  describe('updateActivityInstance', () => {
+    set('updateId', () => 'f36c74b2-c798-4d8f-a8cb-d353ee3b2c44');
+    set('propsToUpdate', () => ({
+      end: '2017-10-21T05:00:00.000Z',
+      isComplete: true,
+    }));
+
+    describe(`${UPDATE_ACTIVITY_INSTANCE_REQUEST}`, () => {
+      set('updateActivityInstanceRequestAction', () => updateActivityInstanceRequest({id: updateId, propsToUpdate}));
+
+      it(`'${UPDATE_ACTIVITY_INSTANCE_REQUEST}' was the first action dispatched by the store`, () => {
+        mockStore.dispatch(updateActivityInstanceRequestAction);
+
+        const actions = mockStore.getActions();
+        const firstAction = actions[0];
+
+        expect(firstAction.type).toEqual(UPDATE_ACTIVITY_INSTANCE_REQUEST);
+      });
+
+      it(`'${UPDATE_ACTIVITY_INSTANCE_REQUEST}' sets the appropriate fetch status to '${UPDATING}'`, () => {
+        const oldFetchStatuses = getActivityInstanceFetchStatus(prevState);
+        const oldFetchStatus = oldFetchStatuses[updateId];
+
+        store.dispatch(updateActivityInstanceRequestAction);
+
+        const newState = store.getState();
+        const newFetchStatuses = getActivityInstanceFetchStatus(newState);
+        const newFetchStatus = newFetchStatuses[updateId];
+
+        expect(newFetchStatus).toEqual(UPDATING);
+        expect(newFetchStatus).not.toEqual(oldFetchStatus);
       });
     });
   });

@@ -67,13 +67,41 @@ export const createActivityInstanceFailure = errorMessage => {
 };
 
 
-// TODO - do this later!
-export const updateActivityInstance = (id, propsToEdit = {}) => {
-  return {
-    type: UPDATE_ACTIVITY_INSTANCE_SUCCESS,
-    payload: {id, propsToEdit},
-  };
+export const updateActivityInstance = ({id, propsToUpdate = {}, client}) => async dispatch => {
+  dispatch(updateActivityInstanceRequest({id, propsToUpdate}));
+
+  const params = getGqlParamString({id, ...propsToUpdate});
+  const updateActivityInstanceMutation = `
+    mutation {
+      updateActivityInstance(${params})
+    }
+  `;
+
+  try {
+    await client.mutate(updateActivityInstanceMutation);
+
+    dispatch(updateActivityInstanceSuccess({id, propsToUpdate}));
+  } catch (error) {
+    const {message} = error;
+
+    dispatch(updateActivityInstanceFailure(message));
+  }
 };
+
+export const updateActivityInstanceRequest = ({id, propsToUpdate = {}}) => ({
+  type: UPDATE_ACTIVITY_INSTANCE_REQUEST,
+  payload: {id, propsToUpdate},
+});
+
+export const updateActivityInstanceSuccess = ({id, propsToUpdate = {}}) => ({
+  type: UPDATE_ACTIVITY_INSTANCE_SUCCESS,
+  payload: {id, propsToUpdate},
+});
+
+export const updateActivityInstanceFailure = errorMessage => ({
+  type: UPDATE_ACTIVITY_INSTANCE_FAILURE,
+  payload: {errorMessage},
+});
 
 export const deleteActivityInstance = ({id, activityTypeId}) => {
   return {
