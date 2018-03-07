@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import _ from 'libs/dash';
 
 import {
   createEntity,
@@ -12,7 +12,7 @@ import {FAILED, LOADING, LOADED, UPDATING, DELETING} from '../fetchStatus';
 
 // TODO: creating and deleting should update related entries as well
 const entitiesReducerFactory = entityName => (entities = {}, action) => {
-  const entityNameCaps = _.toUpper(entityName);
+  const entityNameCaps = _.toSnakeUpper(entityName);
   const {type, payload} = action;
 
   switch(type) {

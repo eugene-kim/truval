@@ -6,6 +6,8 @@ import logger from 'redux-logger';
 import root from 'redux/reducers/root';
 import {
   getNewActivityInstanceFetchStatus,
+  getActivityInstanceFetchStatus,
+  getActivityInstanceEntities,
   getEntityByName,
 } from 'redux/reducers/selectors';
 import client from 'graphql/client';
@@ -49,6 +51,8 @@ describe('activityInstance entity actions:', () => {
     initialState,
     applyMiddleware(...middleware),
   ));
+
+  set('prevState', () => store.getState());
 
   // Matching activityType exists
   set('normalizedCreateActivityInstanceResponse', () => ({
@@ -111,15 +115,14 @@ describe('activityInstance entity actions:', () => {
       });
 
       it(`set the new fetchStatus to '${LOADING}'`, () => {
-        const oldState = store.getState();
-        const oldFetchStatus = getNewActivityInstanceFetchStatus(oldState);
+        const prevFetchStatus = getNewActivityInstanceFetchStatus(prevState);
 
         store.dispatch(createActivityInstanceRequest(createActivityInstancePayload, gqlClient));
 
         const newState = store.getState();
         const newFetchStatus = getNewActivityInstanceFetchStatus(newState);
 
-        expect(oldFetchStatus).not.toEqual(newFetchStatus);
+        expect(prevFetchStatus).not.toEqual(newFetchStatus);
         expect(newFetchStatus).toEqual(LOADING);
       });
     });
@@ -149,12 +152,11 @@ describe('activityInstance entity actions:', () => {
 
       describe('updated state', () => {
         describe('when matching activityType exists', () => {
-          it.only('activityType count was increased by 1', async () => {
+          it('activityType count was increased by 1', async () => {
             
             // Set client mutate to mocked function.
             gqlClient.mutate = mutate;
 
-            const prevState = store.getState();
             const prevActivityType = getEntityByName({
               name: createActivityInstancePayload.name,
               entityTypeName: 'activityType',
@@ -172,9 +174,52 @@ describe('activityInstance entity actions:', () => {
             });
             const newCount = updatedActivityType.activityCount;
 
-            debugger
-
             expect(newCount).toEqual(previousCount + 1);
+          });
+
+          it('new activityInstance entity was created', async () => {
+
+            // Set client mutate to mocked function.
+            gqlClient.mutate = mutate;
+
+            const prevActivityInstanceEntities = getActivityInstanceEntities(prevState);
+            const prevFetchStatuses = getActivityInstanceFetchStatus(prevState);
+
+            await dispatch({
+              store,
+              mockStore,
+              action: createActivityInstance(createActivityInstancePayload, gqlClient),
+            });
+
+            const id = getNewActivityInstanceId(mockStore);
+
+            const newState = store.getState();
+            const newActivityInstanceEntities = getActivityInstanceEntities(newState);
+
+            expect(prevActivityInstanceEntities[id]).toBeUndefined();
+            expect(newActivityInstanceEntities[id]).toBeDefined();
+          });
+
+          it(`fetch status for new activityInstance was created and set to ${LOADED}`, async () => {
+
+            // Set client mutate to mocked function.
+            gqlClient.mutate = mutate;
+
+            const prevFetchStatuses = getActivityInstanceFetchStatus(prevState);
+
+            await dispatch({
+              store,
+              mockStore,
+              action: createActivityInstance(createActivityInstancePayload, gqlClient),
+            });
+
+            const id = getNewActivityInstanceId(mockStore);
+
+            const newState = store.getState();
+            const newFetchStatuses = getActivityInstanceFetchStatus(newState);
+
+            expect(prevFetchStatuses[id]).toBeUndefined();
+            expect(newFetchStatuses[id]).toEqual(LOADED);
           });
         });
 
@@ -217,3 +262,17 @@ describe('activityInstance entity actions:', () => {
     });
   });
 });
+
+const dispatch = ({store, mockStore, action}) => Promise.all([
+  store.dispatch(action),
+  mockStore.dispatch(action),
+]);
+
+const getNewActivityInstanceId = mockStore => {
+  const actions = mockStore.getActions();
+  const createActivityInstanceSuccessAction = actions[2];
+  const {payload} = createActivityInstanceSuccessAction;
+  const newActivityInstance = payload.activityInstance;
+  
+  return newActivityInstance.id;
+}
