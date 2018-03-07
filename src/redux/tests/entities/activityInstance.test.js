@@ -8,6 +8,7 @@ import {
   getNewActivityInstanceFetchStatus,
   getActivityInstanceFetchStatus,
   getActivityInstanceEntities,
+  getActivityTypeEntities,
   getEntityByName,
 } from 'redux/reducers/selectors';
 import client from 'graphql/client';
@@ -131,7 +132,7 @@ describe('activityInstance entity actions:', () => {
 
     describe('successful request', () => {
       it(`expected actions were dispatched`, async () => {
-        
+
         await mockStore.dispatch(createActivityInstance(createActivityInstancePayload, gqlClient));
 
         const actions = mockStore.getActions();
@@ -182,7 +183,11 @@ describe('activityInstance entity actions:', () => {
               action: createActivityInstance(createActivityInstancePayload, gqlClient),
             });
 
-            const id = getNewActivityInstanceId(mockStore);
+            const id = getNewEntityId({
+              mockStore,
+              actionType: CREATE_ACTIVITY_INSTANCE_SUCCESS,
+              entityName: 'activityInstance',
+            });
 
             const newState = store.getState();
             const newActivityInstanceEntities = getActivityInstanceEntities(newState);
@@ -204,7 +209,11 @@ describe('activityInstance entity actions:', () => {
               action: createActivityInstance(createActivityInstancePayload, gqlClient),
             });
 
-            const id = getNewActivityInstanceId(mockStore);
+            const id = getNewEntityId({
+              mockStore,
+              actionType: CREATE_ACTIVITY_INSTANCE_SUCCESS,
+              entityName: 'activityInstance',
+            });
 
             const newState = store.getState();
             const newFetchStatuses = getActivityInstanceFetchStatus(newState);
@@ -215,7 +224,7 @@ describe('activityInstance entity actions:', () => {
         });
 
         describe('when matching activityType DNE and a new one was created', () => {
-          set('activityInstance', () => ({
+          set('createActivityInstancePayload', () => ({
             name: 'new activity type',
             categoryId: 'ca05ca36-805c-4f67-a097-a45988ba82d7',
             start: '2017-10-20T17:00:00.000-07:00',
@@ -248,9 +257,28 @@ describe('activityInstance entity actions:', () => {
             }
           }));
 
-          // it('a new activityType was created', () => {
+          it('a new activityType was created', async () => {
+            const prevActivityTypeEntities = getActivityTypeEntities(prevState);
 
-          // });
+            await dispatch({
+              store,
+              mockStore,
+              action: createActivityInstance(createActivityInstancePayload, gqlClient),
+            });
+
+            const newState = store.getState();
+            const id = getNewEntityId({
+              mockStore,
+              actionType: ADD_ACTIVITY_TYPE,
+              entityName: 'activityType',
+            });
+
+            const newActivityTypeEntities = getActivityTypeEntities(newState);
+            const activityType = newActivityTypeEntities[id];
+
+            expect(activityType).toBeDefined();
+            expect(prevActivityTypeEntities[id]).toBeUndefined();
+          });
         });
       });
     });
@@ -262,11 +290,11 @@ const dispatch = ({store, mockStore, action}) => Promise.all([
   mockStore.dispatch(action),
 ]);
 
-const getNewActivityInstanceId = mockStore => {
+const getNewEntityId = ({mockStore, actionType, entityName}) => {
   const actions = mockStore.getActions();
-  const createActivityInstanceSuccessAction = actions[2];
-  const {payload} = createActivityInstanceSuccessAction;
-  const newActivityInstance = payload.activityInstance;
-  
-  return newActivityInstance.id;
+  const action = actions.find(action => action.type === actionType);
+  const {payload} = action;
+  const entity = payload[entityName];
+
+  return entity.id;
 }
