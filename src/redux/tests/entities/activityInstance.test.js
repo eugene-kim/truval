@@ -35,6 +35,7 @@ import {
 import {
   CREATE_ACTIVITY_INSTANCE_REQUEST,
   CREATE_ACTIVITY_INSTANCE_SUCCESS,
+  CREATE_ACTIVITY_INSTANCE_FAILURE,
   UPDATE_ACTIVITY_INSTANCE_REQUEST,
   UPDATE_ACTIVITY_INSTANCE_SUCCESS,
   UPDATE_ACTIVITY_INSTANCE_FAILURE,
@@ -103,6 +104,8 @@ describe('activityInstance entity actions:', () => {
       payload: {activityInstance: createActivityInstancePayload},
     }));
 
+    set('createActivityInstanceThunk', () => createActivityInstance(createActivityInstancePayload, gqlClient));
+
     /**
      * An action suffixed by `_REQUEST` will be tested independently since it's called at the
      * beginning of the thunk and followed by other actions which change the store state and make
@@ -152,9 +155,19 @@ describe('activityInstance entity actions:', () => {
       });
 
       describe('updated state', () => {
-        set('createActivityInstanceThunk', () => createActivityInstance(createActivityInstancePayload, gqlClient));
-
         describe('when matching activityType exists', () => {
+          it(`activityInstance new fetch status was set to '${LOADED}'`, async () => {
+            const prevNewActivityInstanceStatus = getNewActivityInstanceFetchStatus(prevState);
+
+            await store.dispatch(createActivityInstanceThunk);
+
+            const newState = store.getState();
+            const updatedNewActivityInstanceStatus = getNewActivityInstanceFetchStatus(newState);
+
+            expect(prevNewActivityInstanceStatus).not.toEqual(LOADED);
+            expect(updatedNewActivityInstanceStatus).toEqual(LOADED);
+          });
+
           it(`the matching activityType's activityCount was increased by 1`, async () => {
             const prevActivityType = getEntityByName({
               name: createActivityInstancePayload.name,
@@ -218,18 +231,6 @@ describe('activityInstance entity actions:', () => {
 
             expect(prevFetchStatuses[id]).toBeUndefined();
             expect(newFetchStatuses[id]).toEqual(LOADED);
-          });
-
-          it(`activityInstance new fetch status was set to '${LOADED}'`, async () => {
-            const prevNewActivityInstanceStatus = getNewActivityInstanceFetchStatus(prevState);
-
-            await store.dispatch(createActivityInstanceThunk);
-
-            const newState = store.getState();
-            const updatedNewActivityInstanceStatus = getNewActivityInstanceFetchStatus(newState);
-
-            expect(prevNewActivityInstanceStatus).not.toEqual(LOADED);
-            expect(updatedNewActivityInstanceStatus).toEqual(LOADED);
           });
         });
 
@@ -372,11 +373,26 @@ describe('activityInstance entity actions:', () => {
       });
     });
 
-    // describe('failed attempt', () => {
-    //   set('mutate', () => throw new Error('Error creating activityInstance'));
+    describe('failed request', () => {
+      beforeEach(() => gqlClient.mutate = () => {
+        throw new Error('Error creating activityInstance');
+      });
 
+      it('expected actions were dispatched', async () => {
+        debugger
+        await mockStore.dispatch(createActivityInstanceThunk);
 
-    // });
+        const expectedActionTypes = [
+          CREATE_ACTIVITY_INSTANCE_REQUEST,
+          CREATE_ACTIVITY_INSTANCE_FAILURE,
+        ];
+
+        const actions = mockStore.getActions();
+        const actionTypes = actions.map(action => action.type);
+
+        expect(actionTypes).toEqual(expectedActionTypes);
+      });
+    });
   });
 });
 
