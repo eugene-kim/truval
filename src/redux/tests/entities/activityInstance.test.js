@@ -9,6 +9,7 @@ import {
   getActivityInstanceFetchStatus,
   getActivityInstanceEntities,
   getActivityTypeEntities,
+  getActivityTypeFetchStatus,
   getEntityByName,
 } from 'redux/reducers/selectors';
 import client from 'graphql/client';
@@ -152,7 +153,7 @@ describe('activityInstance entity actions:', () => {
 
       describe('updated state', () => {
         describe('when matching activityType exists', () => {
-          it('activityType count was increased by 1', async () => {
+          it(`the matching activityType's activityCount was increased by 1`, async () => {
             const prevActivityType = getEntityByName({
               name: createActivityInstancePayload.name,
               entityTypeName: 'activityType',
@@ -173,9 +174,8 @@ describe('activityInstance entity actions:', () => {
             expect(newCount).toEqual(previousCount + 1);
           });
 
-          it('new activityInstance entity was created', async () => {
+          it('a new activityInstance entity was created', async () => {
             const prevActivityInstanceEntities = getActivityInstanceEntities(prevState);
-            const prevFetchStatuses = getActivityInstanceFetchStatus(prevState);
 
             await dispatch({
               store,
@@ -196,11 +196,7 @@ describe('activityInstance entity actions:', () => {
             expect(newActivityInstanceEntities[id]).toBeDefined();
           });
 
-          it(`fetch status for new activityInstance was created and set to '${LOADED}'`, async () => {
-
-            // Set client mutate to mocked function.
-            gqlClient.mutate = mutate;
-
+          it(`a new fetch status for new activityInstance was created and set to '${LOADED}'`, async () => {
             const prevFetchStatuses = getActivityInstanceFetchStatus(prevState);
 
             await dispatch({
@@ -223,7 +219,7 @@ describe('activityInstance entity actions:', () => {
           });
         });
 
-        describe('when matching activityType DNE and a new one was created', () => {
+        describe('when an activityType with a matching name DNE', () => {
           set('createActivityInstancePayload', () => ({
             name: 'new activity type',
             categoryId: 'ca05ca36-805c-4f67-a097-a45988ba82d7',
@@ -257,7 +253,7 @@ describe('activityInstance entity actions:', () => {
             }
           }));
 
-          it('a new activityType was created', async () => {
+          it('a new activityType entity was created', async () => {
             const prevActivityTypeEntities = getActivityTypeEntities(prevState);
 
             await dispatch({
@@ -278,6 +274,73 @@ describe('activityInstance entity actions:', () => {
 
             expect(activityType).toBeDefined();
             expect(prevActivityTypeEntities[id]).toBeUndefined();
+          });
+
+          it(`a new activityType fetchStatus was created and set to '${LOADED}'`, async () => {
+            const prevActivityTypeFetchStatuses = getActivityTypeFetchStatus(prevState);
+
+            await dispatch({
+              store,
+              mockStore,
+              action: createActivityInstance(createActivityInstancePayload, gqlClient),
+            });
+
+            const newState = store.getState();
+            const id = getNewEntityId({
+              mockStore,
+              actionType: ADD_ACTIVITY_TYPE,
+              entityName: 'activityType',
+            });
+
+            const newActivityTypeFetchStatuses = getActivityTypeFetchStatus(newState);
+            const fetchStatus = newActivityTypeFetchStatuses[id];
+
+            expect(fetchStatus).toEqual(LOADED);
+            expect(prevActivityTypeFetchStatuses[id]).toBeUndefined();
+          });
+
+          it('a new activityInstance entity was created', async () => {
+            const prevActivityInstanceEntities = getActivityInstanceEntities(prevState);
+
+            await dispatch({
+              store,
+              mockStore,
+              action: createActivityInstance(createActivityInstancePayload, gqlClient),
+            });
+
+            const id = getNewEntityId({
+              mockStore,
+              actionType: CREATE_ACTIVITY_INSTANCE_SUCCESS,
+              entityName: 'activityInstance',
+            });
+
+            const newState = store.getState();
+            const newActivityInstanceEntities = getActivityInstanceEntities(newState);
+
+            expect(prevActivityInstanceEntities[id]).toBeUndefined();
+            expect(newActivityInstanceEntities[id]).toBeDefined();
+          });
+
+          it(`a new fetch status for new activityInstance was created and set to '${LOADED}'`, async () => {
+            const prevFetchStatuses = getActivityInstanceFetchStatus(prevState);
+
+            await dispatch({
+              store,
+              mockStore,
+              action: createActivityInstance(createActivityInstancePayload, gqlClient),
+            });
+
+            const id = getNewEntityId({
+              mockStore,
+              actionType: CREATE_ACTIVITY_INSTANCE_SUCCESS,
+              entityName: 'activityInstance',
+            });
+
+            const newState = store.getState();
+            const newFetchStatuses = getActivityInstanceFetchStatus(newState);
+
+            expect(prevFetchStatuses[id]).toBeUndefined();
+            expect(newFetchStatuses[id]).toEqual(LOADED);
           });
         });
       });

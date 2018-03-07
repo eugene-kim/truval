@@ -20,6 +20,7 @@ const fetchStatusReducerFactory = entityName => (fetchStatuses = {}, action) => 
   const deleteEntityRequest = `DELETE_${entityNameCaps}_REQUEST`;
   const deleteEntitySuccess = `DELETE_${entityNameCaps}_SUCCESS`;
   const deleteEntityFailure = `DELETE_${entityNameCaps}_FAILURE`;
+  const addEntity = `ADD_${entityNameCaps}`;
 
   switch(type) {
     case createEntitySuccess: {
@@ -55,6 +56,12 @@ const fetchStatusReducerFactory = entityName => (fetchStatuses = {}, action) => 
     }
     case deleteEntityFailure: {
       return setEntityFetchStatus(id, FAILED)(fetchStatuses);
+    }
+    case addEntity: {
+      const entity = payload[entityName];
+      const {id} = entity;
+      
+      return setEntityFetchStatus(id, LOADED)(fetchStatuses);
     }
     case UPDATE_FROM_SERVER: {
       return hydrateFetchStatuses(action, entityName)(fetchStatuses);
