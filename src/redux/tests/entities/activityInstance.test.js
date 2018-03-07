@@ -392,6 +392,94 @@ describe('activityInstance entity actions:', () => {
 
         expect(actionTypes).toEqual(expectedActionTypes);
       });
+
+      describe('matching activityType exists', () => {
+        it(`the new activityInstance fetch status is set to ${FAILED}`, async () => {
+          const prevNewActivityInstanceFetchStatus = getNewActivityInstanceFetchStatus(prevState);
+
+          await store.dispatch(createActivityInstanceThunk);
+
+          const newState = store.getState();
+          const newActivityInstanceFetchStatus = getNewActivityInstanceFetchStatus(newState);
+
+          expect(newActivityInstanceFetchStatus).toEqual(FAILED);
+          expect(newActivityInstanceFetchStatus).not.toEqual(prevNewActivityInstanceFetchStatus);
+        });
+
+        it(`no new activityInstance was created`, async () => {
+          const preDispatchActivityInstances = getActivityInstanceEntities(prevState);
+
+          await store.dispatch(createActivityInstanceThunk);
+
+          const newState = store.getState();
+          const postDispatchActivityInstances = getActivityInstanceEntities(newState);
+
+          expect(preDispatchActivityInstances.length).toEqual(postDispatchActivityInstances.length);
+        });
+
+        it(`matching activityType's activityCount remains the same`, async () => {
+          const preDispatchActivityType = getEntityByName({
+            name: 'Write seed data',
+            entityTypeName: 'activityType',
+            state: prevState,
+          });
+          const preDispatchCount = preDispatchActivityType.activityCount;
+
+          await store.dispatch(createActivityInstanceThunk);
+
+          const newState = store.getState();
+          const postDispatchActivityType = getEntityByName({
+            name: 'Write seed data',
+            entityTypeName: 'activityType',
+            state: newState,
+          });
+          const postDispatchCount = postDispatchActivityType.activityCount;
+
+          expect(preDispatchCount).toEqual(postDispatchCount);
+        });
+      });
+
+      describe('matching activityType DNE', () => {
+        set('createActivityInstancePayload', () => ({
+          name: 'new activity type',
+          categoryId: 'ca05ca36-805c-4f67-a097-a45988ba82d7',
+          start: '2017-10-20T17:00:00.000-07:00',
+        }));
+
+        it(`the new activityInstance fetch status is set to ${FAILED}`, async() => {
+          const prevNewActivityInstanceFetchStatus = getNewActivityInstanceFetchStatus(prevState);
+
+          await store.dispatch(createActivityInstanceThunk);
+
+          const newState = store.getState();
+          const newActivityInstanceFetchStatus = getNewActivityInstanceFetchStatus(newState);
+
+          expect(newActivityInstanceFetchStatus).toEqual(FAILED);
+          expect(newActivityInstanceFetchStatus).not.toEqual(prevNewActivityInstanceFetchStatus);
+        });
+
+        it(`no new activityInstance was created`, async () => {
+          const preDispatchActivityInstances = getActivityInstanceEntities(prevState);
+
+          await store.dispatch(createActivityInstanceThunk);
+
+          const newState = store.getState();
+          const postDispatchActivityInstances = getActivityInstanceEntities(newState);
+
+          expect(preDispatchActivityInstances.length).toEqual(postDispatchActivityInstances.length);
+        });
+
+        it(`no new activityType was created`, async () => {
+          const preDispatchActivityTypeEntities = getActivityTypeEntities(prevState);
+
+          await store.dispatch(createActivityInstanceThunk);
+
+          const newState = store.getState();
+          const postDispatchActivityTypeEntities = getActivityTypeEntities(newState);
+
+          expect(preDispatchActivityTypeEntities.length).toEqual(postDispatchActivityTypeEntities.length);
+        });
+      });
     });
   });
 });
