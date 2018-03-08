@@ -66,7 +66,6 @@ export const createActivityInstanceFailure = errorMessage => {
   };
 };
 
-
 export const updateActivityInstance = ({id, propsToUpdate = {}, client}) => async dispatch => {
   dispatch(updateActivityInstanceRequest({id, propsToUpdate}));
 
@@ -84,7 +83,10 @@ export const updateActivityInstance = ({id, propsToUpdate = {}, client}) => asyn
   } catch (error) {
     const {message} = error;
 
-    dispatch(updateActivityInstanceFailure(message));
+    dispatch(updateActivityInstanceFailure({
+      id,
+      errorMessage: message,
+    }));
   }
 };
 
@@ -98,9 +100,9 @@ export const updateActivityInstanceSuccess = ({id, propsToUpdate = {}}) => ({
   payload: {id, propsToUpdate},
 });
 
-export const updateActivityInstanceFailure = errorMessage => ({
+export const updateActivityInstanceFailure = ({id, errorMessage}) => ({
   type: UPDATE_ACTIVITY_INSTANCE_FAILURE,
-  payload: {errorMessage},
+  payload: {id, errorMessage},
 });
 
 export const deleteActivityInstance = ({id, activityTypeId}) => {
