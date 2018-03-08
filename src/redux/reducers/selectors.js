@@ -20,8 +20,9 @@ export const getActivityInstanceFetchStatus = state => getEntityFetchStatuses({e
 export const getNewActivityInstanceFetchStatus = state => getNewEntityFetchStatus({entityName: 'activityInstance', state});
 
 const getEntities = ({entityName, state}) => state.entities[entityName].entities;
-const getEntityFetchStatuses = ({entityName, state}) => state.entities[entityName].fetchStatus;
-const getNewEntityFetchStatus = ({entityName, state}) => state.entities[entityName].new.fetchStatus;
+
+export const getEntityFetchStatuses = ({entityName, state}) => state.entities[entityName].fetchStatus;
+export const getNewEntityFetchStatus = ({entityName, state}) => state.entities[entityName].new.fetchStatus;
 
 export const getEntityByName = ({name, entityTypeName, state}) => {
   invariant(

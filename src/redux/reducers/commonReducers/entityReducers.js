@@ -26,15 +26,15 @@ export const createEntity = (action, entityTypeName) => entities => {
 
 export const updateEntity = action => entities => {
   const {payload} = action;
-  const {id, propsToEdit} = payload;
+  const {id, propsToUpdate} = payload;
 
   invariant(
-    id && propsToEdit,
-    `id and propsToEdit are required properties in the action ${action.type}'s' payload.`,
+    id && propsToUpdate,
+    `id and propsToUpdate are required properties in the action ${action.type}'s' payload.`,
   );
 
   const entity = entities[id];
-  const updatedEntity = _.merge({}, entity, propsToEdit);
+  const updatedEntity = _.merge({}, entity, propsToUpdate);
 
   return _.merge({}, entities, {[id]: updatedEntity});
 }
