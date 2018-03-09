@@ -10,7 +10,8 @@ import {
   DELETE_ACTIVITY_INSTANCE_SUCCESS,
   DELETE_ACTIVITY_INSTANCE_FAILURE,
 } from '../types';
-import {addActivityType} from './activityType';
+import {getEntityById} from 'redux/reducers/selectors';
+import {addActivityType, updateActivityTypeSuccess} from './activityType';
 import {getLoneNormalizedEntity} from '../responseUtil';
 
 
@@ -105,9 +106,51 @@ export const updateActivityInstanceFailure = ({id, errorMessage}) => ({
   payload: {id, errorMessage},
 });
 
-export const deleteActivityInstance = ({id, activityTypeId}) => {
-  return {
-    type: DELETE_ACTIVITY_INSTANCE_SUCCESS,
-    payload: {id, activityTypeId},
-  };
+export const deleteActivityInstance = ({id, activityType, client}) => async dispatch => {
+  debugger
+  const activityTypeId = activityType.id;
+  const {activityCount} = activityType;
+
+  dispatch(deleteActivityInstanceRequest({id, activityTypeId}));
+
+  const params = getGqlParamString({id, activityTypeId});
+  const deleteActivityInstanceMutation = `
+    mutation {
+      deleteActivityInstance(${params})
+    }
+  `;
+
+  try {
+    client.mutate(deleteActivityInstanceMutation);
+
+    dispatch(deleteActivityInstanceSuccess({id, activityTypeId}));
+
+    // Directly update the store with updateActivityTypeSuccess() since the update
+    // to activityCount has already been made server side.
+    const updateActivityTypeAction = updateActivityTypeSuccess({
+      id: activityTypeId,
+      propsToUpdate: {activityCount: activityCount - 1},
+    });
+
+    dispatch(updateActivityTypeAction);
+  } catch (error) {
+    const {message} = error;
+
+    dispatch(deleteActivityInstanceFailure({id, message}));
+  }
 };
+
+export const deleteActivityInstanceRequest = ({id, activityTypeId}) => ({
+  type: DELETE_ACTIVITY_INSTANCE_REQUEST,
+  payload: {id, activityTypeId},
+});
+
+export const deleteActivityInstanceSuccess = ({id, activityTypeId}) => ({
+  type: DELETE_ACTIVITY_INSTANCE_SUCCESS,
+  payload: {id, activityTypeId},
+});
+
+export const deleteActivityInstanceFailure = ({id, errorMessage}) => ({
+  type: DELETE_ACTIVITY_INSTANCE_FAILURE,
+  payload: {id, errorMessage},
+});

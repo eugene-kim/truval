@@ -25,10 +25,5 @@ export const deleteEntityFetchStatus = deleteId => fetchStatuses => {
 }
 
 
-export const setEntityFetchStatus = (id, status) => fetchStatuses => {
-  const newState = _.merge({}, fetchStatuses, {[id]: status});
-
-  debugger
-
-  return newState;
-}
+export const setEntityFetchStatus = (id, status) => fetchStatuses =>
+  _.merge({}, fetchStatuses, {[id]: status})

@@ -33,23 +33,23 @@ export const updateActivityType = async (id, propsToUpdate, client) => async dis
   } catch (error) {
     const {message} = error;
 
-    dispatch(updateActivityTypeFailure(message));
+    dispatch(updateActivityTypeFailure({id, errorMessage: message}));
   }
 };
 
-const updateActivityTypeRequest = (id, propsToUpdate) => ({
+export const updateActivityTypeRequest = ({id, propsToUpdate}) => ({
   type: UPDATE_ACTIVITY_TYPE_REQUEST,
   payload: {id, propsToUpdate},
 });
 
-const updateActivityTypeSuccess = (id, propsToUpdate) => ({
+export const updateActivityTypeSuccess = ({id, propsToUpdate}) => ({
   type: UPDATE_ACTIVITY_TYPE_SUCCESS,
   payload: {id, propsToUpdate},
 });
 
-const updateActivityTypeFailure = errorMessage => ({
+const updateActivityTypeFailure = ({id, errorMessage}) => ({
   type: UPDATE_ACTIVITY_TYPE_FAILURE,
-  payload: {errorMessage},
+  payload: {id, errorMessage},
 });
 
 export const removeActivityType = id => {

@@ -50,7 +50,7 @@ export const deleteEntity = action => entities => {
       return updatedEntities;
     }
 
-    return Object.assign(updateEntities, {[id]: entities[id]});
+    return Object.assign(updatedEntities, {[id]: entities[id]});
   }, {});
 }
 

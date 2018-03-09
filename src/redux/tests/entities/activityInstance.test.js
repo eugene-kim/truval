@@ -10,8 +10,11 @@ import {
   getActivityInstanceEntities,
   getActivityTypeEntities,
   getActivityTypeFetchStatus,
+  getEntities,
   getEntityByName,
+  getEntityById,
   getEntityFetchStatuses,
+  getEntityFetchStatus,
   getNewEntityFetchStatus,
 } from 'redux/reducers/selectors';
 import client from 'graphql/client';
@@ -25,6 +28,7 @@ import {
   updateActivityInstance,
   updateActivityInstanceRequest,
   deleteActivityInstance,
+  deleteActivityInstanceRequest,
 } from 'redux/actions/entities/activityInstance';
 
 import {
@@ -45,7 +49,8 @@ import {
   DELETE_ACTIVITY_INSTANCE_REQUEST,
   DELETE_ACTIVITY_INSTANCE_SUCCESS,
   DELETE_ACTIVITY_INSTANCE_FAILURE,
-  ADD_ACTIVITY_TYPE
+  ADD_ACTIVITY_TYPE,
+  UPDATE_ACTIVITY_TYPE_SUCCESS,
 } from 'redux/actions/types';
 
 
@@ -174,7 +179,7 @@ describe('activityInstance entity actions:', () => {
           it(`the matching activityType's activityCount was increased by 1`, async () => {
             const prevActivityType = getEntityByName({
               name: createActivityInstancePayload.name,
-              entityTypeName: 'activityType',
+              entityType: 'activityType',
               state: prevState,
             });
             const previousCount = prevActivityType.activityCount;
@@ -184,7 +189,7 @@ describe('activityInstance entity actions:', () => {
             const newState = store.getState();
             const updatedActivityType = getEntityByName({
               name: createActivityInstancePayload.name,
-              entityTypeName: 'activityType',
+              entityType: 'activityType',
               state: newState,
             });
             const newCount = updatedActivityType.activityCount;
@@ -204,7 +209,7 @@ describe('activityInstance entity actions:', () => {
             const id = getNewEntityId({
               mockStore,
               actionType: CREATE_ACTIVITY_INSTANCE_SUCCESS,
-              entityName: 'activityInstance',
+              entityType: 'activityInstance',
             });
 
             const newState = store.getState();
@@ -226,7 +231,7 @@ describe('activityInstance entity actions:', () => {
             const id = getNewEntityId({
               mockStore,
               actionType: CREATE_ACTIVITY_INSTANCE_SUCCESS,
-              entityName: 'activityInstance',
+              entityType: 'activityInstance',
             });
 
             const newState = store.getState();
@@ -296,7 +301,7 @@ describe('activityInstance entity actions:', () => {
             const id = getNewEntityId({
               mockStore,
               actionType: ADD_ACTIVITY_TYPE,
-              entityName: 'activityType',
+              entityType: 'activityType',
             });
 
             const newActivityTypeEntities = getActivityTypeEntities(newState);
@@ -319,7 +324,7 @@ describe('activityInstance entity actions:', () => {
             const id = getNewEntityId({
               mockStore,
               actionType: ADD_ACTIVITY_TYPE,
-              entityName: 'activityType',
+              entityType: 'activityType',
             });
 
             const newActivityTypeFetchStatuses = getActivityTypeFetchStatus(newState);
@@ -341,7 +346,7 @@ describe('activityInstance entity actions:', () => {
             const id = getNewEntityId({
               mockStore,
               actionType: CREATE_ACTIVITY_INSTANCE_SUCCESS,
-              entityName: 'activityInstance',
+              entityType: 'activityInstance',
             });
 
             const newState = store.getState();
@@ -363,7 +368,7 @@ describe('activityInstance entity actions:', () => {
             const id = getNewEntityId({
               mockStore,
               actionType: CREATE_ACTIVITY_INSTANCE_SUCCESS,
-              entityName: 'activityInstance',
+              entityType: 'activityInstance',
             });
 
             const newState = store.getState();
@@ -422,7 +427,7 @@ describe('activityInstance entity actions:', () => {
         it(`matching activityType's activityCount remains the same`, async () => {
           const preDispatchActivityType = getEntityByName({
             name: 'Write seed data',
-            entityTypeName: 'activityType',
+            entityType: 'activityType',
             state: prevState,
           });
           const preDispatchCount = preDispatchActivityType.activityCount;
@@ -432,7 +437,7 @@ describe('activityInstance entity actions:', () => {
           const newState = store.getState();
           const postDispatchActivityType = getEntityByName({
             name: 'Write seed data',
-            entityTypeName: 'activityType',
+            entityType: 'activityType',
             state: newState,
           });
           const postDispatchCount = postDispatchActivityType.activityCount;
@@ -614,49 +619,228 @@ describe('activityInstance entity actions:', () => {
     });
   });
 
-  // describe('deleteActivityInstance', () => {
-  //   set('deleteActivityInstancePayload', () => ({
-  //     id: '9cd962f2-be8c-4622-9e26-3524d3baf503',
-  //     activityTypeId: '7e28c0e7-a213-4c4c-84bf-e3dd8db9c9b5',
-  //   }));
+  describe('deleteActivityInstance', () => {
+    set('id', () => '9cd962f2-be8c-4622-9e26-3524d3baf503');
+    set('deleteActivityType', () => ({
+      id: '7e28c0e7-a213-4c4c-84bf-e3dd8db9c9b5',
+      name: 'Reddit',
+      activityCount: 3,
+      // category_name: 'INTERNET',
+      category: '8efe9651-7a62-4323-9eef-080a90157b93',
+      categoryId: '8efe9651-7a62-4323-9eef-080a90157b93',
+      userId: 'cb39dbb5-caa8-4323-93a5-13450b875887',
+    }))
+    set('deleteActivityInstancePayload', () => ({
+      id,
+      activityType: deleteActivityType,
+      client: gqlClient,
+    }));
+    set('deleteActivityInstanceThunk', () => deleteActivityInstance(deleteActivityInstancePayload));
 
-  //   describe(`${DELETE_ACTIVITY_INSTANCE_REQUEST}`, () => {
-  //     set('deleteActivityInstanceRequestAction', () => deleteActivityInstanceRequest(deleteActivityInstancePayload));
+    beforeEach(() => gqlClient.mutate = () => {});
 
-  //     it(`${DELETE_ACTIVITY_INSTANCE_REQUEST} was dispatched`, async () => {
-  //       expectedActionsDispatched({
-  //         mockStore,
-  //         expectedActionTypes: [DELETE_ACTIVITY_INSTANCE_REQUEST],
-  //         action: deleteActivityInstanceRequestAction,
-  //       });
-  //     });
-  //   });
-  // });
+    describe(`${DELETE_ACTIVITY_INSTANCE_REQUEST}`, () => {
+      set('deleteActivityInstanceRequestAction', () => deleteActivityInstanceRequest(deleteActivityInstancePayload));
+
+      it(`${DELETE_ACTIVITY_INSTANCE_REQUEST} was dispatched`, async () => {
+        await actionsWereDispatched({
+          mockStore,
+          expectedActionTypes: [DELETE_ACTIVITY_INSTANCE_REQUEST],
+          action: deleteActivityInstanceRequestAction,
+        });
+      });
+
+      it(`activityInstance fetchStatus was set to ${DELETING}`, async () => {
+        await entityFetchStatusWasSet({
+          id,
+          action: deleteActivityInstanceRequestAction,
+          store,
+          entityType: 'activityInstance',
+          expectedStatus: DELETING,
+          statusShouldDiffer: true,
+        });
+      });
+    });
+
+    describe(`deleteActivityInstance was successful`, () => {
+      it('expected actions dispatched', async () => {
+        await actionsWereDispatched({
+          mockStore,
+          expectedActionTypes: [
+            DELETE_ACTIVITY_INSTANCE_REQUEST,
+            DELETE_ACTIVITY_INSTANCE_SUCCESS,
+            UPDATE_ACTIVITY_TYPE_SUCCESS,
+          ],
+          action: deleteActivityInstanceThunk,
+        });
+      });
+
+      it('activityInstance was deleted', async () => {
+        await entityWasDeleted({
+          id,
+          store,
+          entityType: 'activityInstance',
+          action: deleteActivityInstanceThunk,
+        });
+      });
+
+      it('activityInstance fetchStatus was deleted', async () => {
+        await entityFetchStatusWasDeleted({
+          id,
+          entityType: 'activityInstance',
+          store,
+          action: deleteActivityInstanceThunk,
+        });
+      });
+
+      it('related activityType activityCount was reduced by 1', async () => {
+        const {activityCount} = deleteActivityType;
+        const activityTypeId = deleteActivityType.id;
+
+        await validateEntityPropertyValue({
+          id: activityTypeId,
+          entityType: 'activityType',
+          propertyName: 'activityCount',
+          expectedValue: activityCount - 1,
+          action: deleteActivityInstanceThunk,
+          store,
+        });
+      });
+    });
+
+    describe(`deleteActivityInstance failed`, () => {
+      beforeEach(() => {
+        gqlClient.mutate = () => {
+          throw new Error(`Error deleting activityInstance`);
+        }
+      });
+
+      it(`expected actions were dispatched`, async () => {
+        await actionsWereDispatched({
+          mockStore,
+          expectedActionTypes: [
+            DELETE_ACTIVITY_INSTANCE_REQUEST,
+            DELETE_ACTIVITY_INSTANCE_FAILURE,
+          ],
+          action: deleteActivityInstanceThunk,
+        });
+      });
+
+      it('activityInstance was not deleted', async () => {
+        await entityWasNotDeleted({
+          id,
+          store,
+          entityType: 'activityInstance',
+          action: deleteActivityInstanceThunk,
+        });
+      });
+
+      it(`activityInstance fetchStatus was set to ${FAILED}`, async () => {
+        await entityFetchStatusWasSet({id,
+          store,
+          entityType: 'activityInstance',
+          action: deleteActivityInstanceThunk,
+          expectedStatus: FAILED,
+          statusShouldDiffer: true,
+        });
+      });
+
+      it(`related activityType's activityCount was unchanged`, async () => {
+        await validateEntityPropertyValue({
+          id: deleteActivityType.id,
+          entityType: 'activityType',
+          propertyName: 'activityCount',
+          expectedValue: deleteActivityType.activityCount,
+          action: deleteActivityInstanceThunk,
+          store,
+        });
+      });
+    });
+  });
 });
 
-const expectedActionsDispatched = async ({mockStore, expectedActionTypes, action}) => {
+const validateEntityPropertyValue = async ({id, entityType, propertyName, expectedValue, action, store}) => {
+  await store.dispatch(action);
+
+  const state = store.getState();
+  const entity = getEntityById({id, entityType, state});
+
+  expect(entity[propertyName]).toEqual(expectedValue);
+}
+
+const entityFetchStatusWasDeleted = async ({id, entityType, store, action}) => {
+  const previousState = store.getState();
+  const previousEntityFetchStatus = getEntityFetchStatus({id, entityType, state: previousState});
+
+  await store.dispatch(action);
+
+  const newState = store.getState();
+  const newEntityFetchStatus = getEntityFetchStatus({id, entityType, state: newState});
+
+  expect(newEntityFetchStatus).toBeUndefined();
+  expect(previousEntityFetchStatus).toBeDefined();
+}
+
+const actionsWereDispatched = async ({mockStore, expectedActionTypes, action}) => {
   await mockStore.dispatch(action);
 
   const actions = mockStore.getActions();
   const actionTypes = actions.map(action => action.type);
 
-  expect(expectedActionTypes).toEqual(actionTypes);
+  expect(actionTypes).toEqual(expectedActionTypes);
 }
 
-// const entityFetchStatusWasSet = async ({store, entityName, action, fetchStatus}) => {
+const entityFetchStatusWasSet = async ({id, store, entityType, action, expectedStatus, statusShouldDiffer}) => {
+  const previousState = store.getState();
 
-// }
+  await store.dispatch(action);
+
+  const newState = store.getState();
+  const newFetchStatuses = getEntityFetchStatuses({entityType, state: newState});
+  const newFetchStatus = newFetchStatuses[id];
+
+  expect(newFetchStatus).toEqual(expectedStatus);
+
+  if (statusShouldDiffer) {
+    const previousFetchStatuses = getEntityFetchStatuses({entityType, state: previousState});
+    const previousFetchStatus = previousFetchStatuses[id];
+
+    expect(newFetchStatus).not.toEqual(previousFetchStatus);
+  }
+}
+
+const entityWasDeleted = async ({id, store, entityType, action}) => {
+  const previousState = store.getState();
+  const previousEntities = getEntities({entityType, state: previousState});
+
+  await store.dispatch(action);
+
+  const newState = store.getState();
+  const newEntities = getEntities({entityType, state: newState});
+
+  expect(previousEntities[id]).toBeDefined();
+  expect(newEntities[id]).toBeUndefined();
+}
+
+const entityWasNotDeleted = async ({id, store, entityType, action}) => {
+  await store.dispatch(action);
+
+  const state = store.getState();
+  const entities = getEntities({entityType, state});
+
+  expect(entities[id]).toBeDefined();
+}
 
 const dispatch = ({store, mockStore, action}) => Promise.all([
   store.dispatch(action),
   mockStore.dispatch(action),
 ]);
 
-const getNewEntityId = ({mockStore, actionType, entityName}) => {
+const getNewEntityId = ({mockStore, actionType, entityType}) => {
   const actions = mockStore.getActions();
   const action = actions.find(action => action.type === actionType);
   const {payload} = action;
-  const entity = payload[entityName];
+  const entity = payload[entityType];
 
   return entity.id;
 }
