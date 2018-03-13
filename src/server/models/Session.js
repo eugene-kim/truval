@@ -1,7 +1,7 @@
 import {
   createModelInstance,
   updateModelInstance,
-  getModelInstance,
+  getModelInstanceById,
   getModelInstances,
   deleteModelInstance,
 } from '../database/dbMethods';
@@ -14,7 +14,7 @@ const SESSION_COLUMNS = [
   'is_complete',
   'user_id',
 ];
-const SESSION_TABLE = 'session';
+const SESSION_TABLE = 'Session';
 const Session = {
   createSession: (requiredParams, optionalParams) => createModelInstance(
     requiredParams,
@@ -22,7 +22,7 @@ const Session = {
     SESSION_TABLE,
     SESSION_COLUMNS,
   ),
-  getSession: id => getModelInstance(id, SESSION_TABLE),
+  getSession: id => getModelInstanceById(id, SESSION_TABLE),
   getUserSessions: userId => getModelInstances(
     userId,
     'user_id',

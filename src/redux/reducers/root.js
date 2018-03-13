@@ -1,50 +1,85 @@
 import _ from 'lodash';
 import types from '../actions/types';
 
-// Entities reducers
-import reduceUserEntities from './entities/user';
-import reduceSessionEntities from './entities/session';
-import reduceActivityEntities from './entities/activity';
-import reduceCategoryEntities from './entities/category';
+// Reducer Factories
+import fetchStatusReducerFactory from './factories/fetchStatusReducerFactory';
+import entitiesReducerFactory from './factories/entitiesReducerFactory';
+import newEntityFetchStatusReducer from './factories/newEntityFetchStatusReducer';
 
-// Ordered reducers
-import reduceSessionActivities from './ordered/sessionActivities';
+import activityTypeEntitiesReducer from './entities/activityTypeEntitiesReducer';
+
+// Selectors
+import {
+  getSessionEntities,
+  getSessionFetchStatus,
+  getNewSessionFetchStatus,
+  getCategoryEntities,
+  getCategoryFetchStatus,
+  getNewCategoryFetchStatus,
+  getActivityTypeEntities,
+  getActivityTypeFetchStatus,
+  getNewActivityTypeFetchStatus,
+  getActivityInstanceEntities,
+  getActivityInstanceFetchStatus,
+  getNewActivityInstanceFetchStatus,
+  getUserProps,
+  getUserFetchStatus,
+} from './selectors';
+
+// User
+import reduceUserProps from './app/reduceUserProps';
+import reduceUserFetchStatus from './app/reduceUserFetchStatus';
 
 
 const focusApp = function(state = {}, action) {
-  const {user, session, activity, category} = state.entities;
-  const {sessionActivities} = state.ordered;
-
   return {
     entities: {
-      user: {
-        entities: reduceUserEntities(user.entities, action),
-      },
       session: {
-        entities: reduceSessionEntities(session.entities, action),
+        entities: entitiesReducerFactory('session')(getSessionEntities(state), action),
+        fetchStatus: fetchStatusReducerFactory('session')(getSessionFetchStatus(state), action),
+        new: {
+          fetchStatus: newEntityFetchStatusReducer('session')(getNewSessionFetchStatus(state), action),
+        }
       },
-      activity: {
-        entities: reduceActivityEntities(activity.entities, action),
+      activityType: {
+        entities: activityTypeEntitiesReducer(getActivityTypeEntities(state), action),
+        fetchStatus: fetchStatusReducerFactory('activityType')(getActivityTypeFetchStatus(state), action),
+        new: {
+          fetchStatus: newEntityFetchStatusReducer('activityType')(getNewActivityTypeFetchStatus(state), action),
+        }
+      },
+      activityInstance: {
+        entities: entitiesReducerFactory('activityInstance')(getActivityInstanceEntities(state), action),
+        fetchStatus: fetchStatusReducerFactory('activityInstance')(getActivityInstanceFetchStatus(state), action),
+        new: {
+          fetchStatus: newEntityFetchStatusReducer('activityInstance')(getNewActivityInstanceFetchStatus(state), action),
+        }
       },
       category: {
-        entities: reduceCategoryEntities(category.entities, action),
+        entities: entitiesReducerFactory('category')(getCategoryEntities(state), action),
+        fetchStatus: fetchStatusReducerFactory('category')(getCategoryFetchStatus(state), action),
+        new: {
+          fetchStatus: newEntityFetchStatusReducer('category')(getNewCategoryFetchStatus(state), action),
+        }
       },
     },
 
     // Contains pointers to the currently rendered or selected object.
     current: {
-      user: undefined,
-
+      
       // TODO: Remove after finishing testing.
       session: 1,
-      activity: undefined,
+      activityInstance: undefined,
       category: undefined,
     },
 
-    ordered: {
-      sessionActivities: reduceSessionActivities(sessionActivities, action),
+    app: {
+      user: {
+        props: reduceUserProps(getUserProps(state), action),
+        fetchStatus: reduceUserFetchStatus(getUserFetchStatus(state), action),
+      },
     },
-  } 
+  }
 }
 
 

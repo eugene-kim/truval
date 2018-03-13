@@ -1,6 +1,7 @@
 import User from 'server/models/User';
 import Session from 'server/models/Session';
 import Category from 'server/models/Category';
+import ActivityType from 'server/models/ActivityType';
 
 
 export default {
@@ -22,5 +23,6 @@ export default {
   User: {
     sessions: (user, args) => Session.getUserSessions(user.id),
     categories: (user, args) => Category.getUserCategories(user.id),
+    activityTypes: (user, args) => ActivityType.getUserActivityTypes(user.id),
   },
 };

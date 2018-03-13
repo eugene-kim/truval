@@ -355,42 +355,42 @@ describe('test containsQueryData()', () => {
     });
   });
 
-  describe('4 level nested query with circular references requesting `user(id: 1)`', () => {
+  describe('4 level nested query with circular references requesting `user(id: cb39dbb5-caa8-4323-93a5-13450b875887)`', () => {
     set('query', () => {
       return `
         query {
-          user(id:1) {
+          user(id:"cb39dbb5-caa8-4323-93a5-13450b875887") {
             id,
             username,
-            email,
-            password,
+            categories {
+              id,
+              name,
+              color,
+            },
             sessions {
               id,
               name,
               start,
-              isComplete,
-              activities {
+              end,
+              activityInstances {
                 id,
                 start,
                 end,
                 isComplete,
-                session {
+                activityType {
                   id,
-                  start,
-                  end,
-                  isComplete,
-                  activities {
+                  category {
                     id,
-                    start,
-                    end,
+                    name,
+                    color
                   }
-                },
-                category {
-                  id,
-                  color,
-                  name
                 }
               }
+            },
+            activityTypes {
+              id,
+              name,
+              activityCount,
             }
           }
         }`;
@@ -412,109 +412,146 @@ describe('test containsQueryData()', () => {
           entities: {
             user: {
               entities: {
-                '1': {
-                  id: '1',
+                'cb39dbb5-caa8-4323-93a5-13450b875887': {
+                  id: 'cb39dbb5-caa8-4323-93a5-13450b875887',
                   username: 'the hugest',
                   email: 'hugeeuge@gmail.com',
                   password: 'password',
-                  sessions: ['1', '2', '3'],
+                  sessions: [
+                    '997a5210-33d1-4198-a4a4-5f1ea477cc01',
+                    'bdcf6a74-e2e7-47f7-af8f-1c66042e119e',
+                  ],
+                  categories: [
+                    'ca05ca36-805c-4f67-a097-a45988ba82d7',
+                    '083adb66-0288-4148-b0ca-ec61f99970a6',
+                    '51d017c1-57f1-401c-a16f-7f8142fb37d6',
+                  ],
+                  activityTypes: [
+                    '1982f070-704c-4054-beb4-ea188399fc10',
+                    '810eca68-a948-4646-93b8-09a02d1626a1',
+                    'bc577f78-bf74-4a2e-88c2-553066074dee',
+                    '7fc5ca14-1fec-4bf8-aba3-02a87880424e',
+                  ],
                 },
               },
             },
             session: {
               entities: {
-                '1': {
-                  id: '1',
+                '997a5210-33d1-4198-a4a4-5f1ea477cc01': {
+                  id: '997a5210-33d1-4198-a4a4-5f1ea477cc01',
                   name: 'Study Session 1',
                   start: '2017-10-21T15:51:09.489-07:00',
                   end: '2017-10-21T15:51:09.489-07:00',
                   isComplete: false,
-                  activities: [1,2],
+                  activityInstances: [
+                    'c72cea78-2027-4615-a6a1-3daca28c9bba',
+                    'bf843d19-c4aa-4f18-84dd-105a45ff14c7',
+                  ],
                 },
-                '2': {
-                  id: '2',
+                'bdcf6a74-e2e7-47f7-af8f-1c66042e119e': {
+                  id: 'bdcf6a74-e2e7-47f7-af8f-1c66042e119e',
                   name: 'Study Session 2',
                   start: '2017-10-21T15:51:09.489-07:00',
                   end: '2017-10-21T15:51:09.489-07:00',
                   isComplete: false,
-                  activities: [3,4],
-                },
-                '3': {
-                  id: '3',
-                  name: 'Study Session 3',
-                  start: '2017-10-21T15:51:09.489-07:00',
-                  end: '2017-10-21T15:51:09.489-07:00',
-                  isComplete: false,
-                  activities: [5,6],
+                  activityInstances: [
+                    '13800618-a022-4fbb-a6ad-7ba94f93b221',
+                    '67c120ef-7420-4b2e-b8d2-53e52a85501d',
+                  ],
                 },
               },
             },
-            activity: {
+            activityInstance: {
               entities: {
-                '1': {
-                  'id': '1',
+                'c72cea78-2027-4615-a6a1-3daca28c9bba': {
+                  'id': 'c72cea78-2027-4615-a6a1-3daca28c9bba',
                   'start': '2017-10-20T17:00:00.000-07:00',
                   'end': '2017-10-20T17:20:00.000-07:00',
                   'isComplete': true,
-                  'session': '1',
-                  'category': '1'
+                  'session': '997a5210-33d1-4198-a4a4-5f1ea477cc01',
+                  'category': 'ca05ca36-805c-4f67-a097-a45988ba82d7',
+                  'activityType': '1982f070-704c-4054-beb4-ea188399fc10',
                 },
-                '2': {
-                  'id': '2',
+                'bf843d19-c4aa-4f18-84dd-105a45ff14c7': {
+                  'id': 'bf843d19-c4aa-4f18-84dd-105a45ff14c7',
                   'start': '2017-10-20T17:20:00.000-07:00',
                   'end': '2017-10-20T17:30:00.000-07:00',
                   'isComplete': true,
-                  'session': '1',
-                  'category': '2'
+                  'session': '997a5210-33d1-4198-a4a4-5f1ea477cc01',
+                  'category': '083adb66-0288-4148-b0ca-ec61f99970a6',
+                  'activityType': '810eca68-a948-4646-93b8-09a02d1626a1',
                 },
-                '3': {
-                  'id': '3',
+                '13800618-a022-4fbb-a6ad-7ba94f93b221': {
+                  'id': '13800618-a022-4fbb-a6ad-7ba94f93b221',
                   'start': '2017-10-20T17:30:00.000-07:00',
                   'end': '2017-10-20T17:40:00.000-07:00',
                   'isComplete': true,
-                  'session': '2',
-                  'category': '3'
+                  'session': 'bdcf6a74-e2e7-47f7-af8f-1c66042e119e',
+                  'category': '51d017c1-57f1-401c-a16f-7f8142fb37d6',
+                  'activityType': 'bc577f78-bf74-4a2e-88c2-553066074dee',
+
                 },
-                '4': {
-                  'id': '4',
+                '67c120ef-7420-4b2e-b8d2-53e52a85501d': {
+                  'id': '67c120ef-7420-4b2e-b8d2-53e52a85501d',
                   'start': '2017-10-20T17:40:00.000-07:00',
                   'end': '2017-10-20T17:55:00.000-07:00',
                   'isComplete': true,
-                  'session': '2',
-                  'category': '1'
+                  'session': 'bdcf6a74-e2e7-47f7-af8f-1c66042e119e',
+                  'category': 'ca05ca36-805c-4f67-a097-a45988ba82d7',
+                  'activityType': '7fc5ca14-1fec-4bf8-aba3-02a87880424e',
                 },
-                '5': {
-                  'id': '5',
-                  'start': '2017-10-20T17:55:00.000-07:00',
-                  'end': '2017-10-20T18:40:00.000-07:00',
-                  'isComplete': true,
-                  'session': '3',
-                  'category': '2'
+              },
+            },
+            activityType: {
+              entities: {
+                '1982f070-704c-4054-beb4-ea188399fc10': {
+                  id: '1982f070-704c-4054-beb4-ea188399fc10',
+                  name: 'Write seed data',
+                  activityCount: 6,
+                  // category_name: 'CODE',
+                  category: 'ca05ca36-805c-4f67-a097-a45988ba82d7',
+                  user: 'cb39dbb5-caa8-4323-93a5-13450b875887',
                 },
-                '6': {
-                  'id': '6',
-                  'start': '2017-10-20T18:40:00.000-07:00',
-                  'end': '2017-10-20T19:40:00.000-07:00',
-                  'isComplete': true,
-                  'session': '3',
-                  'category': '3'
+                '810eca68-a948-4646-93b8-09a02d1626a1': {
+                  id: '810eca68-a948-4646-93b8-09a02d1626a1',
+                  name: 'Lunch',
+                  activityCount: 3,
+                  // category_name: 'EAT',
+                  category: '083adb66-0288-4148-b0ca-ec61f99970a6',
+                  user: 'cb39dbb5-caa8-4323-93a5-13450b875887',
+                },
+                'bc577f78-bf74-4a2e-88c2-553066074dee': {
+                  id: 'bc577f78-bf74-4a2e-88c2-553066074dee',
+                  name: 'Poop',
+                  activityCount: 3,
+                  // category_name: 'POTTY',
+                  category: '51d017c1-57f1-401c-a16f-7f8142fb37d6',
+                  user: 'cb39dbb5-caa8-4323-93a5-13450b875887',
+                },
+                '7fc5ca14-1fec-4bf8-aba3-02a87880424e': {
+                  id: '7fc5ca14-1fec-4bf8-aba3-02a87880424e',
+                  name: 'Write test cases',
+                  activityCount: 3,
+                  // category_name: 'CODE',
+                  category: 'ca05ca36-805c-4f67-a097-a45988ba82d7',
+                  user: 'cb39dbb5-caa8-4323-93a5-13450b875887',
                 },
               },
             },
             category: {
               entities: {
-                '1': {
-                  'id': '1',
+                'ca05ca36-805c-4f67-a097-a45988ba82d7': {
+                  'id': 'ca05ca36-805c-4f67-a097-a45988ba82d7',
                   'color': '#3E416A',
                   'name': 'CODE'
                 },
-                '2': {
-                  'id': '2',
+                '083adb66-0288-4148-b0ca-ec61f99970a6': {
+                  'id': '083adb66-0288-4148-b0ca-ec61f99970a6',
                   'color': '#E9696A',
                   'name': 'EAT'
                 },
-                '3': {
-                  'id': '3',
+                '51d017c1-57f1-401c-a16f-7f8142fb37d6': {
+                  'id': '51d017c1-57f1-401c-a16f-7f8142fb37d6',
                   'color': '#BBD8CB',
                   'name': 'POTTY'
                 },
@@ -538,111 +575,148 @@ describe('test containsQueryData()', () => {
           entities: {
             user: {
               entities: {
-                '1': {
-                  id: '1',
+                'cb39dbb5-caa8-4323-93a5-13450b875887': {
+                  id: 'cb39dbb5-caa8-4323-93a5-13450b875887',
                   username: 'the hugest',
                   email: 'hugeeuge@gmail.com',
                   password: 'password',
-                  sessions: ['1', '2', '3'],
+                  sessions: [
+                    '997a5210-33d1-4198-a4a4-5f1ea477cc01',
+                    'bdcf6a74-e2e7-47f7-af8f-1c66042e119e',
+                  ],
+                  categories: [
+                    'ca05ca36-805c-4f67-a097-a45988ba82d7',
+                    '083adb66-0288-4148-b0ca-ec61f99970a6',
+                    '51d017c1-57f1-401c-a16f-7f8142fb37d6',
+                  ],
+                  activityTypes: [
+                    '1982f070-704c-4054-beb4-ea188399fc10',
+                    '810eca68-a948-4646-93b8-09a02d1626a1',
+                    'bc577f78-bf74-4a2e-88c2-553066074dee',
+                    '7fc5ca14-1fec-4bf8-aba3-02a87880424e',
+                  ],
                 },
               },
             },
             session: {
               entities: {
-                '1': {
-                  id: '1',
+                '997a5210-33d1-4198-a4a4-5f1ea477cc01': {
+                  id: '997a5210-33d1-4198-a4a4-5f1ea477cc01',
                   name: 'Study Session 1',
                   start: '2017-10-21T15:51:09.489-07:00',
                   end: '2017-10-21T15:51:09.489-07:00',
                   isComplete: false,
-                  activities: [1,2],
+                  activityInstances: [
+                    'c72cea78-2027-4615-a6a1-3daca28c9bba',
+                    'bf843d19-c4aa-4f18-84dd-105a45ff14c7',
+                  ],
                 },
-                '2': {
-                  id: '2',
+                'bdcf6a74-e2e7-47f7-af8f-1c66042e119e': {
+                  id: 'bdcf6a74-e2e7-47f7-af8f-1c66042e119e',
                   name: 'Study Session 2',
                   start: '2017-10-21T15:51:09.489-07:00',
                   end: '2017-10-21T15:51:09.489-07:00',
                   isComplete: false,
-                  activities: [3,4],
-                },
-                '3': {
-                  id: '3',
-                  name: 'Study Session 3',
-                  start: '2017-10-21T15:51:09.489-07:00',
-                  end: '2017-10-21T15:51:09.489-07:00',
-                  isComplete: false,
-                  activities: [5,6],
+                  activityInstances: [
+                    '13800618-a022-4fbb-a6ad-7ba94f93b221',
+                    '67c120ef-7420-4b2e-b8d2-53e52a85501d',
+                  ],
                 },
               },
             },
-            activity: {
+            activityInstance: {
               entities: {
-                '1': {
-                  'id': '1',
+                'c72cea78-2027-4615-a6a1-3daca28c9bba': {
+                  'id': 'c72cea78-2027-4615-a6a1-3daca28c9bba',
                   'start': '2017-10-20T17:00:00.000-07:00',
                   'end': '2017-10-20T17:20:00.000-07:00',
                   'isComplete': true,
-                  'session': '1',
-                  'category': '1'
+                  'session': '997a5210-33d1-4198-a4a4-5f1ea477cc01',
+                  'category': 'ca05ca36-805c-4f67-a097-a45988ba82d7',
+                  'activityType': '1982f070-704c-4054-beb4-ea188399fc10',
                 },
-                '2': {
-                  'id': '2',
+                'bf843d19-c4aa-4f18-84dd-105a45ff14c7': {
+                  'id': 'bf843d19-c4aa-4f18-84dd-105a45ff14c7',
                   'start': '2017-10-20T17:20:00.000-07:00',
                   'end': '2017-10-20T17:30:00.000-07:00',
                   'isComplete': true,
-                  'session': '1',
-                  'category': '2'
+                  'session': '997a5210-33d1-4198-a4a4-5f1ea477cc01',
+                  'category': '083adb66-0288-4148-b0ca-ec61f99970a6',
+                  'activityType': '810eca68-a948-4646-93b8-09a02d1626a1',
                 },
-                '3': {
-                  'id': '3',
+                '13800618-a022-4fbb-a6ad-7ba94f93b221': {
+                  'id': '13800618-a022-4fbb-a6ad-7ba94f93b221',
                   'start': '2017-10-20T17:30:00.000-07:00',
                   'end': '2017-10-20T17:40:00.000-07:00',
                   'isComplete': true,
-                  'session': '2',
-                  'category': '3'
+                  'session': 'bdcf6a74-e2e7-47f7-af8f-1c66042e119e',
+                  'category': '51d017c1-57f1-401c-a16f-7f8142fb37d6',
+                  'activityType': 'bc577f78-bf74-4a2e-88c2-553066074dee',
+
                 },
-                '4': {
-                  'id': '4',
-                  'start': '2017-10-20T17:40:00.000-07:00',
+                '67c120ef-7420-4b2e-b8d2-53e52a85501d': {
+                  'id': '67c120ef-7420-4b2e-b8d2-53e52a85501d',
+
+                  // Missing scalar field
+                  // 'start': '2017-10-20T17:40:00.000-07:00',
                   'end': '2017-10-20T17:55:00.000-07:00',
                   'isComplete': true,
-                  'session': '2',
-                  'category': '1'
+                  'session': 'bdcf6a74-e2e7-47f7-af8f-1c66042e119e',
+                  'category': 'ca05ca36-805c-4f67-a097-a45988ba82d7',
+                  'activityType': '7fc5ca14-1fec-4bf8-aba3-02a87880424e',
                 },
-                '5': {
-                  'id': '5',
-                  'start': '2017-10-20T17:55:00.000-07:00',
-                  'end': '2017-10-20T18:40:00.000-07:00',
-                  'isComplete': true,
-                  'session': '3',
-                  'category': '2'
+              },
+            },
+            activityType: {
+              entities: {
+                '1982f070-704c-4054-beb4-ea188399fc10': {
+                  id: '1982f070-704c-4054-beb4-ea188399fc10',
+                  name: 'Write seed data',
+                  activityCount: 6,
+                  // category_name: 'CODE',
+                  category: 'ca05ca36-805c-4f67-a097-a45988ba82d7',
+                  user: 'cb39dbb5-caa8-4323-93a5-13450b875887',
                 },
-                '6': {
-                  'id': '6',
-                  'start': '2017-10-20T18:40:00.000-07:00',
-                  'end': '2017-10-20T19:40:00.000-07:00',
-                  'isComplete': true,
-                  'session': '3',
-                  'category': '3'
+                '810eca68-a948-4646-93b8-09a02d1626a1': {
+                  id: '810eca68-a948-4646-93b8-09a02d1626a1',
+                  name: 'Lunch',
+                  activityCount: 3,
+                  // category_name: 'EAT',
+                  category: '083adb66-0288-4148-b0ca-ec61f99970a6',
+                  user: 'cb39dbb5-caa8-4323-93a5-13450b875887',
+                },
+                'bc577f78-bf74-4a2e-88c2-553066074dee': {
+                  id: 'bc577f78-bf74-4a2e-88c2-553066074dee',
+                  name: 'Poop',
+                  activityCount: 3,
+                  // category_name: 'POTTY',
+                  category: '51d017c1-57f1-401c-a16f-7f8142fb37d6',
+                  user: 'cb39dbb5-caa8-4323-93a5-13450b875887',
+                },
+                '7fc5ca14-1fec-4bf8-aba3-02a87880424e': {
+                  id: '7fc5ca14-1fec-4bf8-aba3-02a87880424e',
+                  name: 'Write test cases',
+                  activityCount: 3,
+                  // category_name: 'CODE',
+                  category: 'ca05ca36-805c-4f67-a097-a45988ba82d7',
+                  user: 'cb39dbb5-caa8-4323-93a5-13450b875887',
                 },
               },
             },
             category: {
               entities: {
-                '1': {
-                  'id': '1',
+                'ca05ca36-805c-4f67-a097-a45988ba82d7': {
+                  'id': 'ca05ca36-805c-4f67-a097-a45988ba82d7',
                   'color': '#3E416A',
                   'name': 'CODE'
                 },
-                '2': {
-                  'id': '2',
-
-                  // Missing scalar field
-                  // 'color': '#E9696A',
+                '083adb66-0288-4148-b0ca-ec61f99970a6': {
+                  'id': '083adb66-0288-4148-b0ca-ec61f99970a6',
+                  'color': '#E9696A',
                   'name': 'EAT'
                 },
-                '3': {
-                  'id': '3',
+                '51d017c1-57f1-401c-a16f-7f8142fb37d6': {
+                  'id': '51d017c1-57f1-401c-a16f-7f8142fb37d6',
                   'color': '#BBD8CB',
                   'name': 'POTTY'
                 },
@@ -666,114 +740,151 @@ describe('test containsQueryData()', () => {
           entities: {
             user: {
               entities: {
-                '1': {
-                  id: '1',
+                'cb39dbb5-caa8-4323-93a5-13450b875887': {
+                  id: 'cb39dbb5-caa8-4323-93a5-13450b875887',
                   username: 'the hugest',
                   email: 'hugeeuge@gmail.com',
                   password: 'password',
-                  sessions: ['1', '2', '3'],
+                  sessions: [
+                    '997a5210-33d1-4198-a4a4-5f1ea477cc01',
+                    'bdcf6a74-e2e7-47f7-af8f-1c66042e119e',
+                  ],
+                  categories: [
+                    'ca05ca36-805c-4f67-a097-a45988ba82d7',
+                    '083adb66-0288-4148-b0ca-ec61f99970a6',
+                    '51d017c1-57f1-401c-a16f-7f8142fb37d6',
+                  ],
+                  activityTypes: [
+                    '1982f070-704c-4054-beb4-ea188399fc10',
+                    '810eca68-a948-4646-93b8-09a02d1626a1',
+                    'bc577f78-bf74-4a2e-88c2-553066074dee',
+                    '7fc5ca14-1fec-4bf8-aba3-02a87880424e',
+                  ],
                 },
               },
             },
             session: {
               entities: {
-                '1': {
-                  id: '1',
+                '997a5210-33d1-4198-a4a4-5f1ea477cc01': {
+                  id: '997a5210-33d1-4198-a4a4-5f1ea477cc01',
                   name: 'Study Session 1',
                   start: '2017-10-21T15:51:09.489-07:00',
                   end: '2017-10-21T15:51:09.489-07:00',
                   isComplete: false,
-                  activities: [1,2],
+                  activityInstances: [
+                    'c72cea78-2027-4615-a6a1-3daca28c9bba',
+                    'bf843d19-c4aa-4f18-84dd-105a45ff14c7',
+                  ],
                 },
-                '2': {
-                  id: '2',
+                'bdcf6a74-e2e7-47f7-af8f-1c66042e119e': {
+                  id: 'bdcf6a74-e2e7-47f7-af8f-1c66042e119e',
                   name: 'Study Session 2',
                   start: '2017-10-21T15:51:09.489-07:00',
                   end: '2017-10-21T15:51:09.489-07:00',
                   isComplete: false,
-                  activities: [3,4],
-                },
-                '3': {
-                  id: '3',
-                  name: 'Study Session 3',
-                  start: '2017-10-21T15:51:09.489-07:00',
-                  end: '2017-10-21T15:51:09.489-07:00',
-                  isComplete: false,
-                  activities: [5,6],
+                  activityInstances: [
+                    '13800618-a022-4fbb-a6ad-7ba94f93b221',
+                    '67c120ef-7420-4b2e-b8d2-53e52a85501d',
+                  ],
                 },
               },
             },
-            activity: {
+            activityInstance: {
               entities: {
-                '1': {
-                  'id': '1',
+                'c72cea78-2027-4615-a6a1-3daca28c9bba': {
+                  'id': 'c72cea78-2027-4615-a6a1-3daca28c9bba',
                   'start': '2017-10-20T17:00:00.000-07:00',
                   'end': '2017-10-20T17:20:00.000-07:00',
                   'isComplete': true,
-                  'session': '1',
-                  'category': '1'
+                  'session': '997a5210-33d1-4198-a4a4-5f1ea477cc01',
+                  'category': 'ca05ca36-805c-4f67-a097-a45988ba82d7',
+                  'activityType': '1982f070-704c-4054-beb4-ea188399fc10',
                 },
-                '2': {
-                  'id': '2',
+                'bf843d19-c4aa-4f18-84dd-105a45ff14c7': {
+                  'id': 'bf843d19-c4aa-4f18-84dd-105a45ff14c7',
                   'start': '2017-10-20T17:20:00.000-07:00',
                   'end': '2017-10-20T17:30:00.000-07:00',
                   'isComplete': true,
-                  'session': '1',
-                  'category': '2'
+                  'session': '997a5210-33d1-4198-a4a4-5f1ea477cc01',
+                  'category': '083adb66-0288-4148-b0ca-ec61f99970a6',
+                  'activityType': '810eca68-a948-4646-93b8-09a02d1626a1',
                 },
-                '3': {
-                  'id': '3',
+                '13800618-a022-4fbb-a6ad-7ba94f93b221': {
+                  'id': '13800618-a022-4fbb-a6ad-7ba94f93b221',
                   'start': '2017-10-20T17:30:00.000-07:00',
                   'end': '2017-10-20T17:40:00.000-07:00',
                   'isComplete': true,
-                  'session': '2',
-                  'category': '3'
+                  'session': 'bdcf6a74-e2e7-47f7-af8f-1c66042e119e',
+                  'category': '51d017c1-57f1-401c-a16f-7f8142fb37d6',
+                  'activityType': 'bc577f78-bf74-4a2e-88c2-553066074dee',
+
                 },
-                '4': {
-                  'id': '4',
+                '67c120ef-7420-4b2e-b8d2-53e52a85501d': {
+                  'id': '67c120ef-7420-4b2e-b8d2-53e52a85501d',
                   'start': '2017-10-20T17:40:00.000-07:00',
                   'end': '2017-10-20T17:55:00.000-07:00',
                   'isComplete': true,
-                  'session': '2',
-                  'category': '1'
+                  'session': 'bdcf6a74-e2e7-47f7-af8f-1c66042e119e',
+                  'category': 'ca05ca36-805c-4f67-a097-a45988ba82d7',
+                  'activityType': '7fc5ca14-1fec-4bf8-aba3-02a87880424e',
                 },
-                '5': {
-                  'id': '5',
-                  'start': '2017-10-20T17:55:00.000-07:00',
-                  'end': '2017-10-20T18:40:00.000-07:00',
-                  'isComplete': true,
-                  'session': '3',
-                  'category': '2'
+              },
+            },
+            activityType: {
+              entities: {
+                '1982f070-704c-4054-beb4-ea188399fc10': {
+                  id: '1982f070-704c-4054-beb4-ea188399fc10',
+                  name: 'Write seed data',
+                  activityCount: 6,
+                  // category_name: 'CODE',
+                  category: 'ca05ca36-805c-4f67-a097-a45988ba82d7',
+                  user: 'cb39dbb5-caa8-4323-93a5-13450b875887',
                 },
-                '6': {
-                  'id': '6',
-                  'start': '2017-10-20T18:40:00.000-07:00',
-                  'end': '2017-10-20T19:40:00.000-07:00',
-                  'isComplete': true,
-                  'session': '3',
-                  'category': '3'
+                '810eca68-a948-4646-93b8-09a02d1626a1': {
+                  id: '810eca68-a948-4646-93b8-09a02d1626a1',
+                  name: 'Lunch',
+                  activityCount: 3,
+                  // category_name: 'EAT',
+                  category: '083adb66-0288-4148-b0ca-ec61f99970a6',
+                  user: 'cb39dbb5-caa8-4323-93a5-13450b875887',
                 },
+                'bc577f78-bf74-4a2e-88c2-553066074dee': {
+                  id: 'bc577f78-bf74-4a2e-88c2-553066074dee',
+                  name: 'Poop',
+                  activityCount: 3,
+                  // category_name: 'POTTY',
+                  category: '51d017c1-57f1-401c-a16f-7f8142fb37d6',
+                  user: 'cb39dbb5-caa8-4323-93a5-13450b875887',
+                },
+
+                // Missing entity
+                // '7fc5ca14-1fec-4bf8-aba3-02a87880424e': {
+                //   id: '7fc5ca14-1fec-4bf8-aba3-02a87880424e',
+                //   name: 'Write test cases',
+                //   activityCount: 3,
+                //   // category_name: 'CODE',
+                //   category: 'ca05ca36-805c-4f67-a097-a45988ba82d7',
+                //   user: 'cb39dbb5-caa8-4323-93a5-13450b875887',
+                // },
               },
             },
             category: {
               entities: {
-                '1': {
-                  'id': '1',
+                'ca05ca36-805c-4f67-a097-a45988ba82d7': {
+                  'id': 'ca05ca36-805c-4f67-a097-a45988ba82d7',
                   'color': '#3E416A',
                   'name': 'CODE'
                 },
-                '2': {
-                  'id': '2',
+                '083adb66-0288-4148-b0ca-ec61f99970a6': {
+                  'id': '083adb66-0288-4148-b0ca-ec61f99970a6',
                   'color': '#E9696A',
                   'name': 'EAT'
                 },
-
-                // Missing entity!
-                // '3': {
-                //   'id': '3',
-                //   'color': '#BBD8CB',
-                //   'name': 'POTTY'
-                // },
+                '51d017c1-57f1-401c-a16f-7f8142fb37d6': {
+                  'id': '51d017c1-57f1-401c-a16f-7f8142fb37d6',
+                  'color': '#BBD8CB',
+                  'name': 'POTTY'
+                },
               },
             },
           },

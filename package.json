@@ -3,7 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "config": {
-    "server_path": "src/server/index.js"
+    "server_path": "src/server/index.js",
+    "knexfile_path": "src/server/database/knexfile.js"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
@@ -29,7 +30,9 @@
     "ios": "react-native run-ios -- --reset-cache",
     "test": "jest --verbose",
     "test_debug": "node --inspect-brk node_modules/.bin/jest --runInBand",
-    "seed": "knex --knexfile=src/server/database/knexfile.js seed:run",
+    "migrate": "knex migrate:latest --knexfile=$npm_package_config_knexfile_path",
+    "create_migration": "knex migrate:make --knexfile=$npm_package_config_knexfile_path",
+    "seed": "knex seed:run --knexfile=$npm_package_config_knexfile_path",
     "compile": "npx babel src --out-dir lib --source-maps",
     "react-devtools": "react-devtools"
   },
@@ -51,6 +54,7 @@
     "knex": "^0.13.0",
     "lodash": "^4.17.5",
     "morgan": "^1.9.0",
+    "node-fetch": "^2.0.0",
     "normalizr": "^3.2.4",
     "pg": "^7.4.1",
     "pluralize": "^7.0.0",
@@ -61,6 +65,10 @@
     "react-native-vector-icons": "^4.5.0",
     "react-redux": "^5.0.6",
     "redux": "^3.7.2",
-    "redux-logger": "^3.0.6"
+    "redux-logger": "^3.0.6",
+    "redux-mock-store": "^1.5.1",
+    "redux-thunk": "^2.2.0",
+    "sinon": "^4.4.2",
+    "uuid": "^3.2.1"
   }
 }

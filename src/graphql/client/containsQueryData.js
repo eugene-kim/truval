@@ -1,4 +1,5 @@
 import {visit, BREAK} from 'graphql/language/visitor';
+import invariant from 'invariant';
 import astReader from './astReader';
 import {getReduxEntityName} from './reduxify';
 import pluralize from 'pluralize';
@@ -35,9 +36,10 @@ export default (operationAST, schemaDoc, store) => {
 
         operationName = schemaDoc[operationKey].name;
 
-        if (!operationName) {
-          throw `${operationKey} is not a valid operation!`;
-        }
+        invariant(
+          operationName,
+          `${operationKey} is not a valid operation`,
+        );
 
         operationSchema = schemaDoc.types.find(type => type.name === operationName);
       },
@@ -47,9 +49,10 @@ export default (operationAST, schemaDoc, store) => {
         const fieldName = astReader.getFieldName(node);
 
         if (astReader.isEntityNode(node)) {
-          if (!astReader.entityContainsId(node)) {
-            throw `Every non scalar field must include the id field in order for normalizr to work properly.`;
-          }
+          invariant(
+            astReader.entityContainsId(node),
+            `Every non scalar field must include the id field in order for normalizr to work properly.`,
+          );
 
           // An operation root field is a field that directly follows an operation name (query, mutation, subscription).
           const operationRootField = astReader.getOpRootField(node, operationSchema);
@@ -64,13 +67,14 @@ export default (operationAST, schemaDoc, store) => {
           const isOperationRootField = operationRootField && !parent;
 
           if (isOperationRootField) {
+
             // The operation name isn't guaranteed to be the same name as the type that it retrieves,
             // e.g. the operationRootField for a mutation might be `updateUser` and we're really
             // interested in what type this retrieves, which is `User`.
-            const operationFieldType = astReader.getOperationFieldType(operationName, fieldName, schemaDoc);
+            const operationFieldType = astReader.getOperationRootFieldType(operationName, fieldName, schemaDoc);
             const entityTypeName = getReduxEntityName(operationFieldType);
             
-            // Assume that a query will have an argument named `id` or 
+            // A GraphQL operation will have an argument named `id` or a 'typeId' e.g. `userId`.
             const id = astReader.getArgument('id', node);
 
             if (id) {
@@ -78,6 +82,10 @@ export default (operationAST, schemaDoc, store) => {
               
               if (!entity) {
                 existsInStore = false;
+
+                debugger
+
+                console.log(`Operation root field ${entityTypeName} with id:${id} DNE in store.`);
 
                 return BREAK;
               }
@@ -89,17 +97,24 @@ export default (operationAST, schemaDoc, store) => {
             } else { // Look for an alternative argument containing `Id`, e.g. `userId`.
               const typeIdArgument = astReader.getTypeIdArgument(node);
 
-              if (!typeIdArgument) {
-                throw `Root field must contain an argument containing an id or an entity id.`;
-              }
+              invariant(
+                typeIdArgument,
+                `Root field must contain an argument containing an id or an entity id.`,
+              );
 
               const typeIdName = typeIdArgument.name.value;
               const typeIdValue = typeIdArgument.value.value;
+
+              // Remove `Id` from typeId to get the typeName.
               const typeName = typeIdName.substring(0, typeIdName.length - 2);
               const typeEntity = getEntity(typeIdValue, typeName, state);
 
               if (!typeEntity) {
                 existsInStore = false;
+
+                debugger
+
+                console.log(`Operation root field ${typeName} with ${typeIdName}:${typeIdValue} DNE in store.`);
 
                 return BREAK;
               }
@@ -108,6 +123,10 @@ export default (operationAST, schemaDoc, store) => {
 
               if (!entityIds) {
                 existsInStore = false;
+
+                debugger
+
+                console.log(`${fieldName}Ids not found on ${typeName} with id:${typeIdValue}.`);
 
                 return BREAK;
               }
@@ -139,6 +158,11 @@ export default (operationAST, schemaDoc, store) => {
             if (!allEntitiesExist) {
               existsInStore = false;
 
+              debugger
+
+              console.log(allEntityIds);
+              console.log(`Not all ${entityType} entities could be found in ${allEntityIds}`);
+
               return BREAK;
             }
 
@@ -153,6 +177,7 @@ export default (operationAST, schemaDoc, store) => {
           const parent = astReader.getCurrentParent(stack);
           const entityName = getReduxEntityName(parent.name);
           const entityIds = parent.ids;
+
           const scalarsExists = entityIds.every(entityId => {
 
             // We know the entity exists by virtue of getting to this block withing the function
@@ -163,7 +188,11 @@ export default (operationAST, schemaDoc, store) => {
           });
 
           if (!scalarsExists) {
-            existsInStore = false
+            existsInStore = false;
+
+            debugger
+
+            console.log(`Scalar field ${fieldName} DNE on ${entityName} instances with ids ${entityIds}.`);
 
             return BREAK;
           }

@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import uuidv4 from 'uuid/v4';
 import knex from './index';
 
 
@@ -6,48 +7,71 @@ import knex from './index';
  * Creates an instance of a GraphQL Type in Postgres and returns the newly
  * created object.
  */
-export const createModelInstance = (requiredParams, optionalParams, tableName, columnNames) => {
-  optionalParams = removeUndefinedProperties(optionalParams);
-  const newModelInstance = _.merge(requiredParams, optionalParams);
+export const createModelInstance = async (requiredParams, optionalParams, tableName, columnNames) => {  
+  const newModelInstance = _.merge(
+    {},
+    makeDbCompatible(requiredParams),
+    makeDbCompatible(optionalParams),
+    {id: uuidv4()},
+  );
 
-  return knex(tableName).insert(newModelInstance).returning(columnNames)
-  .then(dbResults => {
+  try {
+    const dbResults = await knex(tableName).insert(newModelInstance).returning(columnNames);
 
-      // .insert() returns an array of objects based on what is passed to .returning()
-      // and how many objects we're inserting.
-      // We're inserting one object with createModelInstance(), so we retrieve from index 0.
-      const dbResult = dbResults[0];
-      const response = toCamelCaseKeys(dbResult);
+    // .insert() returns an array of objects based on what is passed to .returning()
+    // and how many objects we're inserting.
+    // We're inserting one object with createModelInstance(), so we retrieve from index 0.
+    const dbResult = dbResults[0];
+    const response = toCamelCaseKeys(dbResult);
 
-      return response;
-  })
-  .catch(error => console.log(error));
+    return response;
+  } catch (error) {
+    throw error;
+  }
 }
 
-/**1
+/**
  * Updates an already existing instance of a GraphQL type in Postgres and
  * returns the updated object.
  */
-export const updateModelInstance = (mutationParams, tableName, columnNames) => {
-  const id = mutationParams.id;
-  const dbPropertiesToUpdate = makeDbCompatible(mutationParams);
+export const updateModelInstance = async (mutationParams, tableName, columnNames) => {
+  try {
+    const id = mutationParams.id;
+    const dbPropertiesToUpdate = makeDbCompatible(mutationParams);
+    const dbResults = await knex(tableName)
+      .returning(columnNames)
+      .update(dbPropertiesToUpdate)
+      .where('id', id);
 
-  return knex(tableName)
-  .update(dbPropertiesToUpdate).where('id', '=', id).returning(columnNames)
-  .then(dbResults => {
     const dbResult = dbResults[0];
 
     console.log(dbResult);
 
     return toCamelCaseKeys(dbResult);
-  })
-  .catch(error => console.log(error));
+  } catch (error) {
+    console.error(error);
+    
+    throw error;
+  }
 }
 
-export const getModelInstance = (keyValue, tableName, keyName='id') => {
-  return knex(tableName).first().where(keyName, '=', keyValue)
-  .then(tableRow => toCamelCaseKeys(tableRow))
-  .catch(error => console.log(error));
+export const getModelInstance = async (matchProps, tableName) => {
+  try {
+    const dbFriendlyProps = makeDbCompatible(matchProps);
+    const tableRow = await knex(tableName).first().where(dbFriendlyProps);
+
+    return toCamelCaseKeys(tableRow);
+  } catch (error) {
+    throw error;
+  }
+}
+
+export const getModelInstanceById = async (id, tableName) => {
+  try {
+    return getModelInstance({id}, tableName);
+  } catch (error) {
+    throw error;
+  }
 }
 
 export const getModelInstances = (foreignKeyValue, foreignKeyName, tableName) => {
@@ -56,9 +80,12 @@ export const getModelInstances = (foreignKeyValue, foreignKeyName, tableName) =>
   .catch(error => console.log(error));
 }
 
-export const deleteModelInstance = (id, tableName) => {
-  return knex(tableName).del().where('id', '=', id)
-  .catch(error => console.log(error));
+export const deleteModelInstance = async (id, tableName) => {
+  try {
+    return knex(tableName).del().where('id', id);
+  } catch (error) {
+    throw error;
+  }
 }
 
 /**
@@ -66,11 +93,6 @@ export const deleteModelInstance = (id, tableName) => {
  * any properties that have undefined values.
  */
 const makeDbCompatible = object => {
-
-  // Whenever inserting or updating into the database, we shouldn't be fiddling
-  // around with the object id.
-  delete object.id;
-
   const objectWithDefinedValues = removeUndefinedProperties(object);
 
   return toSnakeCaseKeys(objectWithDefinedValues);
@@ -91,6 +113,10 @@ const makeDbCompatible = object => {
  * TODO: Add tests.
  */
 const removeUndefinedProperties = object => {
+  if (!object || typeof object !== 'object') {
+    return {};
+  }
+
   Object.keys(object).forEach(
     key => _.isUndefined(object[key]) && delete object[key]
   );
@@ -104,20 +130,21 @@ const removeUndefinedProperties = object => {
  * Useful when returning an object returned by Postgres that's in snake_case
  * into a properly formatted GraphQL response.
  */
-const toCamelCaseKeys = object => _.mapKeys(object, (value, key) => _.camelCase(key));
+export const toCamelCaseKeys = object => _.mapKeys(object, (value, key) => _.camelCase(key));
 
 /**
  * Returns an object whose keys are in snake case.
  *
  * Useful when formatting an object to be put into Postgres.
  */
-const toSnakeCaseKeys = object => _.mapKeys(object, (value, key) => _.snakeCase(key));
+export const toSnakeCaseKeys = object => _.mapKeys(object, (value, key) => _.snakeCase(key));
 
 
 export default {
   createModelInstance,
   updateModelInstance,
   getModelInstance,
+  getModelInstanceById,
   getModelInstances,
   deleteModelInstance,
 };

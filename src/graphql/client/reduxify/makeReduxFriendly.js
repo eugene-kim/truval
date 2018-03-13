@@ -27,7 +27,7 @@ const makeReduxFriendly = (normalizedGqlResponse, operationAST, schemaDoc) => {
   const rootFieldNames = astReader.getOperationRootFieldNames(operationAST);
   const rootFieldNameTypes = rootFieldNames.map(rootFieldName => ({
     name: rootFieldName,
-    type: astReader.getOperationFieldType(operationName, rootFieldName, schemaDoc),
+    type: astReader.getOperationRootFieldType(operationName, rootFieldName, schemaDoc),
   }));
 
   rootFieldNameTypes.map(rootFieldNameType => {
