@@ -32,6 +32,23 @@ import {
 } from 'redux/actions/entities/activityInstance';
 
 import {
+  validateEntityPropertyValue,
+  entityFetchStatusWasDeleted,
+  actionsWereDispatched,
+  entityFetchStatusWasSet,
+  entityFetchStatusWasCreated,
+  newEntityFetchStatusWasSet,
+  entityWasDeleted,
+  entityWasNotDeleted,
+  dispatch,
+  getNewEntityId,
+  entityWasUpdated,
+  entityWasNotUpdated,
+  entityWasCreated,
+  entityWasNotCreated,
+} from './entityTestMethods';
+
+import {
   UPDATING,
   LOADING,
   LOADED,
@@ -122,23 +139,20 @@ describe('activityInstance entity actions:', () => {
       }));
 
       it('was dispatched', async () => {
-        mockStore.dispatch(createActivityInstanceRequest(createActivityInstancePayload, gqlClient));
-
-        const resultAction = mockStore.getActions()[0];
-
-        expect(resultAction).toEqual(createActivityInstanceRequestAction);
+        await actionsWereDispatched({
+          mockStore,
+          expectedActionTypes: [CREATE_ACTIVITY_INSTANCE_REQUEST],
+          action: createActivityInstanceRequestAction
+        });
       });
 
-      it(`set the new fetchStatus to '${LOADING}'`, () => {
-        const prevFetchStatus = getNewActivityInstanceFetchStatus(prevState);
-
-        store.dispatch(createActivityInstanceRequest(createActivityInstancePayload, gqlClient));
-
-        const newState = store.getState();
-        const newFetchStatus = getNewActivityInstanceFetchStatus(newState);
-
-        expect(prevFetchStatus).not.toEqual(newFetchStatus);
-        expect(newFetchStatus).toEqual(LOADING);
+      it(`set the new fetchStatus to '${LOADING}'`, async () => {
+        await newEntityFetchStatusWasSet({
+          entityType: 'activityInstance',
+          expectedStatus: LOADING,
+          store,
+          action: createActivityInstanceRequestAction,
+        });
       });
     });
 
@@ -165,15 +179,12 @@ describe('activityInstance entity actions:', () => {
       describe('updated state', () => {
         describe('when matching activityType exists', () => {
           it(`activityInstance new fetch status was set to '${LOADED}'`, async () => {
-            const prevNewActivityInstanceStatus = getNewActivityInstanceFetchStatus(prevState);
-
-            await store.dispatch(createActivityInstanceThunk);
-
-            const newState = store.getState();
-            const updatedNewActivityInstanceStatus = getNewActivityInstanceFetchStatus(newState);
-
-            expect(prevNewActivityInstanceStatus).not.toEqual(LOADED);
-            expect(updatedNewActivityInstanceStatus).toEqual(LOADED);
+            await newEntityFetchStatusWasSet({
+              entityType: 'activityInstance',
+              expectedStatus: LOADED,
+              store,
+              action: createActivityInstanceThunk,
+            });
           });
 
           it(`the matching activityType's activityCount was increased by 1`, async () => {
@@ -182,63 +193,38 @@ describe('activityInstance entity actions:', () => {
               entityType: 'activityType',
               state: prevState,
             });
+            const {id} = prevActivityType;
             const previousCount = prevActivityType.activityCount;
 
-            await store.dispatch(createActivityInstanceThunk);
-
-            const newState = store.getState();
-            const updatedActivityType = getEntityByName({
-              name: createActivityInstancePayload.name,
+            await validateEntityPropertyValue({
+              id,
               entityType: 'activityType',
-              state: newState,
+              propertyName: 'activityCount',
+              expectedValue: previousCount + 1,
+              action: createActivityInstanceThunk,
+              store,
             });
-            const newCount = updatedActivityType.activityCount;
-
-            expect(newCount).toEqual(previousCount + 1);
           });
 
           it('a new activityInstance entity was created', async () => {
-            const prevActivityInstanceEntities = getActivityInstanceEntities(prevState);
-
-            await dispatch({
+            await entityWasCreated({
+              entityType: 'activityInstance',
               store,
               mockStore,
               action: createActivityInstanceThunk,
+              createEntityActionType: CREATE_ACTIVITY_INSTANCE_SUCCESS,
             });
-
-            const id = getNewEntityId({
-              mockStore,
-              actionType: CREATE_ACTIVITY_INSTANCE_SUCCESS,
-              entityType: 'activityInstance',
-            });
-
-            const newState = store.getState();
-            const newActivityInstanceEntities = getActivityInstanceEntities(newState);
-
-            expect(prevActivityInstanceEntities[id]).toBeUndefined();
-            expect(newActivityInstanceEntities[id]).toBeDefined();
           });
 
-          it(`a new fetch status for new activityInstance was created and set to '${LOADED}'`, async () => {
-            const prevFetchStatuses = getActivityInstanceFetchStatus(prevState);
-
-            await dispatch({
+          it(`a new fetch status for the new activityInstance entity was created and set to '${LOADED}'`, async () => {
+            await entityFetchStatusWasCreated({
+              entityType: 'activityInstance',
               store,
               mockStore,
               action: createActivityInstanceThunk,
+              createEntityActionType: CREATE_ACTIVITY_INSTANCE_SUCCESS,
+              expectedStatus: LOADED,
             });
-
-            const id = getNewEntityId({
-              mockStore,
-              actionType: CREATE_ACTIVITY_INSTANCE_SUCCESS,
-              entityType: 'activityInstance',
-            });
-
-            const newState = store.getState();
-            const newFetchStatuses = getActivityInstanceFetchStatus(newState);
-
-            expect(prevFetchStatuses[id]).toBeUndefined();
-            expect(newFetchStatuses[id]).toEqual(LOADED);
           });
         });
 
@@ -277,105 +263,54 @@ describe('activityInstance entity actions:', () => {
           }));
 
           it(`activityInstance new fetch status was set to '${LOADED}'`, async () => {
-            const prevNewActivityInstanceStatus = getNewActivityInstanceFetchStatus(prevState);
-
-            await store.dispatch(createActivityInstanceThunk);
-
-            const newState = store.getState();
-            const updatedNewActivityInstanceStatus = getNewActivityInstanceFetchStatus(newState);
-
-            expect(prevNewActivityInstanceStatus).not.toEqual(LOADED);
-            expect(updatedNewActivityInstanceStatus).toEqual(LOADED);
+            await newEntityFetchStatusWasSet({
+              entityType: 'activityInstance',
+              expectedStatus: LOADED,
+              store,
+              action: createActivityInstanceThunk,
+            });
           });
 
           it('a new activityType entity was created', async () => {
-            const prevActivityTypeEntities = getActivityTypeEntities(prevState);
-
-            await dispatch({
+            await entityWasCreated({
+              entityType: 'activityType',
               store,
               mockStore,
               action: createActivityInstanceThunk,
+              createEntityActionType: ADD_ACTIVITY_TYPE,
             });
-
-            const newState = store.getState();
-            const id = getNewEntityId({
-              mockStore,
-              actionType: ADD_ACTIVITY_TYPE,
-              entityType: 'activityType',
-            });
-
-            const newActivityTypeEntities = getActivityTypeEntities(newState);
-            const activityType = newActivityTypeEntities[id];
-
-            expect(activityType).toBeDefined();
-            expect(prevActivityTypeEntities[id]).toBeUndefined();
           });
 
-          it(`a new activityType fetchStatus was created and set to '${LOADED}'`, async () => {
-            const prevActivityTypeFetchStatuses = getActivityTypeFetchStatus(prevState);
-
-            await dispatch({
+          it(`a new activityType entity fetchStatus was created and set to '${LOADED}'`, async () => {
+            await entityFetchStatusWasCreated({
+              entityType: 'activityType',
               store,
               mockStore,
               action: createActivityInstanceThunk,
+              createEntityActionType: ADD_ACTIVITY_TYPE,
+              expectedStatus: LOADED,
             });
-
-            const newState = store.getState();
-            const id = getNewEntityId({
-              mockStore,
-              actionType: ADD_ACTIVITY_TYPE,
-              entityType: 'activityType',
-            });
-
-            const newActivityTypeFetchStatuses = getActivityTypeFetchStatus(newState);
-            const fetchStatus = newActivityTypeFetchStatuses[id];
-
-            expect(fetchStatus).toEqual(LOADED);
-            expect(prevActivityTypeFetchStatuses[id]).toBeUndefined();
           });
 
           it('a new activityInstance entity was created', async () => {
-            const prevActivityInstanceEntities = getActivityInstanceEntities(prevState);
-
-            await dispatch({
+            await entityWasCreated({
+              entityType: 'activityInstance',
               store,
               mockStore,
               action: createActivityInstanceThunk,
+              createEntityActionType: CREATE_ACTIVITY_INSTANCE_SUCCESS,
             });
-
-            const id = getNewEntityId({
-              mockStore,
-              actionType: CREATE_ACTIVITY_INSTANCE_SUCCESS,
-              entityType: 'activityInstance',
-            });
-
-            const newState = store.getState();
-            const newActivityInstanceEntities = getActivityInstanceEntities(newState);
-
-            expect(prevActivityInstanceEntities[id]).toBeUndefined();
-            expect(newActivityInstanceEntities[id]).toBeDefined();
           });
 
           it(`a new fetch status for new activityInstance was created and set to '${LOADED}'`, async () => {
-            const prevFetchStatuses = getActivityInstanceFetchStatus(prevState);
-
-            await dispatch({
+            await entityFetchStatusWasCreated({
+              entityType: 'activityInstance',
               store,
               mockStore,
               action: createActivityInstanceThunk,
+              createEntityActionType: CREATE_ACTIVITY_INSTANCE_SUCCESS,
+              expectedStatus: LOADED,
             });
-
-            const id = getNewEntityId({
-              mockStore,
-              actionType: CREATE_ACTIVITY_INSTANCE_SUCCESS,
-              entityType: 'activityInstance',
-            });
-
-            const newState = store.getState();
-            const newFetchStatuses = getActivityInstanceFetchStatus(newState);
-
-            expect(prevFetchStatuses[id]).toBeUndefined();
-            expect(newFetchStatuses[id]).toEqual(LOADED);
           });
         });
       });
@@ -387,41 +322,33 @@ describe('activityInstance entity actions:', () => {
       });
 
       it('expected actions were dispatched', async () => {
-        await mockStore.dispatch(createActivityInstanceThunk);
-
-        const expectedActionTypes = [
-          CREATE_ACTIVITY_INSTANCE_REQUEST,
-          CREATE_ACTIVITY_INSTANCE_FAILURE,
-        ];
-
-        const actions = mockStore.getActions();
-        const actionTypes = actions.map(action => action.type);
-
-        expect(actionTypes).toEqual(expectedActionTypes);
+        actionsWereDispatched({
+          mockStore,
+          expectedActionTypes: [
+            CREATE_ACTIVITY_INSTANCE_REQUEST,
+            CREATE_ACTIVITY_INSTANCE_FAILURE,
+          ],
+          action: createActivityInstanceThunk,
+        });
       });
 
       describe('matching activityType exists', () => {
         it(`the new activityInstance fetch status is set to ${FAILED}`, async () => {
-          const prevNewActivityInstanceFetchStatus = getNewActivityInstanceFetchStatus(prevState);
-
-          await store.dispatch(createActivityInstanceThunk);
-
-          const newState = store.getState();
-          const newActivityInstanceFetchStatus = getNewActivityInstanceFetchStatus(newState);
-
-          expect(newActivityInstanceFetchStatus).toEqual(FAILED);
-          expect(newActivityInstanceFetchStatus).not.toEqual(prevNewActivityInstanceFetchStatus);
+          newEntityFetchStatusWasSet({
+            entityType: 'activityInstance',
+            expectedStatus: FAILED,
+            store,
+            action: createActivityInstanceThunk,
+            statusShouldDiffer: true,
+          });
         });
 
         it(`no new activityInstance was created`, async () => {
-          const preDispatchActivityInstances = getActivityInstanceEntities(prevState);
-
-          await store.dispatch(createActivityInstanceThunk);
-
-          const newState = store.getState();
-          const postDispatchActivityInstances = getActivityInstanceEntities(newState);
-
-          expect(preDispatchActivityInstances.length).toEqual(postDispatchActivityInstances.length);
+          entityWasNotCreated({
+            entityType: 'activityInstance',
+            store,
+            action: createActivityInstanceThunk,
+          });
         });
 
         it(`matching activityType's activityCount remains the same`, async () => {
@@ -432,17 +359,14 @@ describe('activityInstance entity actions:', () => {
           });
           const preDispatchCount = preDispatchActivityType.activityCount;
 
-          await store.dispatch(createActivityInstanceThunk);
-
-          const newState = store.getState();
-          const postDispatchActivityType = getEntityByName({
-            name: 'Write seed data',
+          validateEntityPropertyValue({
+            id: preDispatchActivityType.id,
             entityType: 'activityType',
-            state: newState,
+            propertyName: 'activityCount',
+            expectedValue: preDispatchCount,
+            action: createActivityInstanceThunk,
+            store,
           });
-          const postDispatchCount = postDispatchActivityType.activityCount;
-
-          expect(preDispatchCount).toEqual(postDispatchCount);
         });
       });
 
@@ -454,52 +378,43 @@ describe('activityInstance entity actions:', () => {
         }));
 
         it(`the new activityInstance fetch status is set to ${FAILED}`, async() => {
-          const prevNewActivityInstanceFetchStatus = getNewActivityInstanceFetchStatus(prevState);
-
-          await store.dispatch(createActivityInstanceThunk);
-
-          const newState = store.getState();
-          const newActivityInstanceFetchStatus = getNewActivityInstanceFetchStatus(newState);
-
-          expect(newActivityInstanceFetchStatus).toEqual(FAILED);
-          expect(newActivityInstanceFetchStatus).not.toEqual(prevNewActivityInstanceFetchStatus);
+          newEntityFetchStatusWasSet({
+            entityType: 'activityInstance',
+            expectedStatus: FAILED,
+            store,
+            action: createActivityInstanceThunk,
+          });
         });
 
         it(`no new activityInstance was created`, async () => {
-          const preDispatchActivityInstances = getActivityInstanceEntities(prevState);
-
-          await store.dispatch(createActivityInstanceThunk);
-
-          const newState = store.getState();
-          const postDispatchActivityInstances = getActivityInstanceEntities(newState);
-
-          expect(preDispatchActivityInstances.length).toEqual(postDispatchActivityInstances.length);
+          entityWasNotCreated({
+            entityType: 'activityInstance',
+            store,
+            action: createActivityInstanceThunk,
+          });
         });
 
         it(`no new activityType was created`, async () => {
-          const preDispatchActivityTypeEntities = getActivityTypeEntities(prevState);
-
-          await store.dispatch(createActivityInstanceThunk);
-
-          const newState = store.getState();
-          const postDispatchActivityTypeEntities = getActivityTypeEntities(newState);
-
-          expect(preDispatchActivityTypeEntities.length).toEqual(postDispatchActivityTypeEntities.length);
+          entityWasNotCreated({
+            entityType: 'activityType',
+            store,
+            action: createActivityInstanceThunk,
+          });
         });
       });
     });
   });
 
   describe('updateActivityInstance', () => {
-    set('updateId', () => 'f36c74b2-c798-4d8f-a8cb-d353ee3b2c44');
+    set('id', () => 'f36c74b2-c798-4d8f-a8cb-d353ee3b2c44');
     set('propsToUpdate', () => ({
       end: '2017-10-21T05:00:00.000Z',
       isComplete: true,
     }));
-    set('updateActivityInstanceThunk', () => updateActivityInstance({id: updateId, propsToUpdate, client: gqlClient}));
+    set('updateActivityInstanceThunk', () => updateActivityInstance({id, propsToUpdate, client: gqlClient}));
 
     describe(`${UPDATE_ACTIVITY_INSTANCE_REQUEST}`, () => {
-      set('updateActivityInstanceRequestAction', () => updateActivityInstanceRequest({id: updateId, propsToUpdate}));
+      set('updateActivityInstanceRequestAction', () => updateActivityInstanceRequest({id, propsToUpdate}));
 
       it(`'${UPDATE_ACTIVITY_INSTANCE_REQUEST}' was the first action dispatched by the store`, () => {
         mockStore.dispatch(updateActivityInstanceRequestAction);
@@ -512,13 +427,13 @@ describe('activityInstance entity actions:', () => {
 
       it(`'${UPDATE_ACTIVITY_INSTANCE_REQUEST}' sets the appropriate fetch status to '${UPDATING}'`, () => {
         const oldFetchStatuses = getActivityInstanceFetchStatus(prevState);
-        const oldFetchStatus = oldFetchStatuses[updateId];
+        const oldFetchStatus = oldFetchStatuses[id];
 
         store.dispatch(updateActivityInstanceRequestAction);
 
         const newState = store.getState();
         const newFetchStatuses = getActivityInstanceFetchStatus(newState);
-        const newFetchStatus = newFetchStatuses[updateId];
+        const newFetchStatus = newFetchStatuses[id];
 
         expect(newFetchStatus).toEqual(UPDATING);
         expect(newFetchStatus).not.toEqual(oldFetchStatus);
@@ -544,18 +459,13 @@ describe('activityInstance entity actions:', () => {
       });
 
       it('the activityInstance entity properties were updated', async () => {
-        const preUpdateActivityInstances = getActivityInstanceEntities(prevState);
-        const preUpdateActivityInstance = preUpdateActivityInstances[updateId];
-
-        await store.dispatch(updateActivityInstanceThunk);
-
-        const newState = store.getState();
-        const activityInstances = getActivityInstanceEntities(newState);
-        const activityInstance = activityInstances[updateId];
-
-        expect(activityInstance.end).toEqual('2017-10-21T05:00:00.000Z');
-        expect(activityInstance.isComplete).toEqual(true);
-        expect(activityInstance).not.toEqual(preUpdateActivityInstance);
+        await entityWasUpdated({
+          id,
+          entityType: 'activityInstance',
+          propsToUpdate,
+          store,
+          action: updateActivityInstanceThunk,
+        });
       });
 
       it(`the activityInstance entity fetchStatus is ${LOADED} post update`, async () => {
@@ -563,7 +473,7 @@ describe('activityInstance entity actions:', () => {
 
         const newState = store.getState();
         const fetchStatuses = getActivityInstanceFetchStatus(newState);
-        const fetchStatus = fetchStatuses[updateId];
+        const fetchStatus = fetchStatuses[id];
 
         expect(fetchStatus).toEqual(LOADED);
       });
@@ -577,40 +487,36 @@ describe('activityInstance entity actions:', () => {
       });
 
       it(`actions ${UPDATE_ACTIVITY_INSTANCE_REQUEST} and ${UPDATE_ACTIVITY_INSTANCE_FAILURE} were dispatched`, async () => {
-        const expectedActionTypes = [UPDATE_ACTIVITY_INSTANCE_REQUEST, UPDATE_ACTIVITY_INSTANCE_FAILURE];
-
-        await mockStore.dispatch(updateActivityInstanceThunk);
-
-        const actions = mockStore.getActions();
-        const actionTypes = actions.map(action => action.type);
-
-        expect(actionTypes).toEqual(expectedActionTypes);
+        await actionsWereDispatched({
+          mockStore,
+          expectedActionTypes: [
+            UPDATE_ACTIVITY_INSTANCE_REQUEST,
+            UPDATE_ACTIVITY_INSTANCE_FAILURE,
+          ],
+          action: updateActivityInstanceThunk,
+        });
       });
 
       it(`fetchStatus was set to ${FAILED}`, async () => {
-        debugger
-        const previousFetchStatuses = getActivityInstanceFetchStatus(prevState);
-        const previousFetchStatus = previousFetchStatuses[updateId];
-
-        await store.dispatch(updateActivityInstanceThunk);
-
-        const newState = store.getState();
-        const newFetchStatuses = getActivityInstanceFetchStatus(newState);
-        const newFetchStatus = newFetchStatuses[updateId];
-
-        expect(newFetchStatus).toEqual(FAILED);
-        expect(newFetchStatus).not.toEqual(previousFetchStatus);
+        await entityFetchStatusWasSet({
+          id: id,
+          store,
+          entityType: 'activityInstance',
+          action: updateActivityInstanceThunk,
+          expectedStatus: FAILED,
+          statusShouldDiffer: true,
+        });
       });
 
       it(`activityInstance was not updated`, async () => {
         const preUpdateActivityInstances = getActivityInstanceEntities(prevState);
-        const preUpdateActivityInstance = preUpdateActivityInstances[updateId];
+        const preUpdateActivityInstance = preUpdateActivityInstances[id];
 
         await store.dispatch(updateActivityInstanceThunk);
 
         const newState = store.getState();
         const activityInstances = getActivityInstanceEntities(newState);
-        const activityInstance = activityInstances[updateId];
+        const activityInstance = activityInstances[id];
 
         expect(activityInstance.end).toBeNull();
         expect(activityInstance.isComplete).toEqual(false);
@@ -758,89 +664,3 @@ describe('activityInstance entity actions:', () => {
     });
   });
 });
-
-const validateEntityPropertyValue = async ({id, entityType, propertyName, expectedValue, action, store}) => {
-  await store.dispatch(action);
-
-  const state = store.getState();
-  const entity = getEntityById({id, entityType, state});
-
-  expect(entity[propertyName]).toEqual(expectedValue);
-}
-
-const entityFetchStatusWasDeleted = async ({id, entityType, store, action}) => {
-  const previousState = store.getState();
-  const previousEntityFetchStatus = getEntityFetchStatus({id, entityType, state: previousState});
-
-  await store.dispatch(action);
-
-  const newState = store.getState();
-  const newEntityFetchStatus = getEntityFetchStatus({id, entityType, state: newState});
-
-  expect(newEntityFetchStatus).toBeUndefined();
-  expect(previousEntityFetchStatus).toBeDefined();
-}
-
-const actionsWereDispatched = async ({mockStore, expectedActionTypes, action}) => {
-  await mockStore.dispatch(action);
-
-  const actions = mockStore.getActions();
-  const actionTypes = actions.map(action => action.type);
-
-  expect(actionTypes).toEqual(expectedActionTypes);
-}
-
-const entityFetchStatusWasSet = async ({id, store, entityType, action, expectedStatus, statusShouldDiffer}) => {
-  const previousState = store.getState();
-
-  await store.dispatch(action);
-
-  const newState = store.getState();
-  const newFetchStatuses = getEntityFetchStatuses({entityType, state: newState});
-  const newFetchStatus = newFetchStatuses[id];
-
-  expect(newFetchStatus).toEqual(expectedStatus);
-
-  if (statusShouldDiffer) {
-    const previousFetchStatuses = getEntityFetchStatuses({entityType, state: previousState});
-    const previousFetchStatus = previousFetchStatuses[id];
-
-    expect(newFetchStatus).not.toEqual(previousFetchStatus);
-  }
-}
-
-const entityWasDeleted = async ({id, store, entityType, action}) => {
-  const previousState = store.getState();
-  const previousEntities = getEntities({entityType, state: previousState});
-
-  await store.dispatch(action);
-
-  const newState = store.getState();
-  const newEntities = getEntities({entityType, state: newState});
-
-  expect(previousEntities[id]).toBeDefined();
-  expect(newEntities[id]).toBeUndefined();
-}
-
-const entityWasNotDeleted = async ({id, store, entityType, action}) => {
-  await store.dispatch(action);
-
-  const state = store.getState();
-  const entities = getEntities({entityType, state});
-
-  expect(entities[id]).toBeDefined();
-}
-
-const dispatch = ({store, mockStore, action}) => Promise.all([
-  store.dispatch(action),
-  mockStore.dispatch(action),
-]);
-
-const getNewEntityId = ({mockStore, actionType, entityType}) => {
-  const actions = mockStore.getActions();
-  const action = actions.find(action => action.type === actionType);
-  const {payload} = action;
-  const entity = payload[entityType];
-
-  return entity.id;
-}
