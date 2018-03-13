@@ -10,12 +10,10 @@ import {
 
 // We call this 'addActivityType' instead of `createActivityType` since we're either adding an entirely new
 // `ActivityType` instance or simply incrementing the count of an existing `ActivityType` instance.
-export const addActivityType = (activityType = {}) => {
-  return {
-    type: ADD_ACTIVITY_TYPE,
-    payload: {activityType},
-  };
-};
+export const addActivityType = (activityType = {}) => ({
+  type: ADD_ACTIVITY_TYPE,
+  payload: {activityType},
+});
 
 export const updateActivityType = async (id, propsToUpdate, client) => async dispatch => {
   dispatch(updateActivityTypeRequest({id, propsToUpdate}));
@@ -63,5 +61,8 @@ export const removeActivityType = id => {
 export default {
   addActivityType,
   updateActivityType,
+  updateActivityTypeRequest,
+  updateActivityTypeSuccess,
+  updateActivityTypeFailure,
   removeActivityType,
 };
