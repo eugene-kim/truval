@@ -322,7 +322,7 @@ describe('activityInstance entity actions:', () => {
       });
 
       it('expected actions were dispatched', async () => {
-        actionsWereDispatched({
+        await actionsWereDispatched({
           mockStore,
           expectedActionTypes: [
             CREATE_ACTIVITY_INSTANCE_REQUEST,
@@ -334,7 +334,7 @@ describe('activityInstance entity actions:', () => {
 
       describe('matching activityType exists', () => {
         it(`the new activityInstance fetch status is set to ${FAILED}`, async () => {
-          newEntityFetchStatusWasSet({
+          await newEntityFetchStatusWasSet({
             entityType: 'activityInstance',
             expectedStatus: FAILED,
             store,
@@ -344,7 +344,7 @@ describe('activityInstance entity actions:', () => {
         });
 
         it(`no new activityInstance was created`, async () => {
-          entityWasNotCreated({
+          await entityWasNotCreated({
             entityType: 'activityInstance',
             store,
             action: createActivityInstanceThunk,
@@ -359,7 +359,7 @@ describe('activityInstance entity actions:', () => {
           });
           const preDispatchCount = preDispatchActivityType.activityCount;
 
-          validateEntityPropertyValue({
+          await validateEntityPropertyValue({
             id: preDispatchActivityType.id,
             entityType: 'activityType',
             propertyName: 'activityCount',
@@ -378,7 +378,7 @@ describe('activityInstance entity actions:', () => {
         }));
 
         it(`the new activityInstance fetch status is set to ${FAILED}`, async() => {
-          newEntityFetchStatusWasSet({
+          await newEntityFetchStatusWasSet({
             entityType: 'activityInstance',
             expectedStatus: FAILED,
             store,
@@ -387,7 +387,7 @@ describe('activityInstance entity actions:', () => {
         });
 
         it(`no new activityInstance was created`, async () => {
-          entityWasNotCreated({
+          await entityWasNotCreated({
             entityType: 'activityInstance',
             store,
             action: createActivityInstanceThunk,
@@ -395,7 +395,7 @@ describe('activityInstance entity actions:', () => {
         });
 
         it(`no new activityType was created`, async () => {
-          entityWasNotCreated({
+          await entityWasNotCreated({
             entityType: 'activityType',
             store,
             action: createActivityInstanceThunk,
@@ -416,27 +416,22 @@ describe('activityInstance entity actions:', () => {
     describe(`${UPDATE_ACTIVITY_INSTANCE_REQUEST}`, () => {
       set('updateActivityInstanceRequestAction', () => updateActivityInstanceRequest({id, propsToUpdate}));
 
-      it(`'${UPDATE_ACTIVITY_INSTANCE_REQUEST}' was the first action dispatched by the store`, () => {
-        mockStore.dispatch(updateActivityInstanceRequestAction);
-
-        const actions = mockStore.getActions();
-        const firstAction = actions[0];
-
-        expect(firstAction.type).toEqual(UPDATE_ACTIVITY_INSTANCE_REQUEST);
+      it(`'${UPDATE_ACTIVITY_INSTANCE_REQUEST}' was the first action dispatched by the store`, async () => {
+        await actionsWereDispatched({
+          mockStore,
+          expectedActionTypes: [UPDATE_ACTIVITY_INSTANCE_REQUEST],
+          action: updateActivityInstanceRequestAction,
+        });
       });
 
-      it(`'${UPDATE_ACTIVITY_INSTANCE_REQUEST}' sets the appropriate fetch status to '${UPDATING}'`, () => {
-        const oldFetchStatuses = getActivityInstanceFetchStatus(prevState);
-        const oldFetchStatus = oldFetchStatuses[id];
-
-        store.dispatch(updateActivityInstanceRequestAction);
-
-        const newState = store.getState();
-        const newFetchStatuses = getActivityInstanceFetchStatus(newState);
-        const newFetchStatus = newFetchStatuses[id];
-
-        expect(newFetchStatus).toEqual(UPDATING);
-        expect(newFetchStatus).not.toEqual(oldFetchStatus);
+      it(`'${UPDATE_ACTIVITY_INSTANCE_REQUEST}' sets the appropriate fetch status to '${UPDATING}'`, async () => {
+        await entityFetchStatusWasSet({
+          id,
+          store,
+          entityType: 'activityInstance',
+          action: updateActivityInstanceRequestAction,
+          expectedStatus: UPDATING,
+        });
       });
     });
 
@@ -449,13 +444,14 @@ describe('activityInstance entity actions:', () => {
 
     describe(`successfully updates the activityInstance entity`, () => {
       it(`actions ${UPDATE_ACTIVITY_INSTANCE_REQUEST} and ${UPDATE_ACTIVITY_INSTANCE_SUCCESS} were dispatched`, async () => {
-        await mockStore.dispatch(updateActivityInstanceThunk);
-
-        const expectedActionTypes = [UPDATE_ACTIVITY_INSTANCE_REQUEST, UPDATE_ACTIVITY_INSTANCE_SUCCESS];
-        const actions = mockStore.getActions();
-        const actionTypes = actions.map(action => action.type);
-
-        expect(actionTypes).toEqual(expectedActionTypes);
+        await actionsWereDispatched({
+          mockStore,
+          expectedActionTypes: [
+            UPDATE_ACTIVITY_INSTANCE_REQUEST,
+            UPDATE_ACTIVITY_INSTANCE_SUCCESS,
+          ],
+          action: updateActivityInstanceThunk,
+        });
       });
 
       it('the activityInstance entity properties were updated', async () => {
@@ -469,13 +465,14 @@ describe('activityInstance entity actions:', () => {
       });
 
       it(`the activityInstance entity fetchStatus is ${LOADED} post update`, async () => {
-        await store.dispatch(updateActivityInstanceThunk);
-
-        const newState = store.getState();
-        const fetchStatuses = getActivityInstanceFetchStatus(newState);
-        const fetchStatus = fetchStatuses[id];
-
-        expect(fetchStatus).toEqual(LOADED);
+        await entityFetchStatusWasSet({
+          id,
+          store,
+          entityType: 'activityInstance',
+          action: updateActivityInstanceThunk,
+          expectedStatus: LOADED,
+          statusShouldDiffer: true,
+        });
       });
     });
 
@@ -509,18 +506,16 @@ describe('activityInstance entity actions:', () => {
       });
 
       it(`activityInstance was not updated`, async () => {
-        const preUpdateActivityInstances = getActivityInstanceEntities(prevState);
-        const preUpdateActivityInstance = preUpdateActivityInstances[id];
-
-        await store.dispatch(updateActivityInstanceThunk);
-
-        const newState = store.getState();
-        const activityInstances = getActivityInstanceEntities(newState);
-        const activityInstance = activityInstances[id];
-
-        expect(activityInstance.end).toBeNull();
-        expect(activityInstance.isComplete).toEqual(false);
-        expect(activityInstance).toEqual(preUpdateActivityInstance);
+        await entityWasNotUpdated({
+          id,
+          entityType: 'activityInstance',
+          propsToUpdate: {
+            end: '2017-10-21T05:00:00.000Z',
+            isComplete: true,
+          },
+          store,
+          action: updateActivityInstanceThunk,
+        });
       });
     });
   });
