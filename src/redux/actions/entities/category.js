@@ -1,4 +1,4 @@
-import getGqlParamString from 'graphql/util';
+import {getGqlParamString} from 'graphql/util';
 import {
   CREATE_CATEGORY_REQUEST,
   CREATE_CATEGORY_SUCCESS,
@@ -12,7 +12,7 @@ import {
 } from '../types';
 
 
-export const createCategory = async (category = {}, client) => async dispatch => {
+export const createCategory = ({category = {}, client}) => async dispatch => {
   dispatch(createCategoryRequest(category));
 
   const createCategoryMutation = `
@@ -26,9 +26,8 @@ export const createCategory = async (category = {}, client) => async dispatch =>
   try {
     const response = await client.mutate(createCategoryMutation);
     const newCategory = response.data.createCategory;
-    const {id, name, color, isPrimary} = newCategory;
 
-    dispatch(createCategorySuccess({id, name, color, isPrimary}));
+    dispatch(createCategorySuccess({category: newCategory}));
   } catch(error) {
     const {message} = error;
 
@@ -36,7 +35,7 @@ export const createCategory = async (category = {}, client) => async dispatch =>
   }
 };
 
-const createCategoryRequest = category => ({
+export const createCategoryRequest = category => ({
   type: CREATE_CATEGORY_REQUEST,
   payload: category,
 });
