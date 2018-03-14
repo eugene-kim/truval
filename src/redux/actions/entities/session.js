@@ -1,4 +1,4 @@
-import getGqlParamString from 'graphql/util';
+import {getGqlParamString} from 'graphql/util';
 import {
   CREATE_SESSION_REQUEST,
   CREATE_SESSION_SUCCESS,
@@ -12,7 +12,7 @@ import {
 } from '../types';
 
 
-export const createSession = async (session = {}, client) => async dispatch => {
+export const createSession = ({session = {}, client}) => async dispatch => {
   dispatch(createSessionRequest(session));
 
   const createSessionMutation = `
@@ -28,7 +28,7 @@ export const createSession = async (session = {}, client) => async dispatch => {
     const newSession = response.data.createSession;
     const {id, name, start, end, isComplete} = newSession;
 
-    dispatch(createSessionSuccess({id, name, start, end, isComplete}));
+    dispatch(createSessionSuccess({session: newSession}));
   } catch(error) {
     const {message} = error;
 
@@ -36,14 +36,14 @@ export const createSession = async (session = {}, client) => async dispatch => {
   }
 };
 
-const createSessionRequest = session => ({
+export const createSessionRequest = session => ({
   type: CREATE_SESSION_REQUEST,
-  payload: session,
+  payload: {session},
 });
 
 const createSessionSuccess = session => ({
   type: CREATE_SESSION_SUCCESS,
-  payload: session,
+  payload: {session},
 });
 
 const createSessionFailure = errorMessage => ({
@@ -51,8 +51,8 @@ const createSessionFailure = errorMessage => ({
   payload: {errorMessage},
 });
 
-export const updateSession = async (id, propsToUpdate, client) => async dispatch => {
-  dispatch(updateSessionRequest(id, propsToUpdate));
+export const updateSession = ({id, propsToUpdate, client}) => async dispatch => {
+  dispatch(updateSessionRequest({id, propsToUpdate}));
 
   const updateSessionMutation = `
     mutation {
@@ -67,28 +67,28 @@ export const updateSession = async (id, propsToUpdate, client) => async dispatch
 
     dispatch(updateSessionSuccess({id, propsToUpdate}));
   } catch(error) {
-    const {message} = error;
+    const errorMessage = error.message;
 
-    dispatch(updateSessionFailure(message));
+    dispatch(updateSessionFailure({id, errorMessage}));
   }
 };
 
-const updateSessionRequest = (id, propsToUpdate) => ({
+export const updateSessionRequest = ({id, propsToUpdate}) => ({
   type: UPDATE_SESSION_REQUEST,
   payload: {id, propsToUpdate},
 });
 
-const updateSessionSuccess = (id, propsToUpdate) => ({
+const updateSessionSuccess = ({id, propsToUpdate}) => ({
   type: UPDATE_SESSION_SUCCESS,
   payload: {id, propsToUpdate},
 });
 
-const updateSessionFailure = errorMessage => ({
+const updateSessionFailure = ({id, errorMessage}) => ({
   type: UPDATE_SESSION_FAILURE,
-  payload: {errorMessage},
+  payload: {id, errorMessage},
 });
 
-export const deleteSession = async (id, client) => async dispatch => {
+export const deleteSession = ({id, client}) => async dispatch => {
   dispatch(deleteSessionRequest(id));
 
   const deleteSessionMutation = `
@@ -102,13 +102,13 @@ export const deleteSession = async (id, client) => async dispatch => {
 
     dispatch(deleteSessionSuccess(id));
   } catch (error) {
-    const {message} = error;
+    const errorMessage = error.message;
 
-    dispatch(deleteSessionFailure(message));
+    dispatch(deleteSessionFailure({id, errorMessage}));
   }
 };
 
-const deleteSessionRequest = id => ({
+export const deleteSessionRequest = id => ({
   type: DELETE_SESSION_REQUEST,
   payload: {id},
 });
@@ -118,14 +118,7 @@ const deleteSessionSuccess = id => ({
   payload: {id},
 });
 
-const deleteSessionFailure = errorMessage => ({
+const deleteSessionFailure = ({id, errorMessage}) => ({
   type: DELETE_SESSION_FAILURE,
-  payload: {errorMessage},
+  payload: {id, errorMessage},
 });
-
-
-export default {
-  createSession,
-  updateSession,
-  deleteSession,
-};

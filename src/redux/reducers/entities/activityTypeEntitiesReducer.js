@@ -8,7 +8,7 @@ import {
 import {
   ADD_ACTIVITY_TYPE,
   UPDATE_ACTIVITY_TYPE_SUCCESS,
-  DELETE_ACTIVITY_TYPE,
+  REMOVE_ACTIVITY_TYPE,
   UPDATE_FROM_SERVER,
 } from 'redux/actions/types';
 
@@ -23,7 +23,7 @@ const activityTypeEntitiesReducer = (activityTypeEntities, action) => {
     case UPDATE_ACTIVITY_TYPE_SUCCESS: {
       return updateEntity(action)(activityTypeEntities);
     }
-    case DELETE_ACTIVITY_TYPE: {
+    case REMOVE_ACTIVITY_TYPE: {
       return deleteEntity(action)(activityTypeEntities);
     }
     case UPDATE_FROM_SERVER: {

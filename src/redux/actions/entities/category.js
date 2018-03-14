@@ -1,4 +1,4 @@
-import getGqlParamString from 'graphql/util';
+import {getGqlParamString} from 'graphql/util';
 import {
   CREATE_CATEGORY_REQUEST,
   CREATE_CATEGORY_SUCCESS,
@@ -12,7 +12,7 @@ import {
 } from '../types';
 
 
-export const createCategory = async (category = {}, client) => async dispatch => {
+export const createCategory = ({category = {}, client}) => async dispatch => {
   dispatch(createCategoryRequest(category));
 
   const createCategoryMutation = `
@@ -26,9 +26,8 @@ export const createCategory = async (category = {}, client) => async dispatch =>
   try {
     const response = await client.mutate(createCategoryMutation);
     const newCategory = response.data.createCategory;
-    const {id, name, color, isPrimary} = newCategory;
 
-    dispatch(createCategorySuccess({id, name, color, isPrimary}));
+    dispatch(createCategorySuccess({category: newCategory}));
   } catch(error) {
     const {message} = error;
 
@@ -36,7 +35,7 @@ export const createCategory = async (category = {}, client) => async dispatch =>
   }
 };
 
-const createCategoryRequest = category => ({
+export const createCategoryRequest = category => ({
   type: CREATE_CATEGORY_REQUEST,
   payload: category,
 });
@@ -51,8 +50,8 @@ const createCategoryFailure = errorMessage => ({
   payload: {errorMessage},
 });
 
-export const updateCategory = async (id, propsToUpdate, client) => async dispatch => {
-  dispatch(updateCategoryRequest(id, propsToUpdate));
+export const updateCategory = ({id, propsToUpdate, client}) => async dispatch => {
+  dispatch(updateCategoryRequest({id, propsToUpdate}));
 
   const updateCategoryMutation = `
     mutation {
@@ -69,26 +68,26 @@ export const updateCategory = async (id, propsToUpdate, client) => async dispatc
   } catch(error) {
     const {message} = error;
 
-    dispatch(updateCategoryFailure(message));
+    dispatch(updateCategoryFailure({id, errorMessage: message}));
   }
 };
 
-const updateCategoryRequest = (id, propsToUpdate) => ({
+export const updateCategoryRequest = ({id, propsToUpdate}) => ({
   type: UPDATE_CATEGORY_REQUEST,
   payload: {id, propsToUpdate},
 });
 
-const updateCategorySuccess = (id, propsToUpdate) => ({
+const updateCategorySuccess = ({id, propsToUpdate}) => ({
   type: UPDATE_CATEGORY_SUCCESS,
   payload: {id, propsToUpdate},
 });
 
-const updateCategoryFailure = errorMessage => ({
+const updateCategoryFailure = ({id, errorMessage}) => ({
   type: UPDATE_CATEGORY_FAILURE,
-  payload: {errorMessage},
+  payload: {id, errorMessage},
 });
 
-export const deleteCategory = async (id, client) => async dispatch => {
+export const deleteCategory = ({id, client}) => async dispatch => {
   dispatch(deleteCategoryRequest(id));
 
   const deleteCategoryMutation = `
@@ -104,11 +103,11 @@ export const deleteCategory = async (id, client) => async dispatch => {
   } catch (error) {
     const {message} = error;
 
-    dispatch(deleteCategoryFailure(message));
+    dispatch(deleteCategoryFailure({id, errorMessage: message}));
   }
 };
 
-const deleteCategoryRequest = id => ({
+export const deleteCategoryRequest = id => ({
   type: DELETE_CATEGORY_REQUEST,
   payload: {id},
 });
@@ -118,9 +117,9 @@ const deleteCategorySuccess = id => ({
   payload: {id},
 });
 
-const deleteCategoryFailure = errorMessage => ({
+const deleteCategoryFailure = ({id, errorMessage}) => ({
   type: DELETE_CATEGORY_FAILURE,
-  payload: {errorMessage},
+  payload: {id, errorMessage},
 });
 
 

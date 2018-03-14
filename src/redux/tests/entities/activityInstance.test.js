@@ -1,4 +1,3 @@
-import sinon from 'sinon';
 import { applyMiddleware, createStore } from 'redux';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
@@ -40,8 +39,6 @@ import {
   newEntityFetchStatusWasSet,
   entityWasDeleted,
   entityWasNotDeleted,
-  dispatch,
-  getNewEntityId,
   entityWasUpdated,
   entityWasNotUpdated,
   entityWasCreated,
