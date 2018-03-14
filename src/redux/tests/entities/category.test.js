@@ -287,7 +287,96 @@ describe('category entity actions', () => {
 
   describe('deleteCategory', () => {
     describe('deleteCategoryRequest', () => {
+      set('deleteCategoryRequestAction', () => deleteCategoryRequest(id));
 
+      it(`expected action ${DELETE_CATEGORY_REQUEST} was dispatched`, async () => {
+        await actionsWereDispatched({
+          mockStore,
+          expectedActionTypes: [DELETE_CATEGORY_REQUEST],
+          action: deleteCategoryRequestAction,
+        });
+      });
+
+      it(`category entity fetchStatus was set to ${DELETING}`, async () => {
+        await entityFetchStatusWasSet({
+          id,
+          store,
+          entityType: 'category',
+          action: deleteCategoryRequestAction,
+          expectedStatus: DELETING,
+          statusShouldDiffer: true,
+        });
+      });
+    });
+
+    set('deleteCategoryThunk', () => deleteCategory({id, client: gqlClient}));
+
+    describe('successful deleteCategory', () => {
+      beforeEach(() => {
+        gqlClient.mutate = () => {};
+      });
+
+      it(`actions ${DELETE_CATEGORY_REQUEST} and ${DELETE_CATEGORY_SUCCESS} were dispatched`, async () => {
+        await actionsWereDispatched({
+          mockStore,
+          expectedActionTypes: [DELETE_CATEGORY_REQUEST, DELETE_CATEGORY_SUCCESS],
+          action: deleteCategoryThunk,
+        });
+      });
+
+      it(`category entity was deleted`, async () => {
+        await entityWasDeleted({
+          id,
+          store,
+          action: deleteCategoryThunk,
+          entityType: 'category',
+        });
+      });
+
+      it(`category entity fetchStatus was deleted`, async () => {
+        await entityFetchStatusWasDeleted({
+          id,
+          store,
+          action: deleteCategoryThunk,
+          entityType: 'category',
+        });
+      });
+    });
+
+    describe('failed deleteCategory', () => {
+      beforeEach(() => {
+        gqlClient.mutate = () => {
+          throw new Error(`Error deleting category`);
+        }
+      });
+
+      it(`expected actions ${DELETE_CATEGORY_REQUEST} and ${DELETE_CATEGORY_FAILURE} were dispatched`, async () => {
+        await actionsWereDispatched({
+          mockStore,
+          expectedActionTypes: [DELETE_CATEGORY_REQUEST, DELETE_CATEGORY_FAILURE],
+          action: deleteCategoryThunk,
+        });
+      });
+
+      it(`category entity was not deleted`, async () => {
+        await entityWasNotDeleted({
+          id,
+          entityType: 'category',
+          store,
+          action: deleteCategoryThunk,
+        });
+      });
+
+      it(`category entity fetchStatus was set to ${FAILED}`, async () => {
+        await entityFetchStatusWasSet({
+          id,
+          entityType: 'category',
+          store,
+          action: deleteCategoryThunk,
+          expectedStatus: FAILED,
+          statusShouldDiffer: true,
+        });
+      });
     });
   });
 });

@@ -87,7 +87,7 @@ const updateCategoryFailure = ({id, errorMessage}) => ({
   payload: {id, errorMessage},
 });
 
-export const deleteCategory = async ({id, client}) => async dispatch => {
+export const deleteCategory = ({id, client}) => async dispatch => {
   dispatch(deleteCategoryRequest(id));
 
   const deleteCategoryMutation = `
@@ -103,7 +103,7 @@ export const deleteCategory = async ({id, client}) => async dispatch => {
   } catch (error) {
     const {message} = error;
 
-    dispatch(deleteCategoryFailure(message));
+    dispatch(deleteCategoryFailure({id, errorMessage: message}));
   }
 };
 
@@ -117,9 +117,9 @@ const deleteCategorySuccess = id => ({
   payload: {id},
 });
 
-const deleteCategoryFailure = errorMessage => ({
+const deleteCategoryFailure = ({id, errorMessage}) => ({
   type: DELETE_CATEGORY_FAILURE,
-  payload: {errorMessage},
+  payload: {id, errorMessage},
 });
 
 
