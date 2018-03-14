@@ -1,10 +1,10 @@
-import getGqlParamString from 'graphql/util';
+import {getGqlParamString} from 'graphql/util';
 import {
   ADD_ACTIVITY_TYPE,
   UPDATE_ACTIVITY_TYPE_REQUEST,
   UPDATE_ACTIVITY_TYPE_SUCCESS,
   UPDATE_ACTIVITY_TYPE_FAILURE,
-  DELETE_ACTIVITY_TYPE,
+  REMOVE_ACTIVITY_TYPE,
 } from '../types';
 
 
@@ -15,7 +15,7 @@ export const addActivityType = (activityType = {}) => ({
   payload: {activityType},
 });
 
-export const updateActivityType = async (id, propsToUpdate, client) => async dispatch => {
+export const updateActivityType = ({id, propsToUpdate, client}) => async dispatch => {
   dispatch(updateActivityTypeRequest({id, propsToUpdate}));
 
   const updateActivityTypeMutation = `
@@ -27,7 +27,7 @@ export const updateActivityType = async (id, propsToUpdate, client) => async dis
   try {
     const response = await client.mutate(updateActivityTypeMutation);
 
-    dispatch(updateActivityTypeSuccess(id, propsToUpdate));
+    dispatch(updateActivityTypeSuccess({id, propsToUpdate}));
   } catch (error) {
     const {message} = error;
 
@@ -50,12 +50,10 @@ const updateActivityTypeFailure = ({id, errorMessage}) => ({
   payload: {id, errorMessage},
 });
 
-export const removeActivityType = id => {
-  return {
-    type: DELETE_ACTIVITY_TYPE,
-    payload: id,
-  };
-};
+export const removeActivityType = id => ({
+  type: REMOVE_ACTIVITY_TYPE,
+  payload: {id},
+});
 
 
 export default {
