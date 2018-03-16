@@ -22,11 +22,11 @@ describe('test containsQueryData()', () => {
     set('query', () => {
       return `
         query {
-          user(id: 1) {
+          session(id: "997a5210-33d1-4198-a4a4-5f1ea477cc01") {
             id,
-            username,
-            email,
-            password,
+            name,
+            start,
+            isComplete,
           }
         }
       `;
@@ -40,20 +40,21 @@ describe('test containsQueryData()', () => {
       expect(storeContainsData).toBe(false);
     });
 
-    it('should return false with a store containing a single user but with id: 2', () => {
+    it('should return false with a store containing a single user but with a mismatched id', () => {
       const initialStoreState = _.merge(
         {},
         initialState,
         {
           entities: {
-            user: {
+            session: {
               entities: {
-                '2': {
-                  id: '2',
-                  username: 'the hugest',
-                  email: 'hugeeuge@gmail.com',
-                  password: 'password',
-                  sessions: ['1', '2', '3', '7', '8', '9']
+                '997a5210-33d1-4198-a4a4-5f1ea477cc02': {
+                  id: '997a5210-33d1-4198-a4a4-5f1ea477cc02',
+                  name: 'Study Session 1',
+                  start: '2017-10-21T22:51:09.489Z',
+                  end: null,
+                  isComplete: false,
+                  userId: 'cb39dbb5-caa8-4323-93a5-13450b875887',
                 }
               }
             }
@@ -66,7 +67,7 @@ describe('test containsQueryData()', () => {
       expect(storeContainsData).toBe(false);
     });
 
-    it('should return false with a store containing no users but an activity', () => {
+    it('should return false with a store containing no users but an activityInstance', () => {
       const initialStoreState = _.merge(
         {},
         initialState,
@@ -74,13 +75,14 @@ describe('test containsQueryData()', () => {
           entities: {
             activity: {
               entities: {
-                '1': {
-                  'id': '1',
-                  'start': '2017-10-20T17:00:00.000-07:00',
-                  'end': '2017-10-20T17:20:00.000-07:00',
-                  'isComplete': true,
-                  'session': '1',
-                  'category': '1'
+                'c72cea78-2027-4615-a6a1-3daca28c9bba': {
+                  id: 'c72cea78-2027-4615-a6a1-3daca28c9bba',
+                  start: '2017-10-21T00:00:00.000Z',
+                  end: '2017-10-21T00:20:00.000Z',
+                  isComplete: true,
+                  duration:1200,
+                  sessionId: '997a5210-33d1-4198-a4a4-5f1ea477cc01',
+                  activityTypeId: '1982f070-704c-4054-beb4-ea188399fc10',
                 },
               },
             },
@@ -93,19 +95,21 @@ describe('test containsQueryData()', () => {
       expect(storeContainsData).toBe(false);
     });
 
-    it('should return false when store contains matching user but with no username property', () => {
+    it('should return false when store contains matching session but with no name property', () => {
       const initialStoreState = _.merge(
         {},
         initialState,
         {
           entities: {
-            user: {
+            session: {
               entities: {
-                '1': {
-                  id: '1',
-                  email: 'hugeeuge@gmail.com',
-                  password: 'password',
-                  sessions: ['1', '2', '3', '7', '8', '9']
+                '997a5210-33d1-4198-a4a4-5f1ea477cc01': {
+                  id: '997a5210-33d1-4198-a4a4-5f1ea477cc01',
+                  // name: 'Study Session 1',
+                  start: '2017-10-21T22:51:09.489Z',
+                  end: null,
+                  isComplete: false,
+                  userId: 'cb39dbb5-caa8-4323-93a5-13450b875887',
                 }
               }
             }
@@ -118,20 +122,21 @@ describe('test containsQueryData()', () => {
       expect(storeContainsData).toBe(false);
     });
 
-    it('should return true when store contains matching user with all expected scalar fields', () => {
+    it('should return true when store contains matching session with all expected scalar fields', () => {
       const initialStoreState = _.merge(
         {},
         initialState,
         {
           entities: {
-            user: {
+            session: {
               entities: {
-                '1': {
-                  id: '1',
-                  username: 'the hugest',
-                  email: 'hugeeuge@gmail.com',
-                  password: 'password',
-                  sessions: ['1', '2', '3', '7', '8', '9']
+                '997a5210-33d1-4198-a4a4-5f1ea477cc01': {
+                  id: '997a5210-33d1-4198-a4a4-5f1ea477cc01',
+                  name: 'Study Session 1',
+                  start: '2017-10-21T22:51:09.489Z',
+                  end: null,
+                  isComplete: false,
+                  userId: 'cb39dbb5-caa8-4323-93a5-13450b875887',
                 }
               }
             }
@@ -355,42 +360,28 @@ describe('test containsQueryData()', () => {
     });
   });
 
-  describe('4 level nested query with circular references requesting `user(id: cb39dbb5-caa8-4323-93a5-13450b875887)`', () => {
+  describe('4 level nested query with circular references requesting `sessions(userId: cb39dbb5-caa8-4323-93a5-13450b875887)`', () => {
     set('query', () => {
       return `
         query {
-          user(id:"cb39dbb5-caa8-4323-93a5-13450b875887") {
+          sessions(userId:"cb39dbb5-caa8-4323-93a5-13450b875887") {
             id,
-            username,
-            categories {
+            name,
+            start,
+            end,
+            activityInstances {
               id,
-              name,
-              color,
-            },
-            sessions {
-              id,
-              name,
               start,
               end,
-              activityInstances {
+              isComplete,
+              activityType {
                 id,
-                start,
-                end,
-                isComplete,
-                activityType {
+                category {
                   id,
-                  category {
-                    id,
-                    name,
-                    color
-                  }
+                  name,
+                  color
                 }
               }
-            },
-            activityTypes {
-              id,
-              name,
-              activityCount,
             }
           }
         }`;

@@ -1,6 +1,7 @@
 import {
   createModelInstance,
   updateModelInstance,
+  getModelInstance,
   getModelInstanceById,
   getModelInstances,
   deleteModelInstance,
