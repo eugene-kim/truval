@@ -22,9 +22,12 @@ import {
   getActivityInstanceEntities,
   getActivityInstanceFetchStatus,
   getNewActivityInstanceFetchStatus,
+} from './selectors/entitySelectors';
+
+import {
   getUserProps,
   getUserFetchStatus,
-} from './selectors';
+} from './selectors/appSelectors';
 
 // User
 import reduceUserProps from './app/reduceUserProps';

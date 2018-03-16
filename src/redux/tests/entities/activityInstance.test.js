@@ -3,19 +3,6 @@ import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import logger from 'redux-logger';
 import root from 'redux/reducers/root';
-import {
-  getNewActivityInstanceFetchStatus,
-  getActivityInstanceFetchStatus,
-  getActivityInstanceEntities,
-  getActivityTypeEntities,
-  getActivityTypeFetchStatus,
-  getEntities,
-  getEntityByName,
-  getEntityById,
-  getEntityFetchStatuses,
-  getEntityFetchStatus,
-  getNewEntityFetchStatus,
-} from 'redux/reducers/selectors';
 import client from 'graphql/client';
 import initialState from '../initialState';
 
@@ -29,6 +16,8 @@ import {
   deleteActivityInstance,
   deleteActivityInstanceRequest,
 } from 'redux/actions/entities/activityInstance';
+
+import { getEntityByName } from 'redux/reducers/selectors/entitySelectors';
 
 import {
   validateEntityPropertyValue,

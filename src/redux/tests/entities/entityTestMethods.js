@@ -7,7 +7,7 @@ import {
   getEntityFetchStatuses,
   getEntityFetchStatus,
   getNewEntityFetchStatus,
-} from 'redux/reducers/selectors';
+} from 'redux/reducers/selectors/entitySelectors';
 
 
 // --------------------------------------------------
