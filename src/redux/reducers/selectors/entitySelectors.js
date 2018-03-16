@@ -1,8 +1,5 @@
 import invariant from 'invariant';
 
-
-
-// Entities
 export const getSessionEntities = state => getEntities({entityType: 'session', state});
 export const getSessionFetchStatus = state => getEntityFetchStatuses({entityType: 'session', state});
 export const getNewSessionFetchStatus = state => getNewEntityFetchStatus({entityType: 'session', state});
@@ -38,7 +35,3 @@ export const getEntityByName = ({name, entityType, state}) => {
 }
 
 export const getEntityById = ({id, entityType, state}) => getEntities({entityType, state})[id];
-
-// App
-export const getUserProps = state => state.app.user.props;
-export const getUserFetchStatus = state => state.app.user.fetchStatus;

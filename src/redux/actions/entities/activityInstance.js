@@ -10,7 +10,6 @@ import {
   DELETE_ACTIVITY_INSTANCE_SUCCESS,
   DELETE_ACTIVITY_INSTANCE_FAILURE,
 } from '../types';
-import {getEntityById} from 'redux/reducers/selectors';
 import {addActivityType, updateActivityTypeSuccess} from './activityType';
 import {getLoneNormalizedEntity} from '../responseUtil';
 

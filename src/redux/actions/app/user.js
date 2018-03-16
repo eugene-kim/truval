@@ -1,4 +1,4 @@
-import getGqlParamString from 'graphql/util';
+import { getGqlParamString } from 'graphql/util';
 import {
   CREATE_USER_REQUEST,
   CREATE_USER_SUCCESS,
@@ -12,12 +12,12 @@ import {
 } from './types';
 
 
-const createUserRequest = (user) => ({
+export const createUserRequest = user => ({
   type: CREATE_USER_REQUEST,
   payload: user,
 });
 
-const createUserSuccess = (user) => ({
+const createUserSuccess = user => ({
   type: CREATE_USER_SUCCESS,
   payload: user,
 });
@@ -27,7 +27,7 @@ const createUserFailure = errorMessage => ({
   payload: {errorMessage},
 });
 
-export const createUser = async ({username, email, password}, client) => dispatch => {
+export const createUser = ({username, email, password}, client) => async dispatch => {
   dispatch(createUserRequest({username, email, password}));
 
   const createUserMutation = `
@@ -51,7 +51,7 @@ export const createUser = async ({username, email, password}, client) => dispatc
   }
 };
 
-const updateUserRequest = (id, propsToUpdate = {}) => ({
+export const updateUserRequest = (id, propsToUpdate = {}) => ({
   type: UPDATE_USER_REQUEST,
   payload: {id, propsToUpdate},
 });
@@ -66,7 +66,7 @@ const updateUserFailure = errorMessage => ({
   payload: {errorMessage},
 });
 
-export const updateUser = async (id, propsToUpdate, client) => dispatch => {
+export const updateUser = ({id, propsToUpdate, client}) => async dispatch => {
   dispatch(updateUserRequest(id, propsToUpdate));
 
   try {
@@ -79,16 +79,18 @@ export const updateUser = async (id, propsToUpdate, client) => dispatch => {
     `;
     const response = await client.mutate(updateUserMutation);
     const user = response.data.updateUser;
+    const updateUserSuccessAction = updateUserSuccess({id, propsToUpdate});
 
-    dispatch(updateUserSuccess(id, propsToUpdate));
+    dispatch(updateUserSuccessAction);
   } catch (error) {
     const {message} = error;
+    const updateUserFailureAction = updateUserFailure({id, errorMessage: message});
 
-    dispatch(updateUserFailure(message));
+    dispatch(updateUserFailureAction);
   }
 };
 
-const deleteUserRequest = id => ({
+export const deleteUserRequest = id => ({
   type: DELETE_USER_REQUEST,
   payload: {id},
 });
@@ -98,12 +100,12 @@ const deleteUserSuccess = id => ({
   payload: {id},
 });
 
-const deleteUserFailure = errorMessage => ({
+const deleteUserFailure = ({id, errorMessage}) => ({
   type: DELETE_USER_FAILURE,
-  payload: {errorMessage},
+  payload: {id, errorMessage},
 });
 
-export const deleteUser = async (id, client) => dispatch => {
+export const deleteUser = ({id, client}) => async dispatch => {
   dispatch(deleteUserRequest(id));
 
   try {
@@ -118,14 +120,8 @@ export const deleteUser = async (id, client) => dispatch => {
     dispatch(deleteUserSuccess(id));
   } catch (error) {
     const {message} = error;
+    const deleteUserFailureAction = deleteUserFailure({id, errorMessage: message})
 
-    dispatch(deleteUserFailure(message));
+    dispatch(deleteUserFailureAction);
   }
-};
-
-
-export default {
-  createUser,
-  updateUser,
-  deleteUser,
 };
