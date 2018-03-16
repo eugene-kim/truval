@@ -19,7 +19,6 @@ import {
 import {
   validateEntityPropertyValue,
   entityFetchStatusWasDeleted,
-  actionsWereDispatched,
   entityFetchStatusWasSet,
   entityFetchStatusWasCreated,
   newEntityFetchStatusWasSet,
@@ -30,6 +29,8 @@ import {
   entityWasCreated,
   entityWasNotCreated,
 } from './entityTestMethods';
+
+import { actionsWereDispatched } from '../reduxTestMethods';
 
 import {
   createSessionRequest,

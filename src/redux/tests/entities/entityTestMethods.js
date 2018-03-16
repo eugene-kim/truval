@@ -191,15 +191,6 @@ export const entityWasNotCreated = async ({entityType, store, action}) => {
 // STORE
 // --------------------------------------------------
 
-export const actionsWereDispatched = async ({mockStore, expectedActionTypes, action}) => {
-  await mockStore.dispatch(action);
-
-  const actions = mockStore.getActions();
-  const actionTypes = actions.map(action => action.type);
-
-  expect(actionTypes).toEqual(expectedActionTypes);
-}
-
 export const dispatch = ({store, mockStore, action}) => Promise.all([
   store.dispatch(action),
   mockStore.dispatch(action),
