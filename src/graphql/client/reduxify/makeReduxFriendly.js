@@ -2,7 +2,7 @@ import _ from 'lodash';
 import pluralize from 'pluralize';
 
 // Utility
-import {renameKey} from 'libs/util/objectUtil';
+import {renameKey} from 'src/libs/util/objectUtil';
 import astReader from '../astReader';
 import {getReduxEntityName} from '../reduxify';
 

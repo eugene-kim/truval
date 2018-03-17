@@ -1,8 +1,9 @@
 import { applyMiddleware, createStore } from 'redux';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import root from 'redux/reducers/root';
-import client from 'graphql/client';
+import root from 'src/redux/reducers/root';
+
+import client from 'src/graphql/client';
 import initialState from '../initialState';
 import {
   CREATE_CATEGORY_REQUEST,
@@ -14,7 +15,7 @@ import {
   DELETE_CATEGORY_REQUEST,
   DELETE_CATEGORY_SUCCESS,
   DELETE_CATEGORY_FAILURE,
-} from 'redux/actions/types'
+} from 'src/redux/actions/types'
 
 import {
   validateEntityPropertyValue,
@@ -39,7 +40,7 @@ import {
   updateCategory,
   deleteCategoryRequest,
   deleteCategory,
-} from 'redux/actions/entities/category';
+} from 'src/redux/actions/entities/category';
 
 import {
   UPDATING,
@@ -47,7 +48,7 @@ import {
   LOADED,
   FAILED,
   DELETING,
-} from 'redux/reducers/fetchStatus';
+} from 'src/redux/reducers/fetchStatus';
 
 describe('category entity actions', () => {
   const middleware = [thunk];

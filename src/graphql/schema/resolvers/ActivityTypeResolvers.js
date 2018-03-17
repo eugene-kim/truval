@@ -1,5 +1,5 @@
-import ActivityType from 'server/models/ActivityType';
-import Category from 'server/models/Category';
+import ActivityType from 'src/server/models/ActivityType';
+import Category from 'src/server/models/Category';
 
 
 export default {

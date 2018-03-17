@@ -1,4 +1,4 @@
-import _ from 'libs/dash';
+import _ from 'src/libs/dash';
 
 import {
   createEntity,
@@ -6,7 +6,7 @@ import {
   deleteEntity,
   hydrateEntities,
 } from '../commonReducers/entityReducers';
-import {UPDATE_FROM_SERVER} from 'redux/actions/types';
+import {UPDATE_FROM_SERVER} from 'src/redux/actions/types';
 import {FAILED, LOADING, LOADED, UPDATING, DELETING} from '../fetchStatus';
 
 

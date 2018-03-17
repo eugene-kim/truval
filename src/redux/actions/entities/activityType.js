@@ -1,4 +1,4 @@
-import {getGqlParamString} from 'graphql/util';
+import {getGqlParamString} from 'src/graphql/util';
 import {
   ADD_ACTIVITY_TYPE,
   UPDATE_ACTIVITY_TYPE_REQUEST,

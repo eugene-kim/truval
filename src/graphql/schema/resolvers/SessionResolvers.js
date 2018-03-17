@@ -1,5 +1,5 @@
-import Session from 'server/models/Session';
-import ActivityInstance from 'server/models/ActivityInstance';
+import Session from 'src/server/models/Session';
+import ActivityInstance from 'src/server/models/ActivityInstance';
 
 
 export default {

@@ -1,13 +1,10 @@
 import React, {Component} from 'react';
-import PropTypes from 'view/util/PropTypes';
+import PropTypes from 'src/view/util/PropTypes';
 import {StyleSheet, Text, View} from 'react-native';
 
-// Redux
-import {addActivity} from 'redux/actions/entities/activity';
-
 // Util
-import Datetime from 'libs/util/Datetime';
-import bind from 'libs/decorators/bind';
+import Datetime from 'src/libs/util/Datetime';
+import bind from 'src/libs/decorators/bind';
 
 // Components
 import ActivityTimeInput from './ActivityTimeInput';
@@ -89,35 +86,7 @@ class AddActivityInput extends Component {
 
   @bind
   handleSubmit() {
-    const {activityStartTime, activityCategory, activityName} = this.state;
-    const {gqlClient} = this.context;
-    const {sessionId} = this.props;
-    const categoryId = parseInt(activityCategory);
-    const mutationString = `
-      mutation {
-        createActivity(
-          name: "${activityName}",
-          start: "${activityStartTime}",
-          isComplete: false,
-          sessionId: "${sessionId}",
-          categoryId: "${categoryId}"
-        ) {
-          id
-        }
-      }`;
-
-    const activity = {
-      name: activityName,
-      start: activityStartTime,
-      isComplete: false,
-      sessionId,
-      categoryId,
-    };
-
-    gqlClient.mutate(
-      mutationString,
-      addActivity(activity),
-    );
+    console.log('handling submission');
   }
 
   // --------------------------------------------------

@@ -1,5 +1,5 @@
 import React from 'react';
-import PropTypes from 'view/util/PropTypes';
+import PropTypes from 'src/view/util/PropTypes';
 import {StyleSheet, Text, TextInput, TouchableHighlight, View} from 'react-native';
 import { Button } from 'react-native-elements';
 

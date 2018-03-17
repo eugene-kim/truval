@@ -1,4 +1,4 @@
-import _ from 'libs/dash';
+import _ from 'src/libs/dash';
 import {FAILED, LOADING, LOADED} from '../fetchStatus';
 
 

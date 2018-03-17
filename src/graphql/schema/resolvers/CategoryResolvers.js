@@ -1,4 +1,4 @@
-import Category from 'server/models/Category';
+import Category from 'src/server/models/Category';
 
 
 export default {

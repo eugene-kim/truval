@@ -8,8 +8,8 @@ import {
   getModelInstances,
   deleteModelInstance,
 } from '../database/dbMethods';
-import knex from 'server/database/index';
-import {toCamelCaseKeys, toSnakeCaseKeys} from 'server/database/dbMethods';
+import knex from 'src/server/database/index';
+import {toCamelCaseKeys, toSnakeCaseKeys} from 'src/server/database/dbMethods';
 
 
 const ACTIVITY_TYPE_TABLE = 'ActivityType';

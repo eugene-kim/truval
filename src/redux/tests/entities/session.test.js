@@ -1,8 +1,8 @@
 import { applyMiddleware, createStore } from 'redux';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import root from 'redux/reducers/root';
-import client from 'graphql/client';
+import root from 'src/redux/reducers/root';
+import client from 'src/graphql/client';
 import initialState from '../initialState';
 import {
   CREATE_SESSION_REQUEST,
@@ -14,7 +14,7 @@ import {
   DELETE_SESSION_REQUEST,
   DELETE_SESSION_SUCCESS,
   DELETE_SESSION_FAILURE,
-} from 'redux/actions/types'
+} from 'src/redux/actions/types'
 
 import {
   validateEntityPropertyValue,
@@ -39,7 +39,7 @@ import {
   updateSession,
   deleteSessionRequest,
   deleteSession,
-} from 'redux/actions/entities/session';
+} from 'src/redux/actions/entities/session';
 
 import {
   UPDATING,
@@ -47,7 +47,7 @@ import {
   LOADED,
   FAILED,
   DELETING,
-} from 'redux/reducers/fetchStatus';
+} from 'src/redux/reducers/fetchStatus';
 
 describe('session entity actions', () => {
   const middleware = [thunk];

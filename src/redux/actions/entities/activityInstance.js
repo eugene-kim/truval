@@ -1,4 +1,4 @@
-import {getGqlParamString} from 'graphql/util';
+import {getGqlParamString} from 'src/graphql/util';
 import {
   CREATE_ACTIVITY_INSTANCE_REQUEST,
   CREATE_ACTIVITY_INSTANCE_SUCCESS,

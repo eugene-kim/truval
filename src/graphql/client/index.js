@@ -9,7 +9,7 @@ import reduxify from './reduxify';
 import containsQueryData from './containsQueryData';
 import fetch from 'node-fetch';
 
-import { UPDATE_FROM_SERVER } from 'redux/actions/types';
+import { UPDATE_FROM_SERVER } from 'src/redux/actions/types';
 
 
 export default ({endpoint = 'http://localhost:3000/graphql', store} = {}) => {

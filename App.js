@@ -40,7 +40,7 @@ class FocusApp extends Component {
   componentDidMount() {
     // TODO: Retrieve current user id via authentication and hydrate store.
     // Hardcoded for now until we add user authentication. Retrieve from store later.
-    const userId = 1;
+    const userId = 'cb39dbb5-caa8-4323-93a5-13450b875887';
 
     // Make query to store so that the store is hydrated with all entity data on App start.
     const initialAppQuery = `
@@ -122,7 +122,7 @@ class FocusApp extends Component {
 
     return (
       <Provider store={store}>
-        <SessionScreen sessionId={1} />
+        <SessionScreen sessionId={'997a5210-33d1-4198-a4a4-5f1ea477cc01'} />
       </Provider>
     );
   }
