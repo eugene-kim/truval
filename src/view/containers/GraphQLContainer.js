@@ -9,8 +9,8 @@ export default (getOperationString, options) => ChildComponent => {
       super(props);
 
       this.state = {
-        isLoading: true,
-        didError: false,
+        queryIsLoading: true,
+        queryFailed: false,
       };
     }
 
@@ -25,11 +25,11 @@ export default (getOperationString, options) => ChildComponent => {
       const operationString = getOperationString(state);
 
       gqlClient.query(operationString, options)
-      .then(response => this.setState({isLoading: false}))
+      .then(response => this.setState({queryIsLoading: false}))
       .catch(error => {
         this.setState({
-          isLoading: false,
-          didError: true,
+          queryIsLoading: false,
+          queryFailed: true,
         });
 
         console.error(error);
@@ -37,12 +37,12 @@ export default (getOperationString, options) => ChildComponent => {
     }
 
     render() {
-      const {isLoading, didError} = this.state;
+      const {queryIsLoading, queryFailed} = this.state;
 
       return (
         <ChildComponent
-          isLoading={isLoading}
-          didError={didError}
+          queryIsLoading={queryIsLoading}
+          queryFailed={queryFailed}
           {...this.props}
         />
       );

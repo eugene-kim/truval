@@ -3,20 +3,20 @@ import invariant from 'invariant';
 
 
 
-export const addEntity = (action, entityTypeName) => entities =>
-  createEntity(action, entityTypeName)(entities);
+export const addEntity = (action, entityType) => entities =>
+  createEntity(action, entityType)(entities);
 
 /**
  * We use currying so that we can compose this function with other reducers that simply take in
  * `entities` as the param.
  */
-export const createEntity = (action, entityTypeName) => entities => {
+export const createEntity = (action, entityType) => entities => {
   const {payload} = action;
-  const entity = payload[entityTypeName];
+  const entity = payload[entityType];
 
   invariant (
     entity,
-    `${entityTypeName} is a required property in ${action.type}'s payload.`,
+    `${entityType} is a required property in ${action.type}'s payload.`,
   );
 
   const {id} = entity;
@@ -54,11 +54,11 @@ export const deleteEntity = action => entities => {
   }, {});
 }
 
-export const hydrateEntities = (action, entityTypeName) => entities => {
+export const hydrateEntities = ({action, entityType, entities}) => {
   const {payload} = action;
 
-  if (payload.entities && payload.entities[entityTypeName]) {
-    return _.merge({}, entities, payload.entities[entityTypeName]);
+  if (payload.entities && payload.entities[entityType]) {
+    return _.merge({}, entities, payload.entities[entityType]);
   }
 
   return entities;

@@ -83,8 +83,6 @@ export default (operationAST, schemaDoc, store) => {
               if (!entity) {
                 existsInStore = false;
 
-                debugger
-
                 console.log(`Operation root field ${entityTypeName} with id:${id} DNE in store.`);
 
                 return BREAK;
@@ -111,8 +109,6 @@ export default (operationAST, schemaDoc, store) => {
 
               if (!typeEntity) {
                 existsInStore = false;
-
-                debugger
 
                 console.log(`Operation root field ${typeName} with ${typeIdName}:${typeIdValue} DNE in store.`);
 

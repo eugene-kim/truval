@@ -9,26 +9,26 @@ import {FAILED, LOADING, LOADED, UPDATING, DELETING} from '../fetchStatus';
 import {UPDATE_FROM_SERVER} from '../../actions/types';
 
 
-const fetchStatusReducerFactory = entityName => (fetchStatuses = {}, action) => {
-  const entityNameCaps = _.toSnakeUpper(entityName);
+const fetchStatusReducerFactory = ({entityType, fetchStatuses = {}, action}) => {
+  const entityTypeCaps = _.toSnakeUpper(entityType);
   const {type, payload} = action;
 
-  const createEntitySuccess = `CREATE_${entityNameCaps}_SUCCESS`;
-  const updateEntityRequest = `UPDATE_${entityNameCaps}_REQUEST`;
-  const updateEntitySuccess = `UPDATE_${entityNameCaps}_SUCCESS`;
-  const updateEntityFailure = `UPDATE_${entityNameCaps}_FAILURE`;
-  const deleteEntityRequest = `DELETE_${entityNameCaps}_REQUEST`;
-  const deleteEntitySuccess = `DELETE_${entityNameCaps}_SUCCESS`;
-  const deleteEntityFailure = `DELETE_${entityNameCaps}_FAILURE`;
+  const createEntitySuccess = `CREATE_${entityTypeCaps}_SUCCESS`;
+  const updateEntityRequest = `UPDATE_${entityTypeCaps}_REQUEST`;
+  const updateEntitySuccess = `UPDATE_${entityTypeCaps}_SUCCESS`;
+  const updateEntityFailure = `UPDATE_${entityTypeCaps}_FAILURE`;
+  const deleteEntityRequest = `DELETE_${entityTypeCaps}_REQUEST`;
+  const deleteEntitySuccess = `DELETE_${entityTypeCaps}_SUCCESS`;
+  const deleteEntityFailure = `DELETE_${entityTypeCaps}_FAILURE`;
 
   // addEntity and removeEntity are special cases for when adding / removing
   // an entity does not require an asynchronous network request.
-  const addEntity = `ADD_${entityNameCaps}`;
-  const removeEntity = `REMOVE_${entityNameCaps}`;
+  const addEntity = `ADD_${entityTypeCaps}`;
+  const removeEntity = `REMOVE_${entityTypeCaps}`;
 
   switch(type) {
     case createEntitySuccess: {
-      const entity = payload[entityName];
+      const entity = payload[entityType];
       const {id} = entity;
 
       return setEntityFetchStatus(id, LOADED)(fetchStatuses);
@@ -62,7 +62,7 @@ const fetchStatusReducerFactory = entityName => (fetchStatuses = {}, action) => 
       return setEntityFetchStatus(id, FAILED)(fetchStatuses);
     }
     case addEntity: {
-      const entity = payload[entityName];
+      const entity = payload[entityType];
       const {id} = entity;
       
       return setEntityFetchStatus(id, LOADED)(fetchStatuses);
@@ -73,7 +73,7 @@ const fetchStatusReducerFactory = entityName => (fetchStatuses = {}, action) => 
       return deleteEntityFetchStatus(id)(fetchStatuses);
     }
     case UPDATE_FROM_SERVER: {
-      return hydrateFetchStatuses(action, entityName)(fetchStatuses);
+      return hydrateFetchStatuses({action, entityType, fetchStatuses});
     }
     default:
       return fetchStatuses;

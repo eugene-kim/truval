@@ -3,6 +3,20 @@ import invariant from 'invariant';
 export const getSessionEntities = state => getEntities({entityType: 'session', state});
 export const getSessionFetchStatus = state => getEntityFetchStatuses({entityType: 'session', state});
 export const getNewSessionFetchStatus = state => getNewEntityFetchStatus({entityType: 'session', state});
+export const getSessionActivityInstances = ({state, sessionId}) => {
+  const session = getEntityById({id: sessionId, state, entityType: 'session'});
+  const activityInstanceIds = session.activityInstances;
+
+  return activityInstanceIds.reduce((activityInstances, activityInstanceId) => {
+    const activityInstance = getEntityById({
+      id: activityInstanceId,
+      state,
+      entityType: 'activityInstance',
+    });
+
+    return activityInstances.concat(activityInstance);
+  }, []);
+}
 
 export const getCategoryEntities = state => getEntities({entityType: 'category', state});
 export const getCategoryFetchStatus = state => getEntityFetchStatuses({entityType: 'category', state});

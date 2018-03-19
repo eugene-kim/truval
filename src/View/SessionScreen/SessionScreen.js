@@ -1,3 +1,4 @@
+
 import React, {Component} from 'react';
 import PropTypes from 'src/view/util/PropTypes';
 import {StyleSheet, View, Text} from 'react-native';
@@ -6,11 +7,18 @@ import { connect } from 'react-redux'
 // Containers
 import GraphQLContainer from '../containers/GraphQLContainer';
 
+// Selectors
+import {
+  getEntityById,
+  getSessionActivityInstances,
+} from 'src/redux/reducers/selectors/entitySelectors';
+
 // Components
 import AddActivityInput from './AddActivityInput/AddActivityInput';
 import ActivityList from './ActivityList';
 
 // Naive implementation.
+// TODO: Add ability to pass props into this.
 @GraphQLContainer(state => {
   const sessionId = state.current.session;
 
@@ -22,15 +30,21 @@ import ActivityList from './ActivityList';
         start,
         end,
         isComplete,
-        activities {
+        activityInstances {
           id,
-          name,
           start,
           end,
           isComplete,
           duration,
-          category {
+          activityType {
             id
+            name,
+            activityCount,
+            category {
+              id,
+              name
+              color
+            }
           }
         }
       }
@@ -38,28 +52,16 @@ import ActivityList from './ActivityList';
   );
 })
 @connect(
-  (() => {
-    const mapStateToProps = state => {
-      const sessionId = state.current.session;
 
-      return {
-        session: state.entities.session.entities[sessionId],
-        activities: getSessionActivities(state, sessionId),
-      }
-    };
+  // mapStateToProps
+  (state, ownProps) => {
+    const {sessionId} = ownProps;
 
-    const getSessionActivities = (state, sessionId) => {
-      const activityIds = state.entities.session.entities[sessionId].activities;
-
-      return activityIds.reduce((accum, activityId) => {
-        const activity = state.entities.activity.entities[activityId];
-
-        return activity ? accum.concat(activity) : accum;
-      }, []);
-    };
-
-    return mapStateToProps;
-  })()
+    return {
+      session: getEntityById({id: sessionId, entityType: 'session', state}),
+      activityInstances: getSessionActivityInstances({state, sessionId}),
+    }
+  },
 )
 class SessionScreen extends Component {
 
@@ -70,18 +72,17 @@ class SessionScreen extends Component {
     session: PropTypes.object,
 
     // TODO: Use a proper proptype later
-    activities: PropTypes.array,
-    isLoading: PropTypes.bool.isRequired,
+    activityInstances: PropTypes.array,
+    queryIsLoading: PropTypes.bool.isRequired,
   };
 
   // --------------------------------------------------
   // Render
   // --------------------------------------------------
   render() {
-    const {isLoading, session, activities} = this.props;
-    const didLoad = !isLoading && session;
+    const {queryIsLoading, session, activities} = this.props;
+    const didLoad = !queryIsLoading && session;
 
-    // TODO: Come up with a proper solution for loading.
     if (!didLoad) {
       return (
         <Text>
@@ -90,7 +91,7 @@ class SessionScreen extends Component {
       );
     }
 
-    const id = parseInt(session.id);
+    const {id} = session.id;
 
     return (
       <View style={styles.container}>
@@ -98,7 +99,6 @@ class SessionScreen extends Component {
           sessionId={id}
         />
         <ActivityList
-          isLoading={isLoading}
           activities={activities}
         />
       </View>

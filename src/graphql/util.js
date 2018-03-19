@@ -7,7 +7,7 @@ export const getGqlParamString = object => {
 
     // No need to output a space at the end of the last parameter.
     const space = isLast ? '' : ' ';
-    const shouldWrapWithQuotes = typeof value !== 'number';
+    const shouldWrapWithQuotes = typeof value !== 'number' || typeof value !== 'boolean';
     const valueString = shouldWrapWithQuotes ? `"${value}"` : value;
 
     return paramString.concat(`${key}:${valueString}${space}`);

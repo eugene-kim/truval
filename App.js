@@ -7,11 +7,12 @@ import logger from 'redux-logger';
 import { Provider } from 'react-redux';
 
 // Local Imports
-import SessionScreen from './src/view/SessionScreen/SessionScreen';
-import getGqlClient from './src/graphql/client';
-import rootReducer from './src/redux/reducers/root';
-import initialState from './src/redux/store/initialState';
-import PropTypes from './src/view/util/PropTypes'
+import { getGqlParamString } from 'src/graphql/util';
+import SessionScreen from 'src/view/SessionScreen/SessionScreen';
+import getGqlClient from 'src/graphql/client';
+import rootReducer from 'src/redux/reducers/root';
+import initialState from 'src/redux/store/initialState';
+import PropTypes from 'src/view/util/PropTypes'
 
 const store = createStore(
   rootReducer,
@@ -28,8 +29,8 @@ class FocusApp extends Component {
 
     this.client = getGqlClient({store});
     this.state = {
-      isLoading: true,
-      didError: false,
+      queryIsLoading: true,
+      queryFailed: false,
     };
   }
 
@@ -38,14 +39,16 @@ class FocusApp extends Component {
   }
 
   componentDidMount() {
+
     // TODO: Retrieve current user id via authentication and hydrate store.
     // Hardcoded for now until we add user authentication. Retrieve from store later.
     const userId = 'cb39dbb5-caa8-4323-93a5-13450b875887';
+    const params = getGqlParamString({id: userId});
 
     // Make query to store so that the store is hydrated with all entity data on App start.
     const initialAppQuery = `
       query {
-        user(id:${userId}) {
+        user(${params}) {
           id,
           username,
           email,
@@ -55,18 +58,22 @@ class FocusApp extends Component {
             start,
             end,
             isComplete,
-            activities {
+            activityInstances {
               id,
-              name,
               start,
               end,
               isComplete,
               duration,
-              category {
-                id,
-              }
             }
           },
+          activityTypes {
+            id
+            name
+            activityCount
+            category {
+              id,
+            }
+          }
           categories {
             id,
             name,
@@ -81,16 +88,17 @@ class FocusApp extends Component {
     .then(response => {
       console.log(store === this.client.getStore());
 
-      this.setState({isLoading: false});
+      this.setState({queryIsLoading: false});
 
       console.log('Got response from server for initial query.');
     })
     .catch(error => {
       this.setState({
-        isLoading: false,
-        didError: true,
+        queryIsLoading: false,
+        queryFailed: true,
       });
 
+      console.log(error.stack);
       console.log('Initial query errored out!');
     });
   }
@@ -102,9 +110,9 @@ class FocusApp extends Component {
   }
 
   render() {
-    const {isLoading, didError} = this.state;
+    const {queryIsLoading, queryFailed} = this.state;
 
-    if (didError) {
+    if (queryFailed) {
       return (
         <View>
           <Text>Error!</Text>
@@ -112,7 +120,7 @@ class FocusApp extends Component {
       );
     }
 
-    if (isLoading) {
+    if (queryIsLoading) {
       return (
         <View>
           <Text>Loading...</Text>

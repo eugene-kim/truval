@@ -38,31 +38,75 @@ const focusApp = function(state = {}, action) {
   return {
     entities: {
       session: {
-        entities: entitiesReducerFactory('session')(getSessionEntities(state), action),
-        fetchStatus: fetchStatusReducerFactory('session')(getSessionFetchStatus(state), action),
+        entities: entitiesReducerFactory({
+          entityType: 'session',
+          entities: getSessionEntities(state),
+          action,
+        }),
+        fetchStatus: fetchStatusReducerFactory({
+          entityType: 'session',
+          fetchStatuses: getSessionFetchStatus(state),
+          action,
+        }),
         new: {
-          fetchStatus: newEntityFetchStatusReducer('session')(getNewSessionFetchStatus(state), action),
+          fetchStatus: newEntityFetchStatusReducer({
+            entityType: 'session',
+            newFetchStatus: getNewSessionFetchStatus(state),
+            action,
+          }),
         }
       },
       activityType: {
         entities: activityTypeEntitiesReducer(getActivityTypeEntities(state), action),
-        fetchStatus: fetchStatusReducerFactory('activityType')(getActivityTypeFetchStatus(state), action),
+        fetchStatus: fetchStatusReducerFactory({
+          entityType: 'activityType',
+          fetchStatuses: getActivityTypeFetchStatus(state),
+          action,
+        }),
         new: {
-          fetchStatus: newEntityFetchStatusReducer('activityType')(getNewActivityTypeFetchStatus(state), action),
+          fetchStatus: newEntityFetchStatusReducer({
+            entityType: 'activityType',
+            newFetchStatus: getNewActivityTypeFetchStatus(state),
+            action,
+          }),
         }
       },
       activityInstance: {
-        entities: entitiesReducerFactory('activityInstance')(getActivityInstanceEntities(state), action),
-        fetchStatus: fetchStatusReducerFactory('activityInstance')(getActivityInstanceFetchStatus(state), action),
+        entities: entitiesReducerFactory({
+          entityType: 'activityInstance',
+          entities: getActivityInstanceEntities(state),
+          action,
+        }),
+        fetchStatus: fetchStatusReducerFactory({
+          entityType: 'activityInstance',
+          fetchStatuses: getActivityInstanceFetchStatus(state),
+          action,
+        }),
         new: {
-          fetchStatus: newEntityFetchStatusReducer('activityInstance')(getNewActivityInstanceFetchStatus(state), action),
+          fetchStatus: newEntityFetchStatusReducer({
+            entityType: 'activityInstance',
+            newFetchStatus: getNewActivityInstanceFetchStatus(state),
+            action,
+          }),
         }
       },
       category: {
-        entities: entitiesReducerFactory('category')(getCategoryEntities(state), action),
-        fetchStatus: fetchStatusReducerFactory('category')(getCategoryFetchStatus(state), action),
+        entities: entitiesReducerFactory({
+          entityType: 'category',
+          entities: getCategoryEntities(state),
+          action,
+        }),
+        fetchStatus: fetchStatusReducerFactory({
+          entityType: 'category',
+          fetchStatuses: getCategoryFetchStatus(state),
+          action,
+        }),
         new: {
-          fetchStatus: newEntityFetchStatusReducer('category')(getNewCategoryFetchStatus(state), action),
+          fetchStatus: newEntityFetchStatusReducer({
+            entityType: 'category',
+            newFetchStatus: getNewCategoryFetchStatus(state),
+            action,
+          }),
         }
       },
     },
