@@ -21,7 +21,7 @@ const sessionEntitiesReducer = (sessionEntities, action) => {
 
   switch(type) {
     case CREATE_SESSION_SUCCESS: {
-      return createEntity(action, entityType)(sessionEntities);
+      return createEntity(action, 'session')(sessionEntities);
     }
     case UPDATE_SESSION_SUCCESS: {
       return updateEntity(action)(sessionEntities);
