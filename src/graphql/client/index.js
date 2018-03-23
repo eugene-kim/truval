@@ -9,7 +9,7 @@ import reduxify from './reduxify';
 import containsQueryData from './containsQueryData';
 import fetch from 'node-fetch';
 
-import { UPDATE_FROM_SERVER } from 'redux/actions/types';
+import { UPDATE_FROM_SERVER } from 'src/redux/actions/types';
 
 
 export default ({endpoint = 'http://localhost:3000/graphql', store} = {}) => {
@@ -44,13 +44,14 @@ export default ({endpoint = 'http://localhost:3000/graphql', store} = {}) => {
           
           const {status} = response;
           const responseBody = response._bodyText;
+          const responseObject = JSON.parse(responseBody);
 
           invariant(
             status === 200,
             `GraphQL operation failed! Status: ${status}\nReason:${responseBody}`,
           );
 
-          const reduxFriendlyData = await reduxify(responseBody, queryAST, schemaDoc);
+          const reduxFriendlyData = await reduxify(responseObject, queryAST, schemaDoc);
 
           store.dispatch({
             type: UPDATE_FROM_SERVER,

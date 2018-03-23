@@ -1,17 +1,17 @@
-import _ from 'libs/dash';
+import _ from 'src/libs/dash';
 import {LOADED} from '../fetchStatus';
 
 
-export const hydrateFetchStatuses = (action, entityTypeName) => fetchStatuses => {
+export const hydrateFetchStatuses = ({action, entityType, fetchStatuses}) => {
   const {payload} = action;
 
-  if (payload.entities && payload.entities[entityTypeName]) {
-    return Object.keys(payload.entities[entityTypeName]).reduce((statuses, id) => {
-      Object.assign(statuses, {[id]: LOADED});
+  if (payload.entities && payload.entities[entityType]) {
+    return Object.keys(payload.entities[entityType]).reduce((statuses, id) => {
+      return Object.assign(fetchStatuses, {[id]: LOADED});
     }, {});
   }
 
-  return entities;
+  return fetchStatuses;
 }
 
 export const deleteEntityFetchStatus = deleteId => fetchStatuses => {

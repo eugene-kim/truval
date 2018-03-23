@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import PropTypes from 'view/util/PropTypes';
+import PropTypes from 'src/view/util/PropTypes';
 import { StyleSheet, Text, TextInput, View } from 'react-native';
 
 
@@ -9,8 +9,8 @@ export default (getOperationString, options) => ChildComponent => {
       super(props);
 
       this.state = {
-        isLoading: true,
-        didError: false,
+        queryIsLoading: true,
+        queryFailed: false,
       };
     }
 
@@ -20,29 +20,31 @@ export default (getOperationString, options) => ChildComponent => {
 
     componentDidMount() {
       const {gqlClient} = this.context;
-      const store = gqlClient.getStore();
-      const state = store.getState();
-      const operationString = getOperationString(state);
+      const operationString = getOperationString(this.props);
 
       gqlClient.query(operationString, options)
-      .then(response => this.setState({isLoading: false}))
+      .then(response => this.setState({
+        queryIsLoading: false,
+        queryFailed: false,
+      }))
       .catch(error => {
         this.setState({
-          isLoading: false,
-          didError: true,
+          queryIsLoading: false,
+          queryFailed: true,
         });
 
         console.error(error);
+        console.log(error.stack);
       });
     }
 
     render() {
-      const {isLoading, didError} = this.state;
+      const {queryIsLoading, queryFailed} = this.state;
 
       return (
         <ChildComponent
-          isLoading={isLoading}
-          didError={didError}
+          queryIsLoading={queryIsLoading}
+          queryFailed={queryFailed}
           {...this.props}
         />
       );

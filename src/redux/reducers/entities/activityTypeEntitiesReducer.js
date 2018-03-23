@@ -10,7 +10,7 @@ import {
   UPDATE_ACTIVITY_TYPE_SUCCESS,
   REMOVE_ACTIVITY_TYPE,
   UPDATE_FROM_SERVER,
-} from 'redux/actions/types';
+} from 'src/redux/actions/types';
 
 
 const activityTypeEntitiesReducer = (activityTypeEntities, action) => {
@@ -27,7 +27,7 @@ const activityTypeEntitiesReducer = (activityTypeEntities, action) => {
       return deleteEntity(action)(activityTypeEntities);
     }
     case UPDATE_FROM_SERVER: {
-      return hydrateEntities(entities, action, 'activityType');
+      return hydrateEntities({entities: activityTypeEntities, action, entityType: 'activityType'});
     }
     default:
       return activityTypeEntities;

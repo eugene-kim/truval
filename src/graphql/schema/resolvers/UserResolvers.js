@@ -1,7 +1,7 @@
-import User from 'server/models/User';
-import Session from 'server/models/Session';
-import Category from 'server/models/Category';
-import ActivityType from 'server/models/ActivityType';
+import User from 'src/server/models/User';
+import Session from 'src/server/models/Session';
+import Category from 'src/server/models/Category';
+import ActivityType from 'src/server/models/ActivityType';
 
 
 export default {

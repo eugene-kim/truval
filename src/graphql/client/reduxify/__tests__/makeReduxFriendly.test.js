@@ -2,11 +2,11 @@
 import {graphql} from 'graphql';
 import {introspectionQuery} from 'graphql/utilities';
 import {parse} from 'graphql/language/parser';
-import _ from 'lodash';
+import _ from 'src/libs/dash';
 
 // Local imports
 import makeReduxFriendly from '../makeReduxFriendly';
-import gqlSchema from 'graphql/schema/typeDefSchema';
+import gqlSchema from 'src/graphql/schema/typeDefSchema';
 import normalizedQueryData from './resources/normalizedQueryData';
 import normalizedMutationData from './resources/normalizedMutationData';
 

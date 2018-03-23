@@ -3,12 +3,12 @@ import {graphql} from 'graphql';
 import {introspectionQuery} from 'graphql/utilities';
 import {parse} from 'graphql/language/parser';
 import {schema} from 'normalizr';
-import _ from 'lodash';
+import _ from 'src/libs/dash';
 import util from 'util';
 
 // Local imports
 import normalizeGql from '../normalizeGql';
-import gqlSchema from 'graphql/schema/typeDefSchema';
+import gqlSchema from 'src/graphql/schema/typeDefSchema';
 
 
 let schemaDocumentWhole;

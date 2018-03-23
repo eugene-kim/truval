@@ -1,15 +1,15 @@
 import { applyMiddleware, createStore } from 'redux';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import root from 'redux/reducers/root';
-import client from 'graphql/client';
+import root from 'src/redux/reducers/root';
+import client from 'src/graphql/client';
 import initialState from '../initialState';
 import {
   UPDATE_ACTIVITY_TYPE_REQUEST,
   UPDATE_ACTIVITY_TYPE_SUCCESS,
   UPDATE_ACTIVITY_TYPE_FAILURE,
   REMOVE_ACTIVITY_TYPE,
-} from 'redux/actions/types'
+} from 'src/redux/actions/types'
 
 import {
   validateEntityPropertyValue,
@@ -31,7 +31,7 @@ import {
   updateActivityTypeRequest,
   updateActivityType,
   removeActivityType,
-} from 'redux/actions/entities/activityType';
+} from 'src/redux/actions/entities/activityType';
 
 import {
   UPDATING,
@@ -39,7 +39,7 @@ import {
   LOADED,
   FAILED,
   DELETING,
-} from 'redux/reducers/fetchStatus';
+} from 'src/redux/reducers/fetchStatus';
 
 describe('activityType entity actions', () => {
   set('id', () => '1982f070-704c-4054-beb4-ea188399fc10');

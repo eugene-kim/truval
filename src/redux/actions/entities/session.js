@@ -1,4 +1,4 @@
-import {getGqlParamString} from 'graphql/util';
+import {getGqlParamString} from 'src/graphql/util';
 import {
   CREATE_SESSION_REQUEST,
   CREATE_SESSION_SUCCESS,

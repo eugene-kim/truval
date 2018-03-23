@@ -1,15 +1,15 @@
 import React, {Component} from 'react';
-import PropTypes from 'view/util/PropTypes';
+import PropTypes from 'src/view/util/PropTypes';
 import {StyleSheet, Text, TextInput, View} from 'react-native';
 import {FormLabel, FormInput} from 'react-native-elements';
 
 
-const ActivityNameInput = ({onNameChange, activityName}) => {
+const ActivityNameInput = ({onNameChange, name}) => {
   return (
     <View style={styles.container}>
       <FormInput
         onChange={onNameChange}
-        value={activityName}
+        value={name}
         keyboardType={'default'}
         style={styles.input}
       />
@@ -22,7 +22,7 @@ const ActivityNameInput = ({onNameChange, activityName}) => {
 // --------------------------------------------------
 ActivityNameInput.propTypes = {
   onNameChange: PropTypes.func.isRequired,
-  activityName: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
 }
 
 

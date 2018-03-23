@@ -1,4 +1,4 @@
-import _ from 'libs/dash';
+import _ from 'src/libs/dash';
 
 import {
   createEntity,
@@ -6,27 +6,26 @@ import {
   deleteEntity,
   hydrateEntities,
 } from '../commonReducers/entityReducers';
-import {UPDATE_FROM_SERVER} from 'redux/actions/types';
-import {FAILED, LOADING, LOADED, UPDATING, DELETING} from '../fetchStatus';
+import {UPDATE_FROM_SERVER} from 'src/redux/actions/types';
 
 
 // TODO: creating and deleting should update related entries as well
-const entitiesReducerFactory = entityName => (entities = {}, action) => {
-  const entityNameCaps = _.toSnakeUpper(entityName);
+const entitiesReducerFactory = ({entityType, entities, action}) => {
+  const entityTypeCaps = _.toSnakeUpper(entityType);
   const {type, payload} = action;
 
   switch(type) {
-    case `CREATE_${entityNameCaps}_SUCCESS`: {
-      return createEntity(action, entityName)(entities);
+    case `CREATE_${entityTypeCaps}_SUCCESS`: {
+      return createEntity(action, entityType)(entities);
     }
-    case `UPDATE_${entityNameCaps}_SUCCESS`: {
+    case `UPDATE_${entityTypeCaps}_SUCCESS`: {
       return updateEntity(action)(entities);
     }
-    case `DELETE_${entityNameCaps}_SUCCESS`: {
+    case `DELETE_${entityTypeCaps}_SUCCESS`: {
       return deleteEntity(action)(entities);
     }
     case UPDATE_FROM_SERVER: {
-      return hydrateEntities(entities, action, entityName);
+      return hydrateEntities({entities, action, entityType});
     }
     default:
       return entities;

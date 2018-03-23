@@ -24,8 +24,8 @@
   },
   "scripts": {
     "start": "react-native start -- --reset-cache",
-    "node": "nodemon $npm_package_config_server_path --exec babel-node",
-    "debug": "nodemon --inspect $npm_package_config_server_path --exec babel-node",
+    "node": "NODE_PATH=.; nodemon $npm_package_config_server_path --exec babel-node",
+    "debug": "NODE_PATH=.; nodemon --inspect $npm_package_config_server_path --exec babel-node",
     "android": "react-native run-android",
     "ios": "react-native run-ios -- --reset-cache",
     "test": "jest --verbose",

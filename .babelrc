@@ -4,18 +4,8 @@
   "presets": ["react-native"],
 
   "plugins": [
-    [
-      "babel-plugin-module-resolver", {
-        "root": ["./src"],
-        "extensions": [
-          ".js",
-          ".ios.js",
-          ".android.js"
-        ]
-      }
-    ],
-    "transform-class-properties",
     "transform-decorators-legacy",
+    "transform-class-properties",
   ],
 
   "retainLines": true

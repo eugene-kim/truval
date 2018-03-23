@@ -13,11 +13,11 @@ import configurePostgresDriver from './database/configurePostgresDriver';
 configurePostgresDriver();
 
 import db from './database';
-import schema from 'graphql/schema';
+import schema from 'src/graphql/schema';
 
 import {createStore} from 'redux';
-import reducer from 'redux/reducers/root';
-import initialState from 'redux/store/initialState';
+import reducer from 'src/redux/reducers/root';
+import initialState from 'src/redux/store/initialState';
 
 var app = express();
 

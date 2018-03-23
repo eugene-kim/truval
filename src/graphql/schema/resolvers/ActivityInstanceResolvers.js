@@ -1,9 +1,9 @@
 import _ from 'lodash';
 
-import knex from 'server/database/index';
-import ActivityInstance from 'server/models/ActivityInstance';
-import ActivityType from 'server/models/ActivityType';
-import Session from 'server/models/Session';
+import knex from 'src/server/database/index';
+import ActivityInstance from 'src/server/models/ActivityInstance';
+import ActivityType from 'src/server/models/ActivityType';
+import Session from 'src/server/models/Session';
 
 
 /**

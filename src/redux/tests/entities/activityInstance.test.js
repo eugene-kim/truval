@@ -2,8 +2,8 @@ import { applyMiddleware, createStore } from 'redux';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import logger from 'redux-logger';
-import root from 'redux/reducers/root';
-import client from 'graphql/client';
+import root from 'src/redux/reducers/root';
+import client from 'src/graphql/client';
 import initialState from '../initialState';
 
 import {
@@ -15,9 +15,9 @@ import {
   updateActivityInstanceRequest,
   deleteActivityInstance,
   deleteActivityInstanceRequest,
-} from 'redux/actions/entities/activityInstance';
+} from 'src/redux/actions/entities/activityInstance';
 
-import { getEntityByName } from 'redux/reducers/selectors/entitySelectors';
+import { getEntityByName } from 'src/redux/reducers/selectors/entitySelectors';
 
 import {
   validateEntityPropertyValue,
@@ -41,7 +41,7 @@ import {
   LOADED,
   FAILED,
   DELETING,
-} from 'redux/reducers/fetchStatus';
+} from 'src/redux/reducers/fetchStatus';
 
 import {
   CREATE_ACTIVITY_INSTANCE_REQUEST,
@@ -55,7 +55,7 @@ import {
   DELETE_ACTIVITY_INSTANCE_FAILURE,
   ADD_ACTIVITY_TYPE,
   UPDATE_ACTIVITY_TYPE_SUCCESS,
-} from 'redux/actions/types';
+} from 'src/redux/actions/types';
 
 
 describe('activityInstance entity actions:', () => {
@@ -90,7 +90,8 @@ describe('activityInstance entity actions:', () => {
             "isComplete": false,
             "start": "2017-10-20T17:00:00.000-07:00",
             "end": null,
-            "activityType": "1982f070-704c-4054-beb4-ea188399fc10"
+            "activityType": "1982f070-704c-4054-beb4-ea188399fc10",
+            "sessionId": "997a5210-33d1-4198-a4a4-5f1ea477cc01"
           }
         }
       },
@@ -108,10 +109,14 @@ describe('activityInstance entity actions:', () => {
     set('createActivityInstancePayload', () => ({
       name: 'Write seed data',
       categoryId: 'ca05ca36-805c-4f67-a097-a45988ba82d7',
+      sessionId: '997a5210-33d1-4198-a4a4-5f1ea477cc01',
       start: '2017-10-20T17:00:00.000-07:00',
     }));
 
-    set('createActivityInstanceThunk', () => createActivityInstance(createActivityInstancePayload, gqlClient));
+    set('createActivityInstanceThunk', () => createActivityInstance({
+      activityInstance: createActivityInstancePayload,
+      client: gqlClient,
+    }));
 
     /**
      * An action suffixed by `_REQUEST` will be tested independently since it's called at the
@@ -146,7 +151,10 @@ describe('activityInstance entity actions:', () => {
     describe('successful activityInstance creation', () => {
       it(`expected actions were dispatched`, async () => {
 
-        await mockStore.dispatch(createActivityInstance(createActivityInstancePayload, gqlClient));
+        await mockStore.dispatch(createActivityInstance({
+          activityInstance: createActivityInstancePayload,
+          client: gqlClient,
+        }));
 
         const actions = mockStore.getActions();
 
@@ -238,7 +246,8 @@ describe('activityInstance entity actions:', () => {
                   "isComplete": false,
                   "start": "2017-10-20T17:00:00.000-07:00",
                   "end": null,
-                  "activityType": "585915a7-3e84-4308-bf95-bd17447658d0"
+                  "activityType": "585915a7-3e84-4308-bf95-bd17447658d0",
+                  "sessionId": "997a5210-33d1-4198-a4a4-5f1ea477cc01"
                 }
               }
             },

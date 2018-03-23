@@ -1,4 +1,4 @@
-import _ from 'libs/dash';
+import _ from 'src/libs/dash';
 
 import {
   getEntities,
@@ -7,7 +7,7 @@ import {
   getEntityFetchStatuses,
   getEntityFetchStatus,
   getNewEntityFetchStatus,
-} from 'redux/reducers/selectors/entitySelectors';
+} from 'src/redux/reducers/selectors/entitySelectors';
 
 
 // --------------------------------------------------

@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import PropTypes from 'view/util/PropTypes';
+import PropTypes from 'src/view/util/PropTypes';
 import {StyleSheet, Text, TextInput, View} from 'react-native';
 import {FormInput} from 'react-native-elements';
 
@@ -11,21 +11,21 @@ class ActivityTimeInput extends Component {
   // --------------------------------------------------
   static propTypes = {
     onTimeChange: PropTypes.func.isRequired,
-    activityStartTime: PropTypes.string.isRequired,
+    start: PropTypes.string.isRequired,
   }
 
   // --------------------------------------------------
   // Render
   // --------------------------------------------------
   render() {
-    const {onTimeChange, activityStartTime} = this.props;
+    const {onTimeChange, start} = this.props;
 
     return (
       <View style={styles.container}>
         <FormInput
           onChange={onTimeChange}
           keyboardType={'default'}
-          value={activityStartTime}
+          value={start}
           style={styles.input}
         />
       </View>
