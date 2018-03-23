@@ -15,6 +15,7 @@ import {getLoneNormalizedEntity} from '../responseUtil';
 
 
 export const createActivityInstance = ({activityInstance, client}) => async dispatch => {
+  debugger
   dispatch(createActivityInstanceRequest(activityInstance));
 
   const createActivityInstanceMutation = `

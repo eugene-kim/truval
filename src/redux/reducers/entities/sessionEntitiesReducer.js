@@ -36,7 +36,7 @@ const sessionEntitiesReducer = (sessionEntities, action) => {
       const {activityInstance} = payload;
       const {id, sessionId} = activityInstance;
       const session = sessionEntities[sessionId];
-      const {activityInstances} = session;
+      const activityInstances = session.activityInstance || [];
       const updateAction = {
         payload: {
           id: sessionId,
