@@ -4,13 +4,13 @@ import {StyleSheet, Text, TextInput, View} from 'react-native';
 import {FormLabel, FormInput} from 'react-native-elements';
 
 
-const ActivityCategoryInput = ({onCategoryChange, activityCategory}) => {
+const ActivityCategoryInput = ({onCategoryChange, category}) => {
   return (
     <View style={styles.container}>
       <FormInput
         onChange={onCategoryChange}
         keyboardType={'default'}
-        value={activityCategory}
+        value={category}
         style={styles.input}
       />
     </View>
@@ -19,7 +19,7 @@ const ActivityCategoryInput = ({onCategoryChange, activityCategory}) => {
 
 ActivityCategoryInput.propTypes = {
   onCategoryChange: PropTypes.func.isRequired,
-  activityCategory: PropTypes.string.isRequired,
+  category: PropTypes.string.isRequired,
 };
 
 

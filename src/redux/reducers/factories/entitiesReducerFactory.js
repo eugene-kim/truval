@@ -7,7 +7,6 @@ import {
   hydrateEntities,
 } from '../commonReducers/entityReducers';
 import {UPDATE_FROM_SERVER} from 'src/redux/actions/types';
-import {FAILED, LOADING, LOADED, UPDATING, DELETING} from '../fetchStatus';
 
 
 // TODO: creating and deleting should update related entries as well

@@ -120,8 +120,6 @@ export default (operationAST, schemaDoc, store) => {
               if (!entityIds) {
                 existsInStore = false;
 
-                debugger
-
                 console.log(`${fieldName}Ids not found on ${typeName} with id:${typeIdValue}.`);
 
                 return BREAK;
@@ -154,8 +152,6 @@ export default (operationAST, schemaDoc, store) => {
             if (!allEntitiesExist) {
               existsInStore = false;
 
-              debugger
-
               console.log(allEntityIds);
               console.log(`Not all ${entityType} entities could be found in ${allEntityIds}`);
 
@@ -185,8 +181,6 @@ export default (operationAST, schemaDoc, store) => {
 
           if (!scalarsExists) {
             existsInStore = false;
-
-            debugger
 
             console.log(`Scalar field ${fieldName} DNE on ${entityName} instances with ids ${entityIds}.`);
 

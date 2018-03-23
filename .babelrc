@@ -4,8 +4,8 @@
   "presets": ["react-native"],
 
   "plugins": [
-    "transform-class-properties",
     "transform-decorators-legacy",
+    "transform-class-properties",
   ],
 
   "retainLines": true

@@ -14,13 +14,13 @@ import {addActivityType, updateActivityTypeSuccess} from './activityType';
 import {getLoneNormalizedEntity} from '../responseUtil';
 
 
-export const createActivityInstance = (activityInstance = {}, client) => async dispatch => {
+export const createActivityInstance = ({activityInstance, client}) => async dispatch => {
   dispatch(createActivityInstanceRequest(activityInstance));
 
   const createActivityInstanceMutation = `
     mutation {
       createActivityInstance(${getGqlParamString(activityInstance)}) {
-        id, isComplete, start, end
+        id, isComplete, start, end, sessionId, activityTypeId
         activityType {
           id, name, activityCount, categoryId,
         } 
@@ -35,11 +35,11 @@ export const createActivityInstance = (activityInstance = {}, client) => async d
       },
     );
 
-    const activityInstance = getLoneNormalizedEntity('activityInstance', response);
-    const activityType = getLoneNormalizedEntity('activityType', response);
+    const activityInstanceEntity = getLoneNormalizedEntity('activityInstance', response);
+    const activityTypeEntity = getLoneNormalizedEntity('activityType', response);
 
-    dispatch(addActivityType(activityType));    
-    dispatch(createActivityInstanceSuccess(activityInstance));
+    dispatch(addActivityType(activityTypeEntity));    
+    dispatch(createActivityInstanceSuccess(activityInstanceEntity));
   } catch (error) {
     const {message} = error;
 
@@ -47,12 +47,12 @@ export const createActivityInstance = (activityInstance = {}, client) => async d
   }
 };
 
-export const createActivityInstanceRequest = (activityInstance = {}) => ({
+export const createActivityInstanceRequest = activityInstance => ({
   type: CREATE_ACTIVITY_INSTANCE_REQUEST,
   payload: {activityInstance},
 });
 
-export const createActivityInstanceSuccess = (activityInstance = {}) => {
+export const createActivityInstanceSuccess = activityInstance => {
   return {
     type: CREATE_ACTIVITY_INSTANCE_SUCCESS,
     payload: {activityInstance},
@@ -106,7 +106,6 @@ export const updateActivityInstanceFailure = ({id, errorMessage}) => ({
 });
 
 export const deleteActivityInstance = ({id, activityType, client}) => async dispatch => {
-  debugger
   const activityTypeId = activityType.id;
   const {activityCount} = activityType;
 

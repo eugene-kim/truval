@@ -6,6 +6,7 @@ import fetchStatusReducerFactory from './factories/fetchStatusReducerFactory';
 import entitiesReducerFactory from './factories/entitiesReducerFactory';
 import newEntityFetchStatusReducer from './factories/newEntityFetchStatusReducer';
 
+import sessionEntitiesReducer from './entities/sessionEntitiesReducer';
 import activityTypeEntitiesReducer from './entities/activityTypeEntitiesReducer';
 
 // Selectors
@@ -38,11 +39,10 @@ const focusApp = function(state = {}, action) {
   return {
     entities: {
       session: {
-        entities: entitiesReducerFactory({
-          entityType: 'session',
-          entities: getSessionEntities(state),
+        entities: sessionEntitiesReducer(
+          getSessionEntities(state),
           action,
-        }),
+        ),
         fetchStatus: fetchStatusReducerFactory({
           entityType: 'session',
           fetchStatuses: getSessionFetchStatus(state),

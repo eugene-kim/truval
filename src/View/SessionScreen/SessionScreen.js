@@ -1,4 +1,3 @@
-
 import React, {Component} from 'react';
 import PropTypes from 'src/view/util/PropTypes';
 import {StyleSheet, View, Text} from 'react-native';
@@ -17,14 +16,17 @@ import {
 import AddActivityInput from './AddActivityInput/AddActivityInput';
 import ActivityList from './ActivityList';
 
+import {getGqlParamString} from 'src/graphql/util';
+
 // Naive implementation.
 // TODO: Add ability to pass props into this.
-@GraphQLContainer(state => {
-  const sessionId = state.current.session;
+@GraphQLContainer(props => {
+  const {sessionId} = props;
+  const params = getGqlParamString({id: sessionId});
 
   return (
     `query {
-      session(id: ${sessionId}) {
+      session(${params}) {
         id,
         name,
         start,
@@ -36,10 +38,13 @@ import ActivityList from './ActivityList';
           end,
           isComplete,
           duration,
+          sessionId,
+          activityTypeId,
           activityType {
             id
             name,
             activityCount,
+            categoryId,
             category {
               id,
               name
@@ -54,8 +59,8 @@ import ActivityList from './ActivityList';
 @connect(
 
   // mapStateToProps
-  (state, ownProps) => {
-    const {sessionId} = ownProps;
+  (state, props) => {
+    const {sessionId} = props;
 
     return {
       session: getEntityById({id: sessionId, entityType: 'session', state}),
@@ -80,7 +85,7 @@ class SessionScreen extends Component {
   // Render
   // --------------------------------------------------
   render() {
-    const {queryIsLoading, session, activities} = this.props;
+    const {queryIsLoading, session, activityInstances} = this.props;
     const didLoad = !queryIsLoading && session;
 
     if (!didLoad) {
@@ -91,15 +96,13 @@ class SessionScreen extends Component {
       );
     }
 
-    const {id} = session.id;
-
     return (
       <View style={styles.container}>
         <AddActivityInput
-          sessionId={id}
+          sessionId={session.id}
         />
         <ActivityList
-          activities={activities}
+          activityInstances={activityInstances}
         />
       </View>
     );

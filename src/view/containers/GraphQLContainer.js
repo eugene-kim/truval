@@ -20,12 +20,13 @@ export default (getOperationString, options) => ChildComponent => {
 
     componentDidMount() {
       const {gqlClient} = this.context;
-      const store = gqlClient.getStore();
-      const state = store.getState();
-      const operationString = getOperationString(state);
+      const operationString = getOperationString(this.props);
 
       gqlClient.query(operationString, options)
-      .then(response => this.setState({queryIsLoading: false}))
+      .then(response => this.setState({
+        queryIsLoading: false,
+        queryFailed: false,
+      }))
       .catch(error => {
         this.setState({
           queryIsLoading: false,
@@ -33,6 +34,7 @@ export default (getOperationString, options) => ChildComponent => {
         });
 
         console.error(error);
+        console.log(error.stack);
       });
     }
 

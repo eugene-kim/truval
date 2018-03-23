@@ -18,9 +18,9 @@ class AddActivityInput extends Component {
     super(props);
 
     this.state = {
-      activityStartTime: new Datetime().toString(),
-      activityCategory: '',
-      activityName: '',
+      start: new Datetime().toString(),
+      category: '',
+      name: '',
     };
   }
 
@@ -28,11 +28,12 @@ class AddActivityInput extends Component {
   // Props
   // --------------------------------------------------
   static propTypes = {
-    sessionId: PropTypes.number.isRequired,
+    sessionId: PropTypes.uuid.isRequired,
   };
 
   static contextTypes = {
     gqlClient: PropTypes.gqlClient,
+    userId: PropTypes.uuid.isRequired,
   }
 
   // --------------------------------------------------
@@ -52,7 +53,7 @@ class AddActivityInput extends Component {
   tick() {
     const datetime = new Datetime();
 
-    datetime.isNewMinute() && this.setState({activityStartTime: datetime.toString()});
+    datetime.isNewMinute() && this.setState({start: datetime.toString()});
   }
 
   extractValueFromEvent(event) {
@@ -65,35 +66,35 @@ class AddActivityInput extends Component {
 
   @bind
   handleTimeChange(event) {
-    const activityStartTime = this.extractValueFromEvent(event);
+    const start = this.extractValueFromEvent(event);
 
-    this.setState({activityStartTime});
+    this.setState({start});
   }
 
   @bind
   handleCategoryChange(event) {
-    const activityCategory = this.extractValueFromEvent(event);
+    const category = this.extractValueFromEvent(event);
 
-    this.setState({activityCategory});
+    this.setState({category});
   }
 
   @bind
   handleNameChange(event) {
-    const activityName = this.extractValueFromEvent(event);
+    const name = this.extractValueFromEvent(event);
 
-    this.setState({activityName});
-  }
-
-  @bind
-  handleSubmit() {
-    console.log('handling submission');
+    this.setState({name});
   }
 
   // --------------------------------------------------
   // Render
   // --------------------------------------------------
   render() {
-    const {activityStartTime, activityCategory, activityName} = this.state;
+    const {gqlClient, userId} = this.context;
+    const {sessionId} = this.props;
+    const {start, category, name} = this.state;
+
+    // Sample input value for now
+    const activityInstance = {start, categoryId: 'ca05ca36-805c-4f67-a097-a45988ba82d7', name, sessionId, userId};
 
     // Not rendering the submit button for now
     return (
@@ -101,22 +102,23 @@ class AddActivityInput extends Component {
         <View style={styles.inputContainer}>
           <ActivityTimeInput
             onTimeChange={this.handleTimeChange}
-            activityStartTime={activityStartTime}
+            start={start}
             style={styles.timeInput}
           />
           <ActivityNameInput
             onNameChange={this.handleNameChange}
-            activityName={activityName}
+            name={name}
             style={styles.nameInput}
           />
           <ActivityCategoryInput
             onCategoryChange={this.handleCategoryChange}
-            activityCategory={activityCategory}
+            category={category}
             style={styles.categoryInput}
           />
         </View>
         <ActivitySubmitButton
-          onSubmit={this.handleSubmit}
+          gqlClient={gqlClient}
+          activityInstance={activityInstance}
         />
       </View>
     );

@@ -36,6 +36,9 @@ class FocusApp extends Component {
 
   static childContextTypes = {
     gqlClient: PropTypes.gqlClient,
+
+    // TODO: Remove when we implement authentication.
+    userId: PropTypes.uuid,
   }
 
   componentDidMount() {
@@ -106,6 +109,9 @@ class FocusApp extends Component {
   getChildContext() {
     return {
       gqlClient: this.client,
+
+      // TODO: Remove when we implement authentication.
+      userId: 'cb39dbb5-caa8-4323-93a5-13450b875887',
     };
   }
 

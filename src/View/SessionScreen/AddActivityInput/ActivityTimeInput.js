@@ -11,21 +11,21 @@ class ActivityTimeInput extends Component {
   // --------------------------------------------------
   static propTypes = {
     onTimeChange: PropTypes.func.isRequired,
-    activityStartTime: PropTypes.string.isRequired,
+    start: PropTypes.string.isRequired,
   }
 
   // --------------------------------------------------
   // Render
   // --------------------------------------------------
   render() {
-    const {onTimeChange, activityStartTime} = this.props;
+    const {onTimeChange, start} = this.props;
 
     return (
       <View style={styles.container}>
         <FormInput
           onChange={onTimeChange}
           keyboardType={'default'}
-          value={activityStartTime}
+          value={start}
           style={styles.input}
         />
       </View>

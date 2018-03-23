@@ -35,9 +35,7 @@ export default {
 
   // Contains pointers to the currently rendered or selected object.
   current: {
-
-    // TODO: Remove after finishing testing.
-    session: 1,
+    session: undefined,
     activityInstance: undefined,
     category: undefined,
   },
