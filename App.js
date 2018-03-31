@@ -23,7 +23,7 @@ const store = createStore(
   ),
 );
 
-class FocusApp extends Component {
+class TruvalApp extends Component {
   constructor(props) {
     super(props);
 
@@ -144,4 +144,4 @@ class FocusApp extends Component {
 };
 
 
-export default FocusApp;
+export default TruvalApp;
