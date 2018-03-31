@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import styled from "styled-components";
 import PropTypes from 'src/view/util/PropTypes';
-import {StyleSheet, Text, TextInput, View} from 'react-native';
+import {Text, TextInput, View} from 'react-native';
 
 
 class ComponentTemplate extends Component {
@@ -18,12 +18,6 @@ class ComponentTemplate extends Component {
   render() {
   }
 };
-
-// --------------------------------------------------
-// Styles
-// --------------------------------------------------
-const styles = StyleSheet.create({
-});
 
 
 export default ComponentTemplate;

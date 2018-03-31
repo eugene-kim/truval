@@ -7,12 +7,7 @@ import Colors from 'src/view/styles/colors';
 
 
 const SessionHeader = ({session, activityInstance, category}) => {
-  debugger
-
   const {name} = session;
-  const Container = styled.View`
-    height: 30px;
-  `;
   const Row = styled.View`
     flex: 1;
     flexDirection: row
@@ -29,13 +24,11 @@ const SessionHeader = ({session, activityInstance, category}) => {
   `;
 
   return (
-    <Container>
-      <Row>
-        <SessionName>
-          {name}
-        </SessionName>
-      </Row>
-    </Container>
+    <Row>
+      <SessionName>
+        {name}
+      </SessionName>
+    </Row>
   );
 }
 

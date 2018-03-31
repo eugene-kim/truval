@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import PropTypes from 'src/view/util/PropTypes';
-import {StyleSheet, View, Text} from 'react-native';
+import styled from 'styled-components';
+import {View, Text} from 'react-native';
 import { connect } from 'react-redux'
 
 // Containers
@@ -15,10 +16,12 @@ import {
 } from 'src/redux/reducers/selectors/entitySelectors';
 
 // Components
-import ActivityList from './ActivityList';
-import SessionHeader from './SessionHeader';
-import SessionCurrentActivity from './SessionCurrentActivity';
-import SessionPastActivities from './SessionPastActivities';
+import SessionHeader from './components/SessionHeader';
+import ActiveActivityView from './components/ActiveActivityView';
+import SessionPastActivities from './components/SessionPastActivities';
+
+// Styles
+import Colors from 'src/view/styles/colors';
 
 // Naive implementation.
 // TODO: Add ability to pass props into this.
@@ -133,27 +136,48 @@ class SessionScreen extends Component {
       );
     }
 
+    const Container = styled.View`
+      flex: 1
+
+      /* 
+        Height of the iOS status bar.
+
+        TODO: Make this dynamic to accomodate Android as well.
+      */
+      marginTop: 40
+    `;
+    const HeaderContainer = styled.View`
+      height: 30px
+    `;
+    const CurrentActivityContainer = styled.View`
+      height: 200px
+
+      shadow-opacity: 0.50;
+      shadow-radius: 5px;
+      shadow-color: ${Colors.shadows.darkGray};
+      shadow-offset: 0px 3px;
+    `;
+
     return (
-      <View style={styles.container}>
-        <SessionHeader
-          session={session}
-          activityInstance={activeActivityInstance}
-          category={activeCategory}
-        />
-      </View>
+      <Container>
+        <HeaderContainer>
+          <SessionHeader
+            session={session}
+            activityInstance={activeActivityInstance}
+            category={activeCategory}
+          />
+        </HeaderContainer>
+        <CurrentActivityContainer>
+          <ActiveActivityView
+            activityType={activeActivityType}
+            activityInstance={activeActivityInstance}
+            category={activeCategory}
+          />
+        </CurrentActivityContainer>
+      </Container>
     );
   }
 };
-
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-
-    // Height of iOS status bar
-    marginTop: 40,
-  },
-});
 
 
 export default SessionScreen;
