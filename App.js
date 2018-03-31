@@ -67,6 +67,7 @@ class FocusApp extends Component {
               end,
               isComplete,
               duration,
+              activityTypeId
             }
           },
           activityTypes {

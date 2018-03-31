@@ -6,6 +6,8 @@ import { connect } from 'react-redux'
 // Containers
 import GraphQLContainer from '../containers/GraphQLContainer';
 
+import {getGqlParamString} from 'src/graphql/util';
+
 // Selectors
 import {
   getEntityById,
@@ -13,10 +15,10 @@ import {
 } from 'src/redux/reducers/selectors/entitySelectors';
 
 // Components
-import AddActivityInput from './AddActivityInput/AddActivityInput';
 import ActivityList from './ActivityList';
-
-import {getGqlParamString} from 'src/graphql/util';
+import SessionHeader from './SessionHeader';
+import SessionCurrentActivity from './SessionCurrentActivity';
+import SessionPastActivities from './SessionPastActivities';
 
 // Naive implementation.
 // TODO: Add ability to pass props into this.
@@ -62,9 +64,34 @@ import {getGqlParamString} from 'src/graphql/util';
   (state, props) => {
     const {sessionId} = props;
 
+    // Add methods to redux
+    const activeActivityInstanceId = 'c72cea78-2027-4615-a6a1-3daca28c9bba';
+
+    // TODO: Create a model or a selector so that this kind of retrieval is easy
+    const activeActivityInstance = getEntityById({
+      id: activeActivityInstanceId,
+      entityType: 'activityInstance',
+      state,
+    });
+    const {activityTypeId} = activeActivityInstance;
+    const activeActivityType = getEntityById({
+      id: activityTypeId,
+      entityType: 'activityType',
+      state,
+    });
+    const {categoryId} = activeActivityType;
+    const activeCategory = getEntityById({
+      id: categoryId,
+      entityType: 'category',
+      state,
+    });
+
     return {
       session: getEntityById({id: sessionId, entityType: 'session', state}),
       activityInstances: getSessionActivityInstances({state, sessionId}),
+      activeActivityInstance,
+      activeActivityType,
+      activeCategory,
     }
   },
 )
@@ -75,6 +102,9 @@ class SessionScreen extends Component {
     // Not sure if I should make this required when it might not be
     // available on screen load.
     session: PropTypes.object,
+    activeActivityInstance: PropTypes.object,
+    activeActivityType: PropTypes.object,
+    activeCategory: PropTypes.object,
 
     // TODO: Use a proper proptype later
     activityInstances: PropTypes.array,
@@ -85,7 +115,14 @@ class SessionScreen extends Component {
   // Render
   // --------------------------------------------------
   render() {
-    const {queryIsLoading, session, activityInstances} = this.props;
+    const {
+      queryIsLoading,
+      session,
+      activityInstances,
+      activeActivityInstance,
+      activeCategory,
+      activeActivityType,
+    } = this.props;
     const didLoad = !queryIsLoading && session;
 
     if (!didLoad) {
@@ -98,11 +135,10 @@ class SessionScreen extends Component {
 
     return (
       <View style={styles.container}>
-        <AddActivityInput
-          sessionId={session.id}
-        />
-        <ActivityList
-          activityInstances={activityInstances}
+        <SessionHeader
+          session={session}
+          activityInstance={activeActivityInstance}
+          category={activeCategory}
         />
       </View>
     );
