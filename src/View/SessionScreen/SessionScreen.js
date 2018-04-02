@@ -1,10 +1,13 @@
 import React, {Component} from 'react';
 import PropTypes from 'src/view/util/PropTypes';
-import {StyleSheet, View, Text} from 'react-native';
+import styled from 'styled-components';
+import {View, Text} from 'react-native';
 import { connect } from 'react-redux'
 
 // Containers
 import GraphQLContainer from '../containers/GraphQLContainer';
+
+import {getGqlParamString} from 'src/graphql/util';
 
 // Selectors
 import {
@@ -13,10 +16,12 @@ import {
 } from 'src/redux/reducers/selectors/entitySelectors';
 
 // Components
-import AddActivityInput from './AddActivityInput/AddActivityInput';
-import ActivityList from './ActivityList';
+import SessionHeader from './components/SessionHeader';
+import ActiveActivityView from './components/ActiveActivityView';
+import PastActivitiesView from './components/PastActivitiesView';
 
-import {getGqlParamString} from 'src/graphql/util';
+// Styles
+import Colors from 'src/view/styles/colors';
 
 // Naive implementation.
 // TODO: Add ability to pass props into this.
@@ -62,9 +67,34 @@ import {getGqlParamString} from 'src/graphql/util';
   (state, props) => {
     const {sessionId} = props;
 
+    // Add methods to redux
+    const activeActivityInstanceId = 'c72cea78-2027-4615-a6a1-3daca28c9bba';
+
+    // TODO: Create a model or a selector so that this kind of retrieval is easy
+    const activeActivityInstance = getEntityById({
+      id: activeActivityInstanceId,
+      entityType: 'activityInstance',
+      state,
+    });
+    const {activityTypeId} = activeActivityInstance;
+    const activeActivityType = getEntityById({
+      id: activityTypeId,
+      entityType: 'activityType',
+      state,
+    });
+    const {categoryId} = activeActivityType;
+    const activeCategory = getEntityById({
+      id: categoryId,
+      entityType: 'category',
+      state,
+    });
+
     return {
       session: getEntityById({id: sessionId, entityType: 'session', state}),
       activityInstances: getSessionActivityInstances({state, sessionId}),
+      activeActivityInstance,
+      activeActivityType,
+      activeCategory,
     }
   },
 )
@@ -75,6 +105,9 @@ class SessionScreen extends Component {
     // Not sure if I should make this required when it might not be
     // available on screen load.
     session: PropTypes.object,
+    activeActivityInstance: PropTypes.object,
+    activeActivityType: PropTypes.object,
+    activeCategory: PropTypes.object,
 
     // TODO: Use a proper proptype later
     activityInstances: PropTypes.array,
@@ -85,7 +118,14 @@ class SessionScreen extends Component {
   // Render
   // --------------------------------------------------
   render() {
-    const {queryIsLoading, session, activityInstances} = this.props;
+    const {
+      queryIsLoading,
+      session,
+      activityInstances,
+      activeActivityInstance,
+      activeCategory,
+      activeActivityType,
+    } = this.props;
     const didLoad = !queryIsLoading && session;
 
     if (!didLoad) {
@@ -96,28 +136,51 @@ class SessionScreen extends Component {
       );
     }
 
+    const Container = styled.View`
+      flex: 1
+      marginTop: 20
+    `;
+    const HeaderContainer = styled.View`
+      height: 35px
+    `;
+    const CurrentActivityContainer = styled.View`
+      height: 200px
+      shadow-opacity: 0.50;
+      shadow-radius: 5px;
+      shadow-color: ${Colors.shadows.darkGray};
+      shadow-offset: 0px 3px;
+      zIndex: 1
+    `;
+    const PastActivitiesContainer = styled.View`
+      flex: 1
+      zIndex: 0
+    `;
+
     return (
-      <View style={styles.container}>
-        <AddActivityInput
-          sessionId={session.id}
-        />
-        <ActivityList
-          activityInstances={activityInstances}
-        />
-      </View>
+      <Container>
+        <HeaderContainer>
+          <SessionHeader
+            session={session}
+            activityInstance={activeActivityInstance}
+            category={activeCategory}
+          />
+        </HeaderContainer>
+        <CurrentActivityContainer>
+          <ActiveActivityView
+            activityType={activeActivityType}
+            activityInstance={activeActivityInstance}
+            category={activeCategory}
+          />
+        </CurrentActivityContainer>
+        <PastActivitiesContainer>
+          <PastActivitiesView
+            activityInstances={activityInstances}
+          />
+        </PastActivitiesContainer>
+      </Container>
     );
   }
 };
-
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-
-    // Height of iOS status bar
-    marginTop: 40,
-  },
-});
 
 
 export default SessionScreen;
