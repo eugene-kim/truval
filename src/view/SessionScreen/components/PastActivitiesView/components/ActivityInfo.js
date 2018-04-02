@@ -41,7 +41,7 @@ const ActivityInfo = ({activityInstance, activityType}) => {
     fontSize: 12
     color: ${Colors.text.lightGray}
   `;
-  const totalDurationText = `${printDuration(duration)}`;
+  const totalDurationText = `Tot: ${printDuration(duration)}`;
 
   return (
     <Container>

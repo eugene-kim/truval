@@ -18,7 +18,12 @@ const ActivityList = ({activityInstances}) => {
     <StyledList
       data={activityInstances}
       renderItem={
-        ({item}) => <ActivityRow activityInstance={item} />
+        ({item, index}) => (
+          <ActivityRow
+            isFirst={index === 0}
+            activityInstance={item}
+          />
+        )
       }
       keyExtractor={item => item.id}
     />

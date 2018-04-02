@@ -16,9 +16,9 @@ const datetime = dateString => {
 };
 
 export const printDuration = seconds => {
-  let durationString = '';
   const duration = moment.duration(seconds, 's');
-  let timeLeft = seconds;
+  
+  let durationString = '';
 
   const exactHours = duration.asHours();
   const hours = Math.floor(exactHours);

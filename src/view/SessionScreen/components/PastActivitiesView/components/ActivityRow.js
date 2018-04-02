@@ -18,11 +18,9 @@ import ActivityInfo from './ActivityInfo';
 import Datetime from 'src/libs/util/Datetime';
 
 
-const ActivityRow = ({category, activityType, activityInstance}) => {
+const ActivityRow = ({category, activityType, activityInstance, isFirst}) => {
   const {start} = activityInstance;
   const date = Datetime(start);
-
-  console.log('asdfasdfasdfasdf');
 
   const {name} = activityType;
 
@@ -31,6 +29,7 @@ const ActivityRow = ({category, activityType, activityInstance}) => {
   // --------------------------------------------------
 
   const Container = styled.View`
+    marginTop: ${isFirst ? 30 : 0}
     marginBottom: 35
     height: 60px
   `;
@@ -92,6 +91,7 @@ ActivityRow.propTypes = {
   category: PropTypes.object.isRequired,
   activityType: PropTypes.object.isRequired,
   activityInstance: PropTypes.object.isRequired,
+  isFirst: PropTypes.bool.isRequired,
 };
 
 export default connect(
