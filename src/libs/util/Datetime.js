@@ -1,41 +1,65 @@
-class Datetime {
+import bind from 'src/libs/decorators/bind';
+import moment from 'moment';
 
-  /**
-   * Takes in Javascript's native Date object.
-   */
-  constructor(date=new Date()) {
-    this.date = date;
+
+/**
+ * Contains wrapper methods around Method.js
+ */
+const datetime = dateString => {
+  const mo = moment(dateString);
+
+  return {
+    getHoursAndMinutes() {
+      return mo.format('LT');
+    }
+  }
+};
+
+export const printDuration = seconds => {
+  let durationString = '';
+  const duration = moment.duration(seconds, 's');
+  let timeLeft = seconds;
+
+  const exactHours = duration.asHours();
+  const hours = Math.floor(exactHours);
+
+  if (hours > 0) {
+    duration.subtract(hours, 'h');
+
+    const unit = hours > 1 ? 'hrs' : 'hr';
+
+    durationString = durationString.concat(`${hours}${unit}`);
   }
 
-  // --------------------------------------------------
-  // Print
-  // --------------------------------------------------
-  getHoursAndMinutes() {
-    const hours = this.formatTimeDigits(this.date.getHours());
-    const minutes = this.formatTimeDigits(this.date.getMinutes());
+  const exactMinutes = duration.asMinutes();
+  const minutes = Math.floor(exactMinutes);
 
-    return `${hours}:${minutes}`;
+  if (minutes > 0) {
+    duration.subtract(minutes, 'm');
+
+    const space = getSpace(durationString);
+
+    durationString = durationString.concat(`${space}${minutes}min`);
   }
 
-  // --------------------------------------------------
-  // Boolean Methods
-  // --------------------------------------------------
-  isNewMinute() {
-    return this.date.getSeconds() === 0;
+  // Only print seconds if nothing else has been printed.
+  if (!durationString) {
+    const exactSeconds = duration.asSeconds();
+    const seconds = Math.floor(exactSeconds);
+
+    if (seconds > 0) {
+      duration.subtract(seconds, 's');
+
+      const space = getSpace(durationString);
+
+      durationString = durationString.concat(`${seconds}sec`);
+    }
   }
 
-  // --------------------------------------------------
-  // Formatting
-  // --------------------------------------------------
-  formatTimeDigits(number) {
-    return (number).toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping: false});
-  }
-
-  toString() {
-    return this.date.toISOString();
-  }
-
+  return durationString;
 }
 
+const getSpace = durationString => durationString ? ' ' : '';
 
-export default Datetime;
+
+export default datetime;

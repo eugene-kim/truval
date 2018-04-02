@@ -6,6 +6,8 @@ import {Text, TextInput, View} from 'react-native';
 // Styles
 import Colors from 'src/view/styles/colors';
 
+import {printDuration} from 'src/libs/util/Datetime';
+
 const ActivityInfo = ({activityInstance, activityType}) => {
   const {name} = activityType;
   const {duration} = activityInstance;
@@ -39,7 +41,7 @@ const ActivityInfo = ({activityInstance, activityType}) => {
     fontSize: 12
     color: ${Colors.text.lightGray}
   `;
-  const totalDurationText = `Total ${duration}`;
+  const totalDurationText = `${printDuration(duration)}`;
 
   return (
     <Container>
@@ -49,7 +51,7 @@ const ActivityInfo = ({activityInstance, activityType}) => {
         </Name>
         <DurationContainer>
           <InstanceDuration>
-            {duration}
+            {printDuration(duration)}
           </InstanceDuration>
           <TypeDuration>
             {totalDurationText}

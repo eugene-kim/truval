@@ -14,10 +14,21 @@ import Colors from 'src/view/styles/colors';
 import CategoryCircle from './CategoryCircle';
 import ActivityInfo from './ActivityInfo';
 
+// Util
+import Datetime from 'src/libs/util/Datetime';
+
 
 const ActivityRow = ({category, activityType, activityInstance}) => {
   const {start} = activityInstance;
+  const date = Datetime(start);
+
+  console.log('asdfasdfasdfasdf');
+
   const {name} = activityType;
+
+  // --------------------------------------------------
+  // Styled Components
+  // --------------------------------------------------
 
   const Container = styled.View`
     marginBottom: 35
@@ -58,7 +69,7 @@ const ActivityRow = ({category, activityType, activityInstance}) => {
       <Contents>
         <StartContainer>
           <StartTime textAlign={'right'}>
-            {start}
+            {date.getHoursAndMinutes()}
           </StartTime>
         </StartContainer>
         <CircleContainer>

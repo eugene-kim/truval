@@ -20,10 +20,6 @@ const PastActivitiesView = ({activityInstances}) => {
     backgroundColor: ${Colors.white}
   `;
 
-  const ListContainer = styled.View`
-    paddingTop: 20
-  `;
-
   const Line = styled.View`
     height: 100%
     width: 2px
@@ -33,10 +29,10 @@ const PastActivitiesView = ({activityInstances}) => {
 
   return (
     <Container>
+      <Line />
       <ActivityList
         activityInstances={activityInstances}
       />
-      <Line/>
     </Container>
   );
 }

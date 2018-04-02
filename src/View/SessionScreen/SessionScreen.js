@@ -141,23 +141,19 @@ class SessionScreen extends Component {
       marginTop: 20
     `;
     const HeaderContainer = styled.View`
-      height: 30px
+      height: 35px
     `;
     const CurrentActivityContainer = styled.View`
       height: 200px
-      /*
       shadow-opacity: 0.50;
       shadow-radius: 5px;
       shadow-color: ${Colors.shadows.darkGray};
       shadow-offset: 0px 3px;
-      */
-      shadow-opacity: 1;
-      shadow-radius: 5px;
-      shadow-color: red;
-      shadow-offset: 0px 8px;
+      zIndex: 1
     `;
     const PastActivitiesContainer = styled.View`
       flex: 1
+      zIndex: 0
     `;
 
     return (
