@@ -8,7 +8,8 @@
   },
   "rnpm": {
     "assets": [
-      "./assets/fonts/"
+      "./assets/fonts/Font-Awesome",
+      "./assets/fonts/Nunito"
     ]
   },
   "devDependencies": {
