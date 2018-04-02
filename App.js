@@ -8,7 +8,7 @@ import { Provider } from 'react-redux';
 
 // Local Imports
 import { getGqlParamString } from 'src/graphql/util';
-import SessionScreen from 'src/view/SessionScreen/SessionScreen';
+import SessionScreen from 'src/view/SessionScreen';
 import getGqlClient from 'src/graphql/client';
 import rootReducer from 'src/redux/reducers/root';
 import initialState from 'src/redux/store/initialState';

@@ -14,7 +14,7 @@ const SessionHeader = ({session, activityInstance, category}) => {
     justifyContent: center
     alignItems: center
 
-    opacity: .70
+    opacity: .90
     backgroundColor: ${category.color}
   `;
   const SessionName = styled.Text`

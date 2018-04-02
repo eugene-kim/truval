@@ -47,7 +47,7 @@ const ActiveActivityView = ({activityType, activityInstance, category}) => {
     height: 30px
     backgroundColor: ${Colors.white}
     position: absolute
-    bottom: 0%
+    bottom: 0px
   `;
 
   return (

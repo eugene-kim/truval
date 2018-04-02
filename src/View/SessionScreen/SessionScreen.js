@@ -18,7 +18,7 @@ import {
 // Components
 import SessionHeader from './components/SessionHeader';
 import ActiveActivityView from './components/ActiveActivityView';
-import SessionPastActivities from './components/SessionPastActivities';
+import PastActivitiesView from './components/PastActivitiesView';
 
 // Styles
 import Colors from 'src/view/styles/colors';
@@ -138,24 +138,26 @@ class SessionScreen extends Component {
 
     const Container = styled.View`
       flex: 1
-
-      /* 
-        Height of the iOS status bar.
-
-        TODO: Make this dynamic to accomodate Android as well.
-      */
-      marginTop: 40
+      marginTop: 20
     `;
     const HeaderContainer = styled.View`
       height: 30px
     `;
     const CurrentActivityContainer = styled.View`
       height: 200px
-
+      /*
       shadow-opacity: 0.50;
       shadow-radius: 5px;
       shadow-color: ${Colors.shadows.darkGray};
       shadow-offset: 0px 3px;
+      */
+      shadow-opacity: 1;
+      shadow-radius: 5px;
+      shadow-color: red;
+      shadow-offset: 0px 8px;
+    `;
+    const PastActivitiesContainer = styled.View`
+      flex: 1
     `;
 
     return (
@@ -174,6 +176,11 @@ class SessionScreen extends Component {
             category={activeCategory}
           />
         </CurrentActivityContainer>
+        <PastActivitiesContainer>
+          <PastActivitiesView
+            activityInstances={activityInstances}
+          />
+        </PastActivitiesContainer>
       </Container>
     );
   }
