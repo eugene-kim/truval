@@ -16,15 +16,13 @@ export const createModelInstance = async (requiredParams, optionalParams, tableN
   );
 
   try {
-    const dbResults = await knex(tableName).insert(newModelInstance).returning(columnNames);
+    const insertPromise = knex(tableName).insert(newModelInstance).returning(columnNames);
+    const rows = await formatAndReturnQueryResult(insertPromise);
 
     // .insert() returns an array of objects based on what is passed to .returning()
     // and how many objects we're inserting.
     // We're inserting one object with createModelInstance(), so we retrieve from index 0.
-    const dbResult = dbResults[0];
-    const response = toCamelCaseKeys(dbResult);
-
-    return response;
+    return rows[0];
   } catch (error) {
     throw error;
   }
@@ -38,16 +36,14 @@ export const updateModelInstance = async (mutationParams, tableName, columnNames
   try {
     const id = mutationParams.id;
     const dbPropertiesToUpdate = makeDbCompatible(mutationParams);
-    const dbResults = await knex(tableName)
+    const updatePromise = knex(tableName)
       .returning(columnNames)
       .update(dbPropertiesToUpdate)
       .where('id', id);
 
-    const dbResult = dbResults[0];
+    const result = await formatAndReturnQueryResult(updatePromise);
 
-    console.log(dbResult);
-
-    return toCamelCaseKeys(dbResult);
+    return result[0];
   } catch (error) {
     console.error(error);
     
@@ -74,10 +70,24 @@ export const getModelInstanceById = async (id, tableName) => {
   }
 }
 
-export const getModelInstances = (foreignKeyValue, foreignKeyName, tableName) => {
-  return knex(tableName).select().where(foreignKeyName, '=', foreignKeyValue)
-  .then(rows => rows.map(row => toCamelCaseKeys(row)))
-  .catch(error => console.log(error));
+export const getModelInstances = async (foreignKeyValue, foreignKeyName, tableName) => {
+  const queryPromise = knex(tableName).select().where(foreignKeyName, '=', foreignKeyValue);
+
+  try {
+    return await formatAndReturnQueryResult(queryPromise);
+  } catch(error) {
+    throw error;
+  }
+}
+
+const formatAndReturnQueryResult = async promise => {
+  const result = await promise;
+
+  if (result instanceof Array) {
+    return result.map(row => toCamelCaseKeys(row));
+  }
+
+  return toCamelCaseKeys(result);
 }
 
 export const deleteModelInstance = async (id, tableName) => {

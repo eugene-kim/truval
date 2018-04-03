@@ -6,6 +6,7 @@
     "server_path": "src/server/index.js",
     "knexfile_path": "src/server/database/knexfile.js"
   },
+
   "rnpm": {
     "assets": [
       "./assets/fonts/Font-Awesome",
@@ -13,6 +14,7 @@
       "./assets/fonts/MaterialCommunityIcons"
     ]
   },
+
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.0",
@@ -29,6 +31,7 @@
     "react-test-renderer": "16.0.0",
     "regenerator-runtime": "^0.11.1"
   },
+
   "scripts": {
     "start": "react-native start -- --reset-cache",
     "node": "NODE_PATH=.; nodemon $npm_package_config_server_path --exec babel-node",
@@ -42,14 +45,19 @@
     "seed": "knex seed:run --knexfile=$npm_package_config_knexfile_path",
     "compile": "npx babel src --out-dir lib --source-maps",
     "react-devtools": "react-devtools",
-
-    // Workaround to deal with icon loading issue:
-    // https://github.com/oblador/react-native-vector-icons/issues/626
     "postinstall": "rm ./node_modules/react-native/local-cli/core/__fixtures__/files/package.json"
   },
+  "scripts-comments": {
+    "postinstall": [
+      "Workaround to deal with icon loading issue:",
+      "https://github.com/oblador/react-native-vector-icons/issues/626"
+    ]
+  },
+
   "jest": {
     "setupTestFrameworkScriptFile": "./jest-plugins.js"
   },
+  
   "dependencies": {
     "apollo-cache-inmemory": "^1.1.7",
     "apollo-client": "^2.2.3",
