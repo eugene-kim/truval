@@ -1,3 +1,8 @@
+/**
+ * To reset the migration, run the following:
+ * `DROP TABLE "Category", "User", "Session", "ActivityType", "ActivityInstance", "knex_migrations", "knex_migrations_lock";`
+ */
+
 exports.up = async function(knex, Promise) {
   await knex.schema.createTable('User', table => {
     table.uuid('id').primary();
@@ -24,6 +29,8 @@ exports.up = async function(knex, Promise) {
       table.uuid('id').primary();
       table.string('name').notNullable();
       table.string('color').notNullable();
+      table.string('icon_font_family');
+      table.string('icon_name');
       table.boolean('is_primary').notNullable().defaultTo(false);
       table.timestamps(true, true);
       table.unique(['name', 'user_id']);

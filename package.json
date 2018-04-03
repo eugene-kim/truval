@@ -9,7 +9,8 @@
   "rnpm": {
     "assets": [
       "./assets/fonts/Font-Awesome",
-      "./assets/fonts/Nunito"
+      "./assets/fonts/Nunito",
+      "./assets/fonts/MaterialCommunityIcons"
     ]
   },
   "devDependencies": {
@@ -40,7 +41,11 @@
     "create_migration": "knex migrate:make --knexfile=$npm_package_config_knexfile_path",
     "seed": "knex seed:run --knexfile=$npm_package_config_knexfile_path",
     "compile": "npx babel src --out-dir lib --source-maps",
-    "react-devtools": "react-devtools"
+    "react-devtools": "react-devtools",
+
+    // Workaround to deal with icon loading issue:
+    // https://github.com/oblador/react-native-vector-icons/issues/626
+    "postinstall": "rm ./node_modules/react-native/local-cli/core/__fixtures__/files/package.json"
   },
   "jest": {
     "setupTestFrameworkScriptFile": "./jest-plugins.js"
@@ -69,7 +74,7 @@
     "react-apollo": "^2.0.4",
     "react-native": "^0.53.0",
     "react-native-elements": "^0.18.5",
-    "react-native-vector-icons": "^4.5.0",
+    "react-native-vector-icons": "^4.6.0",
     "react-redux": "^5.0.6",
     "redux": "^3.7.2",
     "redux-logger": "^3.0.6",

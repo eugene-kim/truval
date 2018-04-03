@@ -55,6 +55,8 @@ const typeDefs = `
     id: ID!
     name: String!
     color: String!
+    iconFontFamily: String
+    iconName: String
     isPrimary: Boolean!
     userId: ID!
     user: User!

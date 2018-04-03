@@ -3,12 +3,18 @@ import styled from 'styled-components';
 import PropTypes from 'src/view/util/PropTypes';
 import {Text, TextInput, View} from 'react-native';
 import _ from 'src/libs/dash';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+
 
 // Styles
 import Colors from 'src/view/styles/colors';
 
 const CategoryCircle = ({category}) => {
   const {color, name} = category;
+
+  // --------------------------------------------------
+  // Styled Components
+  // --------------------------------------------------
   const Circle = styled.View`
     height: 50px
     width: 50px
@@ -25,14 +31,38 @@ const CategoryCircle = ({category}) => {
     color: ${Colors.text.white}
   `;
 
-  const letter = _.toUpper(name.charAt(0));
+  // --------------------------------------------------
+  // Render Functions
+  // --------------------------------------------------
+  const renderIcon = category => {
+    const {iconName, name} = category;
 
-  return (
-    <Circle>
-      <Content>
+    if (!category.iconName) {
+      const letter = _.toUpper(name.charAt(0));
+
+      return (
         <Letter>
           {letter}
         </Letter>
+      )
+    }
+
+    return (
+      <Icon
+        name={iconName}
+        size={20}
+        color={Colors.white}
+      />
+    );
+  }
+
+  // --------------------------------------------------
+  // Render
+  // --------------------------------------------------
+  return (
+    <Circle>
+      <Content>
+        {renderIcon(category)}
       </Content>
     </Circle>
   );
