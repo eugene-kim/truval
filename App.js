@@ -82,6 +82,8 @@ class TruvalApp extends Component {
             id,
             name,
             color,
+            iconFontFamily,
+            iconName,
             isPrimary
           }
         }

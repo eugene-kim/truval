@@ -51,9 +51,11 @@ import Colors from 'src/view/styles/colors';
             activityCount,
             categoryId,
             category {
-              id,
+              id
               name
               color
+              iconFontFamily
+              iconName
             }
           }
         }
