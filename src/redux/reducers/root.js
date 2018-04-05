@@ -7,12 +7,14 @@ import entitiesReducerFactory from './factories/entitiesReducerFactory';
 import newEntityFetchStatusReducer from './factories/newEntityFetchStatusReducer';
 
 import sessionEntitiesReducer from './entities/sessionEntitiesReducer';
+import orderedSessionReducer from './entities/orderedSessionReducer';
 import activityTypeEntitiesReducer from './entities/activityTypeEntitiesReducer';
 
 // Selectors
 import {
   getSessionEntities,
   getSessionFetchStatus,
+  getOrderedSessions,
   getNewSessionFetchStatus,
   getCategoryEntities,
   getCategoryFetchStatus,
@@ -54,7 +56,11 @@ const focusApp = function(state = {}, action) {
             newFetchStatus: getNewSessionFetchStatus(state),
             action,
           }),
-        }
+        },
+        ordered: orderedSessionReducer(
+          getOrderedSessions(state),
+          action,
+        ),
       },
       activityType: {
         entities: activityTypeEntitiesReducer(getActivityTypeEntities(state), action),

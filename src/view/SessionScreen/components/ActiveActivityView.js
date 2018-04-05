@@ -8,11 +8,11 @@ import Colors from 'src/view/styles/colors';
 
 const ActiveActivityView = ({activityType, activityInstance, category}) => {
   const Container = styled.View`
-    flex: 1
+    flexGrow: 1
     justifyContent: center
     alignItems: center
     position: relative
-
+    paddingVertical: 27
     backgroundColor: ${category.color}
   `;
 

@@ -36,12 +36,14 @@ const sessionEntitiesReducer = (sessionEntities, action) => {
       const {activityInstance} = payload;
       const {id, sessionId} = activityInstance;
       const session = sessionEntities[sessionId];
-      const activityInstances = session.activityInstance || [];
+      const activityInstances = session.activityInstances || [];
       const updateAction = {
         payload: {
           id: sessionId,
           propsToUpdate: {
-            activityInstances: activityInstances.concat(id),
+
+            // Activity instances are ordered newest --> oldest.
+            activityInstances: [id].concat(activityInstances),
           },
         },
       };

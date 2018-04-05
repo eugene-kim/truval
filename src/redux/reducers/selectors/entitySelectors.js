@@ -17,6 +17,7 @@ export const getSessionActivityInstances = ({state, sessionId}) => {
     return activityInstances.concat(activityInstance);
   }, []);
 }
+export const getOrderedSessions = state => state.entities.session.ordered;
 
 export const getCategoryEntities = state => getEntities({entityType: 'category', state});
 export const getCategoryFetchStatus = state => getEntityFetchStatuses({entityType: 'category', state});

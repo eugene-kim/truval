@@ -146,7 +146,6 @@ class SessionScreen extends Component {
       height: 35px
     `;
     const CurrentActivityContainer = styled.View`
-      height: 200px
       shadow-opacity: 0.50;
       shadow-radius: 5px;
       shadow-color: ${Colors.shadows.darkGray};

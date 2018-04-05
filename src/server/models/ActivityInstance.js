@@ -3,7 +3,7 @@ import {
   updateModelInstance,
   getModelInstance,
   getModelInstanceById,
-  getModelInstances,
+  getOrderedModelInstances,
   deleteModelInstance,
 } from '../database/dbMethods';
 
@@ -30,7 +30,15 @@ const ActivityInstance = {
   getActivityInstance: id => getModelInstanceById(id, ACTIVITY_INSTANCE_TABLE),
   updateActivityInstance: mutationParams => updateModelInstance(mutationParams, ACTIVITY_INSTANCE_TABLE, ACTIVITY_INSTANCE_COLUMNS),
   deleteActivityInstance: id => deleteModelInstance(id, ACTIVITY_INSTANCE_TABLE),
-  getSessionActivityInstances: sessionId => getModelInstances(sessionId, 'session_id', ACTIVITY_INSTANCE_TABLE),
+
+  // We want the most recent activityInstances to be returned first
+  getSessionActivityInstances: sessionId => getOrderedModelInstances({
+    foreignKeyValue: sessionId,
+    foreignKeyName: 'session_id',
+    tableName: ACTIVITY_INSTANCE_TABLE,
+    orderByColumn: 'start',
+    direction: 'desc',
+  }),
 };
 
 
