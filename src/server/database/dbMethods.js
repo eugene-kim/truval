@@ -34,7 +34,7 @@ export const createModelInstance = async (requiredParams, optionalParams, tableN
  */
 export const updateModelInstance = async (mutationParams, tableName, columnNames) => {
   try {
-    const id = mutationParams.id;
+    const {id} = mutationParams;
     const dbPropertiesToUpdate = makeDbCompatible(mutationParams);
     const updatePromise = knex(tableName)
       .returning(columnNames)
@@ -72,6 +72,27 @@ export const getModelInstanceById = async (id, tableName) => {
 
 export const getModelInstances = async (foreignKeyValue, foreignKeyName, tableName) => {
   const queryPromise = knex(tableName).select().where(foreignKeyName, '=', foreignKeyValue);
+
+  try {
+    return await formatAndReturnQueryResult(queryPromise);
+  } catch(error) {
+    throw error;
+  }
+}
+
+export const getOrderedModelInstances = async ({
+  foreignKeyValue,
+  foreignKeyName,
+  tableName,
+  orderByColumn,
+
+  // 'ASC' is the default order set by Postgres.
+  direction='asc',
+}) => {
+  const queryPromise = knex(tableName)
+    .select()
+    .where(foreignKeyName, '=', foreignKeyValue)
+    .orderBy(orderByColumn, direction);
 
   try {
     return await formatAndReturnQueryResult(queryPromise);

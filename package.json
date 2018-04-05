@@ -6,7 +6,6 @@
     "server_path": "src/server/index.js",
     "knexfile_path": "src/server/database/knexfile.js"
   },
-
   "rnpm": {
     "assets": [
       "./assets/fonts/Font-Awesome",
@@ -14,7 +13,6 @@
       "./assets/fonts/MaterialCommunityIcons"
     ]
   },
-
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.0",
@@ -31,7 +29,6 @@
     "react-test-renderer": "16.0.0",
     "regenerator-runtime": "^0.11.1"
   },
-
   "scripts": {
     "start": "react-native start -- --reset-cache",
     "node": "NODE_PATH=.; nodemon $npm_package_config_server_path --exec babel-node",
@@ -53,11 +50,9 @@
       "https://github.com/oblador/react-native-vector-icons/issues/626"
     ]
   },
-
   "jest": {
     "setupTestFrameworkScriptFile": "./jest-plugins.js"
   },
-  
   "dependencies": {
     "apollo-cache-inmemory": "^1.1.7",
     "apollo-client": "^2.2.3",
@@ -90,6 +85,7 @@
     "redux-thunk": "^2.2.0",
     "sinon": "^4.4.2",
     "styled-components": "^3.2.5",
+    "styled-x": "^0.6.2",
     "uuid": "^3.2.1"
   }
 }

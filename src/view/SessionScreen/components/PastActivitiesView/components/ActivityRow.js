@@ -1,8 +1,9 @@
 import React, {Component} from 'react';
 import PropTypes from 'src/view/util/PropTypes';
-import {Dimensions, Text, TextInput, View} from 'react-native';
+import {Dimensions, Text, View} from 'react-native';
 import styled from 'styled-components';
 import { connect } from 'react-redux'
+import { TextInput } from 'styled-x';
 
 // Redux
 import {getEntityById} from 'src/redux/reducers/selectors/entitySelectors';
@@ -31,7 +32,6 @@ const ActivityRow = ({category, activityType, activityInstance, isFirst}) => {
   const Container = styled.View`
     marginTop: ${isFirst ? 30 : 0}
     marginBottom: 35
-    height: 60px
   `;
   const Contents = styled.View`
     flex: 1
@@ -44,7 +44,6 @@ const ActivityRow = ({category, activityType, activityInstance, isFirst}) => {
     flexDirection: row
     justifyContent: center
     alignItems: center
-    height: 60
   `;
   const CircleContainer = ContentContainer.extend`
     flex: 0 1 auto
