@@ -54,11 +54,13 @@ export const deleteEntity = action => entities => {
   }, {});
 }
 
+export const getPayloadEntities = (payload, entityType) => payload.entities[entityType];
 export const hydrateEntities = ({action, entityType, entities}) => {
   const {payload} = action;
+  const payloadEntities = getPayloadEntities(payload, entityType);
 
-  if (payload.entities && payload.entities[entityType]) {
-    return _.merge({}, entities, payload.entities[entityType]);
+  if (payloadEntities) {
+    return _.merge({}, entities, payloadEntities);
   }
 
   return entities;

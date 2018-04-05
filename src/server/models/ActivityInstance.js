@@ -31,7 +31,7 @@ const ActivityInstance = {
   updateActivityInstance: mutationParams => updateModelInstance(mutationParams, ACTIVITY_INSTANCE_TABLE, ACTIVITY_INSTANCE_COLUMNS),
   deleteActivityInstance: id => deleteModelInstance(id, ACTIVITY_INSTANCE_TABLE),
 
-  // We want the most activityInstances to be returned.
+  // We want the most recent activityInstances to be returned first
   getSessionActivityInstances: sessionId => getOrderedModelInstances({
     foreignKeyValue: sessionId,
     foreignKeyName: 'session_id',

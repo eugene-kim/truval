@@ -2,7 +2,7 @@ import {
   createModelInstance,
   updateModelInstance,
   getModelInstanceById,
-  getModelInstances,
+  getOrderedModelInstances,
   deleteModelInstance,
 } from '../database/dbMethods';
 
@@ -23,11 +23,13 @@ const Session = {
     SESSION_COLUMNS,
   ),
   getSession: id => getModelInstanceById(id, SESSION_TABLE),
-  getUserSessions: userId => getModelInstances(
-    userId,
-    'user_id',
-    SESSION_TABLE,
-  ),
+  getUserSessions: userId => getOrderedModelInstances({
+    foreignKeyValue: userId,
+    foreignKeyName: 'user_id',
+    tableName: SESSION_TABLE,
+    orderByColumn: 'start',
+    direction: 'desc',
+  }),
   updateSession: mutationParams => updateModelInstance(
     mutationParams,
     SESSION_TABLE,
