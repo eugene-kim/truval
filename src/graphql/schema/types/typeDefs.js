@@ -37,6 +37,7 @@ const typeDefs = `
     # Datetime String in ISO 8601 format.
     end: String
     duration: Int
+    totalDuration: Int
   }
 
   type ActivityType {

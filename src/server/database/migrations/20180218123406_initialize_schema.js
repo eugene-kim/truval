@@ -58,6 +58,7 @@ exports.up = async function(knex, Promise) {
     table.datetime('end');
     table.boolean('is_complete').notNullable().defaultTo(false);
     table.integer('duration');
+    table.integer('total_duration');
     table.timestamps(true, true);
 
     // Foreign Keys

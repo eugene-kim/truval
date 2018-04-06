@@ -10,7 +10,7 @@ import {printDuration} from 'src/libs/util/Datetime';
 
 const ActivityInfo = ({activityInstance, activityType}) => {
   const {name} = activityType;
-  const {duration} = activityInstance;
+  const {duration, totalDuration} = activityInstance;
 
   const Container = styled.View`
     height: 34px
@@ -41,7 +41,20 @@ const ActivityInfo = ({activityInstance, activityType}) => {
     fontSize: 12
     color: ${Colors.text.lightGray}
   `;
-  const totalDurationText = `Tot: ${printDuration(duration)}`;
+
+  const renderTotalDuration = ({duration, totalDuration}) => {
+    if (!totalDuration || totalDuration <= duration) {
+      return null;
+    }
+
+    const totalDurationText = `Total: ${printDuration(totalDuration)}`;
+
+    return (
+      <TypeDuration>
+        {totalDurationText}
+      </TypeDuration>
+    );
+  }
 
   return (
     <Container>
@@ -53,9 +66,7 @@ const ActivityInfo = ({activityInstance, activityType}) => {
           <InstanceDuration>
             {printDuration(duration)}
           </InstanceDuration>
-          <TypeDuration>
-            {totalDurationText}
-          </TypeDuration>
+          {renderTotalDuration({duration, totalDuration})}
         </DurationContainer>
       </Content>
     </Container>
