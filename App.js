@@ -67,6 +67,7 @@ class TruvalApp extends Component {
               end,
               isComplete,
               duration,
+              totalDuration,
               activityTypeId
             }
           },

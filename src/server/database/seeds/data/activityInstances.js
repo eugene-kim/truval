@@ -2,77 +2,95 @@ module.exports = [
   
   // First user
   {
+    // Write seed data
     id: 'c72cea78-2027-4615-a6a1-3daca28c9bba',
     start: '2017-10-21T00:00:00.000Z',
-    end: '2017-10-21T00:20:00.000Z',
+    end: '2017-10-21T00:20:24.000Z',
     is_complete: true,
     duration:1200,
+    total_duration: 1200,
     session_id: '997a5210-33d1-4198-a4a4-5f1ea477cc01',
     activity_type_id: '1982f070-704c-4054-beb4-ea188399fc10',
   },
   {
+    // Lunch
     id: 'bf843d19-c4aa-4f18-84dd-105a45ff14c7',
     start: '2017-10-21T00:20:00.000Z',
     end: '2017-10-21T00:30:00.000Z',
     is_complete: true,
     duration: 600,
+    total_duration: 600,
     session_id: '997a5210-33d1-4198-a4a4-5f1ea477cc01',
     activity_type_id: '810eca68-a948-4646-93b8-09a02d1626a1',
   },
   {
+    // Poop
     id: '13800618-a022-4fbb-a6ad-7ba94f93b221',
     start: '2017-10-21T00:30:00.000Z',
     end: '2017-10-21T00:40:00.000Z',
     is_complete: true,
     duration: 600,
+    total_duration: 600,
     session_id: '997a5210-33d1-4198-a4a4-5f1ea477cc01',
     activity_type_id: 'bc577f78-bf74-4a2e-88c2-553066074dee',
   },
   {
+    // Write test cases
     id: '67c120ef-7420-4b2e-b8d2-53e52a85501d',
     start: '2017-10-21T00:40:00.000Z',
     end: '2017-10-21T00:55:00.000Z',
     is_complete: true,
     duration: 900,
+    total_duration: 900,
     session_id: '997a5210-33d1-4198-a4a4-5f1ea477cc01',
     activity_type_id: '7fc5ca14-1fec-4bf8-aba3-02a87880424e',
   },
   {
+    // Cheer up girlfriend
     id: '0a133e89-123c-4624-9483-78536ff88085',
     start: '2017-10-21T00:55:00.000Z',
     end: '2017-10-21T01:40:00.000Z',
     is_complete: true,
     duration:2700,
+    total_duration: 2700,
     session_id: '997a5210-33d1-4198-a4a4-5f1ea477cc01',
     activity_type_id: '5ac9393e-76fd-4f32-923a-d97e6bea8db5',
   },
   {
+    // Reddit
     id: '9cd962f2-be8c-4622-9e26-3524d3baf503',
     start: '2017-10-21T01:40:00.000Z',
     end: '2017-10-21T02:40:00.000Z',
     is_complete: true,
     duration: 3600,
+    total_duration: 3600,
     session_id: '997a5210-33d1-4198-a4a4-5f1ea477cc01',
     activity_type_id: '7e28c0e7-a213-4c4c-84bf-e3dd8db9c9b5',
   },
   {
+    // Write seed data
     id: '5ba767ce-d58c-417a-9f1c-9601b44a8e3c',
     start: '2017-10-21T02:40:00.000Z',
     end: '2017-10-21T04:00:00.000Z',
     is_complete: true,
     duration: 4800,
+    total_duration: 6000,
     session_id: '997a5210-33d1-4198-a4a4-5f1ea477cc01',
     activity_type_id: '1982f070-704c-4054-beb4-ea188399fc10',
   },
   {
+    // Cheer up girlfriend
     id: 'f36c74b2-c798-4d8f-a8cb-d353ee3b2c44',
     start: '2017-10-21T04:00:00.000Z',
-    end: null,
-    is_complete: false,
-    duration: null,
+    end: '2017-10-21T05:02:30.000Z',
+    is_complete: true,
+    duration: 3750,
+    total_duration: 6450,
     session_id: '997a5210-33d1-4198-a4a4-5f1ea477cc01',
     activity_type_id: '5ac9393e-76fd-4f32-923a-d97e6bea8db5',
   },
+
+  // Session start
   {
     id: 'db1a5a14-38a9-40fa-91cf-1f4d1babd632',
     start: '2017-10-21T00:00:00.000Z',
@@ -145,6 +163,8 @@ module.exports = [
     session_id: 'bdcf6a74-e2e7-47f7-af8f-1c66042e119e',
     activity_type_id: '5ac9393e-76fd-4f32-923a-d97e6bea8db5',
   },
+
+  // Session start
   {
     id: '811bf2c8-8006-417a-8bcf-dfbc5fa05f62',
     start: '2017-10-21T00:00:00.000Z',

@@ -43,6 +43,7 @@ import Colors from 'src/view/styles/colors';
           end,
           isComplete,
           duration,
+          totalDuration,
           sessionId,
           activityTypeId,
           activityType {

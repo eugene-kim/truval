@@ -15,6 +15,7 @@ const ACTIVITY_INSTANCE_COLUMNS = [
   'start',
   'end',
   'duration',
+  'total_duration',
   'session_id',
   'activity_type_id',
 ];

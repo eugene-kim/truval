@@ -7,7 +7,15 @@ import {
 } from '../database/dbMethods';
 
 const CATEGORY_TABLE = 'Category';
-const CATEGORY_COLUMNS = ['id', 'name', 'color', 'is_primary', 'user_id'];
+const CATEGORY_COLUMNS = [
+  'id',
+  'name',
+  'color',
+  'is_primary',
+  'icon_font_family',
+  'icon_name',
+  'user_id',
+];
 
 const Category = {
   createCategory: (requiredParams, optionalParams) => createModelInstance(
