@@ -14,4 +14,7 @@ export default {
   white: '#FFFFFF',
   whiteGray: '#F7F7F7',
   mediumGray: '#E3E3E3',
+
+  primary: '#80deea',
+  secondary: '#f8bbd0',
 }
