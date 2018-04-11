@@ -21,7 +21,7 @@ const NavGraphIcon = ({}) => {
     <Icon
       name={'account'}
       size={30}
-      color={Colors.mediumGray}
+      color={Colors.darkerGray}
     />
   );
 }

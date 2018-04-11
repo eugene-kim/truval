@@ -21,7 +21,7 @@ const NavGraphIcon = ({}) => {
     <Icon
       name={'chart-donut'}
       size={30}
-      color={Colors.mediumGray}
+      color={Colors.darkerGray}
     />
   );
 }

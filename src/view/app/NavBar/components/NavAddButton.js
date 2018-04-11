@@ -19,7 +19,8 @@ const AddButton = ({}) => {
   const BgCircle = Circle.extend`
     justifyContent: center
     alignItems: center
-    shadow-radius: 8px;
+    shadow-opacity: 0.50;
+    shadow-radius: 2px;
     shadow-color: ${Colors.shadows.darkGray};
     shadow-offset: 0px 4px;
   `;

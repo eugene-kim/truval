@@ -194,8 +194,12 @@ class SessionScreen extends Component {
           />
         </PastActivitiesContainer>
         <NavBarContainer
-          colors={['rgba(255, 255, 255, 0)', 'rgba(255, 255, 255, 1.0)']}
-          locations={[0.1, 1.0]}>
+          colors={[
+            'rgba(255, 255, 255, 0.0)',
+            'rgba(255, 255, 255, 0.9)',
+            'rgba(255, 255, 255, 1.0)',
+          ]}
+          locations={[0, 0.5, 1.0]}>
           <NavBar />
         </NavBarContainer>
       </Container>
