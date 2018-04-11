@@ -3,11 +3,14 @@ import styled from 'styled-components';
 import PropTypes from 'src/view/util/PropTypes';
 import {Text, TextInput, View} from 'react-native';
 import _ from 'src/libs/dash';
+
+// Components
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 
 // Styles
 import Colors from 'src/view/styles/colors';
+
 
 const CategoryCircle = ({category}) => {
   const {color, name} = category;

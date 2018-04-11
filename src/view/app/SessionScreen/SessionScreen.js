@@ -1,11 +1,13 @@
 import React, {Component} from 'react';
 import PropTypes from 'src/view/util/PropTypes';
 import styled from 'styled-components';
-import {View, Text} from 'react-native';
+import { Dimensions } from 'react-native';
+import {View, Text} from 'styled-x';
 import { connect } from 'react-redux'
 
+
 // Containers
-import GraphQLContainer from '../containers/GraphQLContainer';
+import GraphQLContainer from 'src/view/containers/GraphQLContainer';
 
 import {getGqlParamString} from 'src/graphql/util';
 
@@ -19,6 +21,9 @@ import {
 import SessionHeader from './components/SessionHeader';
 import ActiveActivityView from './components/ActiveActivityView';
 import PastActivitiesView from './components/PastActivitiesView';
+import NavBar from '../NavBar';
+import LinearGradient from 'react-native-linear-gradient';
+
 
 // Styles
 import Colors from 'src/view/styles/colors';
@@ -130,6 +135,7 @@ class SessionScreen extends Component {
       activeActivityType,
     } = this.props;
     const didLoad = !queryIsLoading && session;
+    const {width} = Dimensions.get('window');
 
     if (!didLoad) {
       return (
@@ -142,6 +148,7 @@ class SessionScreen extends Component {
     const Container = styled.View`
       flex: 1
       marginTop: 20
+      position: relative
     `;
     const HeaderContainer = styled.View`
       height: 35px
@@ -156,6 +163,13 @@ class SessionScreen extends Component {
     const PastActivitiesContainer = styled.View`
       flex: 1
       zIndex: 0
+    `;
+    const NavBarContainer = styled(LinearGradient)`
+      flexGrow: 1
+      position: absolute
+      zIndex: 1
+      bottom: 0
+      width: ${width}
     `;
 
     return (
@@ -179,6 +193,15 @@ class SessionScreen extends Component {
             activityInstances={activityInstances}
           />
         </PastActivitiesContainer>
+        <NavBarContainer
+          colors={[
+            'rgba(255, 255, 255, 0.0)',
+            'rgba(255, 255, 255, 0.9)',
+            'rgba(255, 255, 255, 1.0)',
+          ]}
+          locations={[0, 0.5, 1.0]}>
+          <NavBar />
+        </NavBarContainer>
       </Container>
     );
   }

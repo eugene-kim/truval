@@ -27,7 +27,6 @@ export default (orderedSessions = [], action) => {
       return orderedSessions.filter(orderedSession => orderedSession.id !== id);
     }
     case UPDATE_FROM_SERVER: {
-      debugger
       const entitiesFromServer = getPayloadEntities(payload, 'session');
       const newOrderedSessions = orderedSessions.slice();
       const idsFromServer = Object.keys(entitiesFromServer);
