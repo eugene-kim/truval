@@ -20,6 +20,10 @@ export default (getOperationString, options) => ChildComponent => {
 
     componentDidMount() {
       const {gqlClient} = this.context;
+
+      console.log(`props we received:`);
+      console.log(this.props);
+
       const operationString = getOperationString(this.props);
 
       gqlClient.query(operationString, options)

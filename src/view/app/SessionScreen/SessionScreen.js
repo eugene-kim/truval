@@ -28,10 +28,11 @@ import LinearGradient from 'react-native-linear-gradient';
 // Styles
 import Colors from 'src/view/styles/colors';
 
-// Naive implementation.
-// TODO: Add ability to pass props into this.
+
 @GraphQLContainer(props => {
-  const {sessionId} = props;
+  console.log(props);
+
+  const {sessionId} = props.navigation.state.params;
   const params = getGqlParamString({id: sessionId});
 
   return (
@@ -73,7 +74,14 @@ import Colors from 'src/view/styles/colors';
 
   // mapStateToProps
   (state, props) => {
-    const {sessionId} = props;
+
+    const {queryIsLoading} = props;
+    const {sessionId} = props.navigation.state.params;
+
+    if (queryIsLoading) {
+      console.log('query is loading...');
+      return {}
+    }
 
     // Add methods to redux
     const activeActivityInstanceId = 'c72cea78-2027-4615-a6a1-3daca28c9bba';
@@ -133,6 +141,7 @@ class SessionScreen extends Component {
       activeActivityInstance,
       activeCategory,
       activeActivityType,
+      navigation,
     } = this.props;
     const didLoad = !queryIsLoading && session;
     const {width} = Dimensions.get('window');
@@ -200,7 +209,9 @@ class SessionScreen extends Component {
             'rgba(255, 255, 255, 1.0)',
           ]}
           locations={[0, 0.5, 1.0]}>
-          <NavBar />
+          <NavBar
+            navigation={navigation}
+          />
         </NavBarContainer>
       </Container>
     );

@@ -5,13 +5,22 @@ import PropTypes from 'prop-types';
  * `import PropTypes from prop-types` so that we have a single import statement.
  */
 
-const CustomPropTypes = PropTypes;
-
-CustomPropTypes.gqlClient = PropTypes.shape({
+PropTypes.gqlClient = PropTypes.shape({
   query: PropTypes.func.isRequired,
 });
 
-CustomPropTypes.reduxStore = PropTypes.shape({
+PropTypes.navigation = PropTypes.shape({
+  navigate: PropTypes.func.isRequired,
+  goBack: PropTypes.func.isRequired,
+  addListener: PropTypes.func.isRequired,
+  isFocused: PropTypes.func.isRequired,
+  state: PropTypes.object.isRequired,
+  setParams: PropTypes.func.isRequired,
+  getParam: PropTypes.func.isRequired,
+  dispatch: PropTypes.func.isRequired,
+});
+
+PropTypes.reduxStore = PropTypes.shape({
   subscribe: PropTypes.func.isRequired,
   dispatch: PropTypes.func.isRequired,
   getState: PropTypes.func.isRequired
@@ -36,11 +45,11 @@ const createUUIDPropType = isRequired => (props, propName, componentName) => {
   }
 }
 
-CustomPropTypes.uuid = createUUIDPropType(false);
-CustomPropTypes.uuid.isRequired = createUUIDPropType(true);
+PropTypes.uuid = createUUIDPropType(false);
+PropTypes.uuid.isRequired = createUUIDPropType(true);
 
 
-export default CustomPropTypes;
+export default PropTypes;
 
 /*
 
