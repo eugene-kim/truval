@@ -6,10 +6,9 @@ import {View, Text} from 'styled-x';
 import { connect } from 'react-redux'
 
 
-// Containers
+import { GqlClientContextConsumer } from 'src/view/context/GqlClientContext';
 import GraphQLContainer from 'src/view/containers/GraphQLContainer';
-
-import {getGqlParamString} from 'src/graphql/util';
+import { getGqlParamString } from 'src/graphql/util';
 
 // Selectors
 import {
@@ -24,12 +23,11 @@ import PastActivitiesView from './components/PastActivitiesView';
 import NavBar from '../NavBar';
 import LinearGradient from 'react-native-linear-gradient';
 
-
 // Styles
 import Colors from 'src/view/styles/colors';
 
 
-@GraphQLContainer(props => {
+@GqlClientContextConsumer(props => {
   console.log(props);
 
   const {sessionId} = props.navigation.state.params;
