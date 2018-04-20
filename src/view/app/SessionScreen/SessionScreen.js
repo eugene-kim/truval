@@ -5,9 +5,6 @@ import { Dimensions } from 'react-native';
 import {View, Text} from 'styled-x';
 import { connect } from 'react-redux'
 
-
-import { GqlClientContext } from 'src/view/context/GqlClientContext';
-import GraphQLContainer from 'src/view/containers/GraphQLContainer';
 import { getGqlParamString } from 'src/graphql/util';
 
 // Selectors
@@ -25,31 +22,10 @@ import LinearGradient from 'react-native-linear-gradient';
 
 // Styles
 import Colors from 'src/view/styles/colors';
+import GqlClientContainer from 'src/view/containers/GqlClientContainer';
 
-console.log('session screen');
 
-// TODO: Move this back into its own file once you figure out what's wrong with it.
-const GqlClientContextConsumer = (getOperationString, options) => ChildComponent => props => {
-
-  const query = getOperationString(props);
-
-  return (
-    <GqlClientContext.Consumer>
-      {
-        gqlClient => (
-          <GraphQLContainer
-            gqlClient={gqlClient}
-            query={query}
-            queryOptions={options}>
-            <ChildComponent {...props} />
-          </GraphQLContainer>
-        )
-      }
-    </GqlClientContext.Consumer>
-  );
-}
-
-@GqlClientContextConsumer(props => {
+@GqlClientContainer(props => {
   console.log(props);
 
   const {sessionId} = props.navigation.state.params;

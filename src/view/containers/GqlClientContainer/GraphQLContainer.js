@@ -44,7 +44,10 @@ class GraphQLContainer extends Component {
     const {queryIsLoading, queryFailed} = this.state;
     const newProps = {...this.props, queryIsLoading, queryFailed};
 
-    return React.cloneElement(this.props.children, {...newProps});
+    return React.cloneElement(
+      React.Children.only(this.props.children),
+      {...newProps},
+    );
   }
 }
 
