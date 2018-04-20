@@ -6,7 +6,7 @@ import {View, Text} from 'styled-x';
 import { connect } from 'react-redux'
 
 
-import { GqlClientContextConsumer } from 'src/view/context/GqlClientContext';
+import { GqlClientContext } from 'src/view/context/GqlClientContext';
 import GraphQLContainer from 'src/view/containers/GraphQLContainer';
 import { getGqlParamString } from 'src/graphql/util';
 
@@ -26,6 +26,28 @@ import LinearGradient from 'react-native-linear-gradient';
 // Styles
 import Colors from 'src/view/styles/colors';
 
+console.log('session screen');
+
+// TODO: Move this back into its own file once you figure out what's wrong with it.
+const GqlClientContextConsumer = (getOperationString, options) => ChildComponent => props => {
+
+  const query = getOperationString(props);
+
+  return (
+    <GqlClientContext.Consumer>
+      {
+        gqlClient => (
+          <GraphQLContainer
+            gqlClient={gqlClient}
+            query={query}
+            queryOptions={options}>
+            <ChildComponent {...props} />
+          </GraphQLContainer>
+        )
+      }
+    </GqlClientContext.Consumer>
+  );
+}
 
 @GqlClientContextConsumer(props => {
   console.log(props);

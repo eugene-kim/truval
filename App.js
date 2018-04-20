@@ -23,6 +23,7 @@ const store = createStore(
 );
 const gqlClient = getGqlClient({store});
 
+console.log('app.js');
 
 class TruvalApp extends Component {
   constructor(props) {
@@ -30,6 +31,7 @@ class TruvalApp extends Component {
   }
 
   render() {
+    console.log('app.js');
     return (
       <GqlClientContext.Provider value={gqlClient}>
         <Provider store={store}>

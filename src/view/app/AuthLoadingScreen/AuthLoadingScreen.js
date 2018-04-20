@@ -6,6 +6,9 @@ import {Text, TextInput, View} from 'styled-x';
 
 import { getGqlParamString } from 'src/graphql/util';
 
+
+console.log('auth loading screen');
+
 class AuthLoadingScreen extends Component {
 
   constructor(props) {
