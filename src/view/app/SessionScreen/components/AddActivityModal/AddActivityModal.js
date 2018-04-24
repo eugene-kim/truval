@@ -11,9 +11,17 @@ const AddActivityModal = ({}) => {
   // --------------------------------------------------
   // Styled Components
   // --------------------------------------------------
-  const Container = View.extend`
+  const Container = styled.View`
     flex: 1
     backgroundColor: red
+    borderTopLeftRadius: 27
+    borderTopRightRadius: 27
+  `;
+
+  const Message = styled.Text`
+    color: black
+    fontFamily: Nunito
+    fontSize: 12
   `;
 
   // --------------------------------------------------
@@ -21,7 +29,7 @@ const AddActivityModal = ({}) => {
   // --------------------------------------------------
   return (
     <Container>
-      <Text>{'I\'m a modal'}</Text>
+      <Message>{'I\'m a modal'}</Message>
     </Container>
   );
 }

@@ -1,9 +1,8 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'src/view/util/PropTypes';
+import {View, Text} from 'styled-x';
 import styled from 'styled-components';
 import { Dimensions } from 'react-native';
-import {View, Text} from 'styled-x';
-import { connect } from 'react-redux'
 
 import { getGqlParamString } from 'src/graphql/util';
 
@@ -13,8 +12,13 @@ import {
   getSessionActivityInstances,
 } from 'src/redux/reducers/selectors/entitySelectors';
 
+// Containers
+import { connect } from 'react-redux'
+import GqlClientContainer from 'src/view/containers/GqlClientContainer';
+
 // Components
 import SessionHeader from './components/SessionHeader';
+import AddActivityModal from './components/AddActivityModal';
 import ActiveActivityView from './components/ActiveActivityView';
 import PastActivitiesView from './components/PastActivitiesView';
 import NavBar from '../NavBar';
@@ -22,13 +26,10 @@ import LinearGradient from 'react-native-linear-gradient';
 
 // Styles
 import Colors from 'src/view/styles/colors';
-import GqlClientContainer from 'src/view/containers/GqlClientContainer';
 
 
 @GqlClientContainer(props => {
-  console.log(props);
-
-  const {sessionId} = props.navigation.state.params;
+  const { sessionId } = props.navigation.state.params;
   const params = getGqlParamString({id: sessionId});
 
   return (
@@ -155,6 +156,9 @@ class SessionScreen extends Component {
       marginTop: 20
       position: relative
     `;
+    const ContentContainer = styled.View`
+      flex: 1
+    `;
     const HeaderContainer = styled.View`
       height: 35px
     `;
@@ -169,6 +173,14 @@ class SessionScreen extends Component {
       flex: 1
       zIndex: 0
     `;
+    const ModalContainer = styled.View`
+      flex: 1
+      position: absolute
+      bottom: 0
+      height: 100%
+      paddingTop: 35
+      width: ${width}
+    `;
     const NavBarContainer = styled(LinearGradient)`
       flexGrow: 1
       position: absolute
@@ -179,25 +191,30 @@ class SessionScreen extends Component {
 
     return (
       <Container>
-        <HeaderContainer>
-          <SessionHeader
-            session={session}
-            activityInstance={activeActivityInstance}
-            category={activeCategory}
-          />
-        </HeaderContainer>
-        <CurrentActivityContainer>
-          <ActiveActivityView
-            activityType={activeActivityType}
-            activityInstance={activeActivityInstance}
-            category={activeCategory}
-          />
-        </CurrentActivityContainer>
-        <PastActivitiesContainer>
-          <PastActivitiesView
-            activityInstances={activityInstances}
-          />
-        </PastActivitiesContainer>
+        <ContentContainer>
+          <HeaderContainer>
+            <SessionHeader
+              session={session}
+              activityInstance={activeActivityInstance}
+              category={activeCategory}
+            />
+          </HeaderContainer>
+          <CurrentActivityContainer>
+            <ActiveActivityView
+              activityType={activeActivityType}
+              activityInstance={activeActivityInstance}
+              category={activeCategory}
+            />
+          </CurrentActivityContainer>
+          <PastActivitiesContainer>
+            <PastActivitiesView
+              activityInstances={activityInstances}
+            />
+          </PastActivitiesContainer>
+        </ContentContainer>
+        <ModalContainer>
+          <AddActivityModal />
+        </ModalContainer>
         <NavBarContainer
           colors={[
             'rgba(255, 255, 255, 0.0)',
