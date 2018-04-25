@@ -469,6 +469,11 @@ export default {
         email: 'hugeeuge@gmail.com',
       },
       fetchStatus: 'LOADED',
-    }
+    },
+    screenState: {
+      AddActivityModal: {
+        isOpen: false,
+      },
+    },
   }
 };

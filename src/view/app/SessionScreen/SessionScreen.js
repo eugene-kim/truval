@@ -130,7 +130,7 @@ class SessionScreen extends Component {
     activityInstances: PropTypes.array,
     queryIsLoading: PropTypes.bool.isRequired,
 
-    isAddActivityModalOpen: PropTypes.bool.isRequired,
+    isAddActivityModalOpen: PropTypes.bool,
   };
 
   // --------------------------------------------------
