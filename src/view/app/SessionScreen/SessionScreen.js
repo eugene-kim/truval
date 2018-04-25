@@ -1,37 +1,38 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'src/view/util/PropTypes';
+import {View, Text} from 'styled-x';
 import styled from 'styled-components';
 import { Dimensions } from 'react-native';
-import {View, Text} from 'styled-x';
-import { connect } from 'react-redux'
 
-
-// Containers
-import GraphQLContainer from 'src/view/containers/GraphQLContainer';
-
-import {getGqlParamString} from 'src/graphql/util';
+import { getGqlParamString } from 'src/graphql/util';
 
 // Selectors
 import {
   getEntityById,
   getSessionActivityInstances,
-} from 'src/redux/reducers/selectors/entitySelectors';
+} from 'src/redux/selectors/entitySelectors';
+
+import { getAddActivityModalState } from 'src/redux/selectors/appSelectors';
+
+
+// Containers
+import { connect } from 'react-redux'
+import GqlClientContainer from 'src/view/containers/GqlClientContainer';
 
 // Components
 import SessionHeader from './components/SessionHeader';
+import AddActivityModal from './components/AddActivityModal';
 import ActiveActivityView from './components/ActiveActivityView';
 import PastActivitiesView from './components/PastActivitiesView';
 import NavBar from '../NavBar';
 import LinearGradient from 'react-native-linear-gradient';
 
-
 // Styles
 import Colors from 'src/view/styles/colors';
 
-// Naive implementation.
-// TODO: Add ability to pass props into this.
-@GraphQLContainer(props => {
-  const {sessionId} = props;
+
+@GqlClientContainer(props => {
+  const { sessionId } = props.navigation.state.params;
   const params = getGqlParamString({id: sessionId});
 
   return (
@@ -73,7 +74,14 @@ import Colors from 'src/view/styles/colors';
 
   // mapStateToProps
   (state, props) => {
-    const {sessionId} = props;
+
+    const {queryIsLoading} = props;
+    const {sessionId} = props.navigation.state.params;
+
+    if (queryIsLoading) {
+      console.log('query is loading...');
+      return {}
+    }
 
     // Add methods to redux
     const activeActivityInstanceId = 'c72cea78-2027-4615-a6a1-3daca28c9bba';
@@ -103,6 +111,7 @@ import Colors from 'src/view/styles/colors';
       activeActivityInstance,
       activeActivityType,
       activeCategory,
+      isAddActivityModalOpen: getAddActivityModalState(state),
     }
   },
 )
@@ -120,6 +129,8 @@ class SessionScreen extends Component {
     // TODO: Use a proper proptype later
     activityInstances: PropTypes.array,
     queryIsLoading: PropTypes.bool.isRequired,
+
+    isAddActivityModalOpen: PropTypes.bool,
   };
 
   // --------------------------------------------------
@@ -133,6 +144,8 @@ class SessionScreen extends Component {
       activeActivityInstance,
       activeCategory,
       activeActivityType,
+      navigation,
+      isAddActivityModalOpen,
     } = this.props;
     const didLoad = !queryIsLoading && session;
     const {width} = Dimensions.get('window');
@@ -150,6 +163,9 @@ class SessionScreen extends Component {
       marginTop: 20
       position: relative
     `;
+    const ContentContainer = styled.View`
+      flex: 1
+    `;
     const HeaderContainer = styled.View`
       height: 35px
     `;
@@ -164,6 +180,14 @@ class SessionScreen extends Component {
       flex: 1
       zIndex: 0
     `;
+    const ModalContainer = styled.View`
+      flex: 1
+      position: absolute
+      bottom: 0
+      height: 100%
+      paddingTop: 35
+      width: ${width}
+    `;
     const NavBarContainer = styled(LinearGradient)`
       flexGrow: 1
       position: absolute
@@ -174,25 +198,35 @@ class SessionScreen extends Component {
 
     return (
       <Container>
-        <HeaderContainer>
-          <SessionHeader
-            session={session}
-            activityInstance={activeActivityInstance}
-            category={activeCategory}
-          />
-        </HeaderContainer>
-        <CurrentActivityContainer>
-          <ActiveActivityView
-            activityType={activeActivityType}
-            activityInstance={activeActivityInstance}
-            category={activeCategory}
-          />
-        </CurrentActivityContainer>
-        <PastActivitiesContainer>
-          <PastActivitiesView
-            activityInstances={activityInstances}
-          />
-        </PastActivitiesContainer>
+        <ContentContainer>
+          <HeaderContainer>
+            <SessionHeader
+              session={session}
+              activityInstance={activeActivityInstance}
+              category={activeCategory}
+            />
+          </HeaderContainer>
+          <CurrentActivityContainer>
+            <ActiveActivityView
+              activityType={activeActivityType}
+              activityInstance={activeActivityInstance}
+              category={activeCategory}
+            />
+          </CurrentActivityContainer>
+          <PastActivitiesContainer>
+            <PastActivitiesView
+              activityInstances={activityInstances}
+            />
+          </PastActivitiesContainer>
+        </ContentContainer>
+        {
+          isAddActivityModalOpen ?
+          (
+            <ModalContainer>
+              <AddActivityModal />
+            </ModalContainer>
+          ) : null
+        }
         <NavBarContainer
           colors={[
             'rgba(255, 255, 255, 0.0)',

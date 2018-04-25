@@ -21,6 +21,10 @@ export default ({endpoint = 'http://localhost:3000/graphql', store} = {}) => {
 
   return {
     query: async function(queryString, options = {}) {
+
+      console.log('Querying the server with the following query:\n');
+      console.log(queryString);
+
       const schemaDocumentWhole = await graphql(gqlSchema, introspectionQuery);
       const schemaDoc = schemaDocumentWhole.data.__schema;
       const queryAST = parse(queryString);

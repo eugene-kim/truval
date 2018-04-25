@@ -6,42 +6,41 @@ import {Text, TextInput, View} from 'styled-x';
 // Styles
 import Colors from 'src/view/styles/colors';
 
-// Components
-import NavAddButton from './components/NavAddButton';
-import NavGraphButton from './components/NavGraphButton';
-import NavUserButton from './components/NavUserButton';
-
-
-const NavBar = ({}) => {
+const AddActivityModal = ({}) => {
 
   // --------------------------------------------------
   // Styled Components
   // --------------------------------------------------
-
   const Container = styled.View`
     flex: 1
-    flexDirection: row
-    paddingBottom: 10
-    justifyContent: space-evenly
-    alignItems: flex-end
+    backgroundColor: red
+    borderTopLeftRadius: 27
+    borderTopRightRadius: 27
+  `;
+
+  const Message = styled.Text`
+    color: black
+    fontFamily: Nunito
+    fontSize: 12
   `;
 
   // --------------------------------------------------
   // Render
   // --------------------------------------------------
-
   return (
     <Container>
-      <NavGraphButton />
-      <NavAddButton />
-      <NavUserButton />
+      <Message>{'I\'m a modal'}</Message>
     </Container>
   );
+}
+
+
+// --------------------------------------------------
+// Props
+// --------------------------------------------------
+AddActivityModal.propTypes = {
 
 }
 
-NavBar.propTypes = {};
 
-
-
-export default NavBar;
+export default AddActivityModal;

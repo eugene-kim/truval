@@ -66,3 +66,11 @@ export const DELETE_CATEGORY_FAILURE = 'DELETE_CATEGORY_FAILURE';
 // --------------------------------------------------
 
 export const UPDATE_FROM_SERVER = 'UPDATE_FROM_SERVER';
+
+// --------------------------------------------------
+// App Actions
+// --------------------------------------------------
+
+
+export const CLOSE_ADD_ACTIVITY_MODAL = 'CLOSE_ADD_ACTIVITY_MODAL';
+export const OPEN_ADD_ACTIVITY_MODAL = 'OPEN_ADD_ACTIVITY_MODAL';
