@@ -10,7 +10,10 @@ import { getGqlParamString } from 'src/graphql/util';
 import {
   getEntityById,
   getSessionActivityInstances,
-} from 'src/redux/reducers/selectors/entitySelectors';
+} from 'src/redux/selectors/entitySelectors';
+
+import { getAddActivityModalState } from 'src/redux/selectors/appSelectors';
+
 
 // Containers
 import { connect } from 'react-redux'
@@ -108,6 +111,7 @@ import Colors from 'src/view/styles/colors';
       activeActivityInstance,
       activeActivityType,
       activeCategory,
+      isAddActivityModalOpen: getAddActivityModalState(state),
     }
   },
 )
@@ -125,6 +129,8 @@ class SessionScreen extends Component {
     // TODO: Use a proper proptype later
     activityInstances: PropTypes.array,
     queryIsLoading: PropTypes.bool.isRequired,
+
+    isAddActivityModalOpen: PropTypes.bool.isRequired,
   };
 
   // --------------------------------------------------
@@ -139,6 +145,7 @@ class SessionScreen extends Component {
       activeCategory,
       activeActivityType,
       navigation,
+      isAddActivityModalOpen,
     } = this.props;
     const didLoad = !queryIsLoading && session;
     const {width} = Dimensions.get('window');
@@ -212,9 +219,14 @@ class SessionScreen extends Component {
             />
           </PastActivitiesContainer>
         </ContentContainer>
-        <ModalContainer>
-          <AddActivityModal />
-        </ModalContainer>
+        {
+          isAddActivityModalOpen ?
+          (
+            <ModalContainer>
+              <AddActivityModal />
+            </ModalContainer>
+          ) : null
+        }
         <NavBarContainer
           colors={[
             'rgba(255, 255, 255, 0.0)',
@@ -222,9 +234,7 @@ class SessionScreen extends Component {
             'rgba(255, 255, 255, 1.0)',
           ]}
           locations={[0, 0.5, 1.0]}>
-          <NavBar
-            navigation={navigation}
-          />
+          <NavBar />
         </NavBarContainer>
       </Container>
     );

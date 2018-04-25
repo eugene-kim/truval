@@ -25,16 +25,18 @@ import {
   getActivityInstanceEntities,
   getActivityInstanceFetchStatus,
   getNewActivityInstanceFetchStatus,
-} from './selectors/entitySelectors';
+} from '../selectors/entitySelectors';
 
 import {
   getUserProps,
   getUserFetchStatus,
-} from './selectors/appSelectors';
+  getAddActivityModalState,
+} from '../selectors/appSelectors';
 
 // User
 import reduceUserProps from './app/reduceUserProps';
 import reduceUserFetchStatus from './app/reduceUserFetchStatus';
+import reduceAddActivityModal from './app/reduceAddActivityModal';
 
 
 const focusApp = function(state = {}, action) {
@@ -131,6 +133,15 @@ const focusApp = function(state = {}, action) {
         props: reduceUserProps(getUserProps(state), action),
         fetchStatus: reduceUserFetchStatus(getUserFetchStatus(state), action),
       },
+
+      screenState: {
+        AddActivityModal: {
+          isOpen: reduceAddActivityModal(
+            getAddActivityModalState(state),
+            action,
+          ),
+        },
+      }
     },
   }
 }

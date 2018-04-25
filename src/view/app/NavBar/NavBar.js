@@ -12,7 +12,7 @@ import NavGraphButton from './components/NavGraphButton';
 import NavUserButton from './components/NavUserButton';
 
 
-const NavBar = ({navigation}) => {
+const NavBar = ({}) => {
 
   // --------------------------------------------------
   // Styled Components
@@ -33,16 +33,15 @@ const NavBar = ({navigation}) => {
   return (
     <Container>
       <NavGraphButton />
-      <NavAddButton navigation={navigation} />
+      <NavAddButton />
       <NavUserButton />
     </Container>
   );
 
 }
 
-NavBar.propTypes = {
-  navigation: PropTypes.navigation.isRequired,
-}
+NavBar.propTypes = {};
+
 
 
 export default NavBar;

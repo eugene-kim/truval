@@ -2,7 +2,7 @@ import {
   getUser,
   getUserProps,
   getUserFetchStatus,
-} from 'redux/reducers/selectors';
+} from 'redux/selectors';
 
 export const userFetchStatusWasSet = async ({action, expectedStatus, store, statusShouldDiffer}) => {
   const previousState = store.getState();

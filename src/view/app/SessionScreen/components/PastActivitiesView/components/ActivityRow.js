@@ -6,7 +6,7 @@ import { connect } from 'react-redux'
 import { TextInput } from 'styled-x';
 
 // Redux
-import {getEntityById} from 'src/redux/reducers/selectors/entitySelectors';
+import {getEntityById} from 'src/redux/selectors/entitySelectors';
 
 // Styles
 import Colors from 'src/view/styles/colors';

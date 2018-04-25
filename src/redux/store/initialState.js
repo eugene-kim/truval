@@ -45,5 +45,10 @@ export default {
       props: {},
       fetchStatus: '',
     },
+    screenState: {
+      AddActivityModal: {
+        isOpen: false,
+      },
+    },
   },
 };

@@ -17,7 +17,7 @@ import {
   deleteActivityInstanceRequest,
 } from 'src/redux/actions/entities/activityInstance';
 
-import { getEntityByName } from 'src/redux/reducers/selectors/entitySelectors';
+import { getEntityByName } from 'src/redux/selectors/entitySelectors';
 
 import {
   validateEntityPropertyValue,
