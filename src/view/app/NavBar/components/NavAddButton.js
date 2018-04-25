@@ -88,7 +88,7 @@ export default connect(
 
   // mapDispatchToProps
   dispatch => ({
-    openAddActivityModal: () => dispatch(openAddActivityModal),
-    closeAddActivityModal: () => dispatch(closeAddActivityModal),
+    openAddActivityModal: () => dispatch(openAddActivityModal()),
+    closeAddActivityModal: () => dispatch(closeAddActivityModal()),
   }),
 )(NavAddButton);
