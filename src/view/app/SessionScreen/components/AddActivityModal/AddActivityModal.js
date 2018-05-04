@@ -5,6 +5,10 @@ import {Text, TextInput, View} from 'styled-x';
 
 // Styles
 import Colors from 'src/view/styles/colors';
+import TextStyles from 'src/view/styles/text/textStyles';
+
+import AddPreviousActivitiesList from './components/AddPreviousActivitiesList';
+
 
 const AddActivityModal = ({}) => {
 
@@ -24,12 +28,27 @@ const AddActivityModal = ({}) => {
     fontSize: 12
   `;
 
+  const PreviousActivitiesContainer = styled.View`
+    flex: 1
+  `;
+
+  const PreviousActivitiesHeader = styled.Text`
+    ${TextStyles.largeBoldHeader}
+    color: ${Colors.text.darkGray}
+  `;
+
+
+
   // --------------------------------------------------
   // Render
   // --------------------------------------------------
   return (
     <Container>
-      <Message>{'I\'m a modal'}</Message>
+      <PreviousActivitiesContainer>
+        <PreviousActivitiesHeader>
+          {'Add Previous'}
+        </PreviousActivitiesHeader>
+      </PreviousActivitiesContainer>
     </Container>
   );
 }

@@ -219,14 +219,14 @@ class SessionScreen extends Component {
             />
           </PastActivitiesContainer>
         </ContentContainer>
-        {
-          isAddActivityModalOpen ?
-          (
-            <ModalContainer>
-              <AddActivityModal />
-            </ModalContainer>
-          ) : null
-        }
+          {
+            isAddActivityModalOpen ?
+            (
+              <ModalContainer>
+                <AddActivityModal />
+              </ModalContainer>
+            ) : null
+          }
         <NavBarContainer
           colors={[
             'rgba(255, 255, 255, 0.0)',
