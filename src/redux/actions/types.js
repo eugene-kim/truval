@@ -71,6 +71,7 @@ export const UPDATE_FROM_SERVER = 'UPDATE_FROM_SERVER';
 // App Actions
 // --------------------------------------------------
 
+export const SET_RUNNING_ACTIVITY_INSTANCE = 'SET_RUNNING_ACTIVITY_INSTANCE';
 
 export const CLOSE_ADD_ACTIVITY_MODAL = 'CLOSE_ADD_ACTIVITY_MODAL';
 export const OPEN_ADD_ACTIVITY_MODAL = 'OPEN_ADD_ACTIVITY_MODAL';

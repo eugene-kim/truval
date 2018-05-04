@@ -31,12 +31,14 @@ import {
   getUserProps,
   getUserFetchStatus,
   getAddActivityModalState,
+  getLiveActivityInstanceId,
 } from '../selectors/appSelectors';
 
 // User
 import reduceUserProps from './app/reduceUserProps';
 import reduceUserFetchStatus from './app/reduceUserFetchStatus';
 import reduceAddActivityModal from './app/reduceAddActivityModal';
+import reduceLiveActivityInstance from './app/reduceLiveActivityInstance';
 
 
 const focusApp = function(state = {}, action) {
@@ -141,6 +143,10 @@ const focusApp = function(state = {}, action) {
             action,
           ),
         },
+        liveActivityInstanceId: reduceLiveActivityInstance(
+          getLiveActivityInstanceId(state),
+          action,
+        ),
       }
     },
   }

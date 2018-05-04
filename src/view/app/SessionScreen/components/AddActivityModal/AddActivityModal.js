@@ -10,7 +10,7 @@ import TextStyles from 'src/view/styles/text/textStyles';
 import AddPreviousActivitiesList from './components/AddPreviousActivitiesList';
 
 
-const AddActivityModal = ({}) => {
+const AddActivityModal = ({session}) => {
 
   // --------------------------------------------------
   // Styled Components
@@ -48,6 +48,9 @@ const AddActivityModal = ({}) => {
         <PreviousActivitiesHeader>
           {'Add Previous'}
         </PreviousActivitiesHeader>
+        <AddPreviousActivitiesList
+          session={session}
+        />
       </PreviousActivitiesContainer>
     </Container>
   );

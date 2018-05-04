@@ -1,9 +1,110 @@
 import PropTypes from 'prop-types';
+import createPropTypeValidator from './createPropTypeValidator';
+import moment from 'moment';
 
 /**
  * Add custom propTypes here. Our components should import this file instead of doing a
  * `import PropTypes from prop-types` so that we have a single import statement.
  */
+
+// --------------------------------------------------
+// datetime
+// --------------------------------------------------
+
+const datetimeValidator = ({prop, propName}) => {
+  const mo = moment(prop);
+
+  return mo.isValid() ? {
+    isValid: true,
+  } : {
+    isValid: false,
+    errorMessage: `${propName} must be a datestring consumable by the moment.js library. Provided value: ${prop}.`,
+  }
+};
+
+PropTypes.datetime = createPropTypeValidator({
+  isRequired: false,
+  propValidator: datetimeValidator,
+});
+PropTypes.datetime.isRequired = createPropTypeValidator({
+  isRequired: true,
+  propValidator: datetimeValidator,
+});
+
+// --------------------------------------------------
+// uuid
+// --------------------------------------------------
+
+const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+const uuidPropValidator = ({prop, propName}) => {
+  const isMatch = prop.match(uuidRegex);
+
+  return isMatch ? {
+    isValid: true,
+  } : {
+    isValid: false,
+    errorMessage: `${propName} must be a UUID. Provided value: ${prop}.`,
+  };
+}
+
+PropTypes.uuid = createPropTypeValidator({
+  isRequired: false,
+  propValidator: uuidPropValidator,
+});
+PropTypes.uuid.isRequired = createPropTypeValidator({
+  isRequired: true,
+  propValidator: uuidPropValidator,
+});
+
+// --------------------------------------------------
+// Entities
+// --------------------------------------------------
+
+PropTypes.activityInstance = PropTypes.shape({
+  id: PropTypes.uuid.isRequired,
+  start: PropTypes.datetime.isRequired,
+  isComplete: PropTypes.bool.isRequired,
+  activityTypeId: PropTypes.uuid.isRequired,
+  sessionId: PropTypes.uuid.isRequired,
+
+  // Optional
+  end: PropTypes.datetime,
+  duration: PropTypes.number,
+  categoryId: PropTypes.uuid,
+  
+});
+
+PropTypes.activityType = PropTypes.shape({
+  id: PropTypes.uuid.isRequired,
+  name: PropTypes.string.isRequired,
+  activityCount: PropTypes.number.isRequired,
+
+  // Optional
+  categoryId: PropTypes.uuid,
+})
+
+PropTypes.category = PropTypes.shape({
+  id: PropTypes.uuid.isRequired,
+  name: PropTypes.string.isRequired,
+  color: PropTypes.string.isRequired,
+  iconName: PropTypes.string.isRequired,
+  isPrimary: PropTypes.bool.isRequired,
+});
+
+PropTypes.session = PropTypes.shape({
+  id: PropTypes.uuid.isRequired,
+  name: PropTypes.string.isRequired,
+  start: PropTypes.datetime.isRequired,
+  isComplete: PropTypes.bool.isRequired,
+  activityInstances: PropTypes.arrayOf(PropTypes.uuid).isRequired,
+
+  // Optional
+  end: PropTypes.datetime,
+});
+
+// --------------------------------------------------
+// Misc
+// --------------------------------------------------
 
 PropTypes.gqlClient = PropTypes.shape({
   query: PropTypes.func.isRequired,
@@ -26,32 +127,11 @@ PropTypes.reduxStore = PropTypes.shape({
   getState: PropTypes.func.isRequired
 });
 
-const createUUIDPropType = isRequired => (props, propName, componentName) => {
-  const prop = props[propName];
-
-  if (!prop) {
-    if (isRequired) {
-      throw new Error(`In ${componentName}, prop ${propName} is required.`);
-    }
-
-    return null;
-  }
-
-  const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-  const isMatch = prop.match(uuidRegex);
-
-  if (!isMatch) {
-    throw new Error(`${propName} must be a UUID. Provided value: ${prop}.`);
-  }
-}
-
-PropTypes.uuid = createUUIDPropType(false);
-PropTypes.uuid.isRequired = createUUIDPropType(true);
-
 
 export default PropTypes;
 
 /*
+PropTypes examples:
 
 import PropTypes from 'prop-types';
 

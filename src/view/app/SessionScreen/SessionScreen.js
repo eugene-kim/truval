@@ -223,7 +223,9 @@ class SessionScreen extends Component {
             isAddActivityModalOpen ?
             (
               <ModalContainer>
-                <AddActivityModal />
+                <AddActivityModal
+                  session={session}
+                />
               </ModalContainer>
             ) : null
           }

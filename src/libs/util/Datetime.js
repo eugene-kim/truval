@@ -15,6 +15,18 @@ const datetime = dateString => {
   }
 };
 
+export const getDuration = (datetimeString1, datetimeString2) => {
+  if (!(datetimeString1 && datetimeString2)) {
+    return 0;
+  }
+
+  const moment1 = moment(datetimeString1);
+  const moment2 = moment(datetimeString2);
+  const duration = moment.duration(moment1.diff(moment2, 'seconds'));
+
+  return Math.abs(duration);
+}
+
 export const printDuration = seconds => {
   const duration = moment.duration(seconds, 's');
   

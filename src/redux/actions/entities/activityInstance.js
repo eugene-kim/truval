@@ -11,11 +11,11 @@ import {
   DELETE_ACTIVITY_INSTANCE_FAILURE,
 } from '../types';
 import {addActivityType, updateActivityTypeSuccess} from './activityType';
+import { setRunningActivityInstance } from '../app/screenState';
 import {getLoneNormalizedEntity} from '../responseUtil';
 
 
 export const createActivityInstance = ({activityInstance, client}) => async dispatch => {
-  debugger
   dispatch(createActivityInstanceRequest(activityInstance));
 
   const createActivityInstanceMutation = `
@@ -41,6 +41,7 @@ export const createActivityInstance = ({activityInstance, client}) => async disp
 
     dispatch(addActivityType(activityTypeEntity));    
     dispatch(createActivityInstanceSuccess(activityInstanceEntity));
+    dispatch(setRunningActivityInstance(activityInstanceEntity.id));
   } catch (error) {
     const {message} = error;
 
