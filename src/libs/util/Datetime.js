@@ -15,14 +15,17 @@ const datetime = dateString => {
   }
 };
 
-export const getDuration = (datetimeString1, datetimeString2) => {
+/**
+ * Returns the duration between two datetime strings in seconds.
+ */
+export const getDuration = (datetimeString1, datetimeString2, units = 'seconds') => {
   if (!(datetimeString1 && datetimeString2)) {
     return 0;
   }
 
   const moment1 = moment(datetimeString1);
   const moment2 = moment(datetimeString2);
-  const duration = moment.duration(moment1.diff(moment2, 'seconds'));
+  const duration = moment.duration(moment1.diff(moment2, units));
 
   return Math.abs(duration);
 }

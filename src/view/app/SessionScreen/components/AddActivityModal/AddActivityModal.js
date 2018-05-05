@@ -17,7 +17,7 @@ const AddActivityModal = ({session}) => {
   // --------------------------------------------------
   const Container = styled.View`
     flex: 1
-    backgroundColor: red
+    backgroundColor: ${Colors.whiteGray}
     borderTopLeftRadius: 27
     borderTopRightRadius: 27
   `;
@@ -30,11 +30,13 @@ const AddActivityModal = ({session}) => {
 
   const PreviousActivitiesContainer = styled.View`
     flex: 1
+    paddingTop: 35
+    paddingHorizontal: 17
   `;
 
   const PreviousActivitiesHeader = styled.Text`
-    ${TextStyles.largeBoldHeader}
-    color: ${Colors.text.darkGray}
+    ${TextStyles.display1()}
+    marginBottom: 15
   `;
 
 

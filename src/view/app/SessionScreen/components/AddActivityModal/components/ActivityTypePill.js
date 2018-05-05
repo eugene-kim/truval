@@ -9,21 +9,85 @@ import {
   createActivityInstance,
   updateActivityInstance,
 } from 'src/redux/actions/entities/activityInstance';
+import { closeAddActivityModal } from 'src/redux/actions/app/screenState';
 import { getEntityById } from 'src/redux/selectors/entitySelectors';
+
+// Util
+import { getDuration } from 'src/libs/util/Datetime';
 
 // Styles
 import Colors from 'src/view/styles/colors';
+import TextStyles from 'src/view/styles/text/textStyles';
+
+// Components
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const ActivityTypePill = ({activityType, category, handlePress}) => {
 
   // --------------------------------------------------
   // Styled Components
   // --------------------------------------------------
+  const {color} = category;
+
+  const Container = styled.View`
+    flexDirection: row
+    alignItems: center
+    justifyContent: center
+    paddingVertical: 20
+    paddingHorizontal: 30
+    marginRight: 15
+    marginBottom: 18
+    backgroundColor: ${color}
+    borderRadius: 100
+  `;
+  const ActivityTypeText = styled.View`
+    flex: 1
+    flexDirection: column
+    justifyContent: center
+    alignItems: flex-start
+  `;
+  const ActivityTypeName = styled.Text`
+    ${TextStyles.mediumBold(Colors.text.white)}
+  `;
+  const CategoryIcon = styled(Icon)`
+    marginRight: 10
+  `;
+  const CategoryName = styled.Text`
+    ${TextStyles.extraSmall(Colors.text.white)}
+  `;
 
   // --------------------------------------------------
   // Render
   // --------------------------------------------------
-  return null;
+  const renderIcon = category => {
+    const {iconName, name} = category;
+
+    if (!iconName) {
+      return null;
+    }
+
+    return (
+      <CategoryIcon
+        name={iconName}
+        size={25}
+        color={Colors.white}
+      />
+    );
+  }
+
+  return (
+    <Container> 
+      {renderIcon(category)}
+      <ActivityTypeText>
+        <ActivityTypeName>
+          {activityType.name}
+        </ActivityTypeName>
+        <CategoryName>
+          {category.name.toUpperCase()}
+        </CategoryName>
+      </ActivityTypeText> 
+    </Container>
+  );
 }
 
 
@@ -31,6 +95,9 @@ const ActivityTypePill = ({activityType, category, handlePress}) => {
 // Props
 // --------------------------------------------------
 ActivityTypePill.propTypes = {
+  activityType: PropTypes.activityType.isRequired,
+  category: PropTypes.category.isRequired,
+  handlePress: PropTypes.func.isRequired,
 }
 
 
@@ -38,7 +105,8 @@ export default connect(
 
   // mapStateToProps
   (state, props) => {
-    const {categoryId} = props;
+    const {activityType} = props;
+    const {categoryId} = activityType;
     const category = getEntityById({
       id: categoryId,
       entityType: 'category',
@@ -54,45 +122,43 @@ export default connect(
       gqlClient,
       activityType,
       session,
+      categoryId,
       liveActivityInstance,
     } = props;
 
+    const {start} = liveActivityInstance;
+
     return {
       handlePress: () => {
-        const datetime = new Datetime();
-        const datetimeString = datetime.toString();
+        const endDatetime = new Datetime();
+        const endDatetimeString = endDatetime.toString();
 
         // Update currently running instance with an `end` time.
         const updateActivityInstanceAction = updateActivityInstance({
           id: liveActivityInstance.id,
-
-          // TODO: add duration
           propsToUpdate: {
-            end: datetimeString,
-            duration: 1200,
+            end: endDatetimeString,
+            duration: getDuration(start, endDatetimeString),
+            isComplete: true,
+          },
+          client: gqlClient,
+        });
+
+        // Create a new activityInstance - sets the new currentActivity
+        const createActivityInstanceAction = createActivityInstance({
+          activityInstance: {
+            isComplete: false,
+            sessionId: session.id,
+            start: endDatetimeString,
+            activityTypeId: activityType.id,
+            categoryId,
           },
           client: gqlClient,
         });
 
         dispatch(updateActivityInstanceAction);
-
-        // Create a new activityInstance
-        const createActivityInstanceAction = createActivityInstance({
-          activityInstance: {
-            
-            isComplete: false,
-            sessionId: session.id,
-            activityTypeId: activityType.id,
-            start: datetimeString,
-          },
-          client: gqlClient,
-        });
-
         dispatch(createActivityInstanceAction);
-
-
-        // Close the AddActivityModal
-
+        dispatch(closeAddActivityModal());
       },
     }
   }

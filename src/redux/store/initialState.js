@@ -49,6 +49,9 @@ export default {
       AddActivityModal: {
         isOpen: false,
       },
+
+      // TODO: Remove when done with testing.
+      liveActivityInstanceId: 'f36c74b2-c798-4d8f-a8cb-d353ee3b2c44',
     },
   },
 };

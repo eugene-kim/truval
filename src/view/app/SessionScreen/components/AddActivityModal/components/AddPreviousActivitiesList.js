@@ -19,7 +19,7 @@ import Colors from 'src/view/styles/colors';
 // Components
 import ActivityTypePill from './ActivityTypePill';
 
-const AddPreviousActivitiesList = ({ session, activityTypes }) => {
+const AddPreviousActivitiesList = ({session, activityTypes, liveActivityInstance}) => {
 
   // --------------------------------------------------
   // Styled Components
@@ -29,19 +29,22 @@ const AddPreviousActivitiesList = ({ session, activityTypes }) => {
     flex: 1
     flexDirection: row
     flexWrap: wrap
+    overflow: scroll
   `;
 
   // --------------------------------------------------
   // Render
   // --------------------------------------------------
   const activityPills = activityTypes.map(activityType => (
-    <GqlClientContext.Consumer key={activityType.id}>
+    <GqlClientContext.Consumer
+      key={activityType.id}>
       {
         gqlClient => (
           <ActivityTypePill
-            gqlClient={gqlClient}
+            liveActivityInstance={liveActivityInstance}
             activityType={activityType}
             session={session}
+            gqlClient={gqlClient}
           />
         )
       }
@@ -68,9 +71,13 @@ AddPreviousActivitiesList.propTypes = {
 export default connect(
 
   // mapStateToProps
-  (state) => {
+  state => {
     const activityTypeEntities = getActivityTypeEntities(state);
 
+    // TODO: Return an array that's ordered by most frequently used / most recently used.
+    const activityTypes = Object.keys(activityTypeEntities).map(
+      activityTypeEntityId => activityTypeEntities[activityTypeEntityId]
+    );
     const liveActivityInstanceId = getLiveActivityInstanceId(state);
     const liveActivityInstance = getEntityById({
       id: liveActivityInstanceId,
@@ -79,12 +86,7 @@ export default connect(
     });
 
     return {
-
-      // TODO: Return an array that's ordered by most frequently used / most recently used.
-      activityTypes: Object.keys(activityTypeEntities).map(
-        activityTypeEntityId => activityTypeEntities[activityTypeEntityId]
-      ),
+      activityTypes,
       liveActivityInstance,
     }
-  })
-  (AddPreviousActivitiesList);
+  })(AddPreviousActivitiesList);

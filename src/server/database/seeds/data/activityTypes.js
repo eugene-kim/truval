@@ -3,7 +3,7 @@ module.exports = [
   // User 1
   {
     id: '1982f070-704c-4054-beb4-ea188399fc10',
-    name: 'Write seed data',
+    name: 'Seed data',
     activity_count: 6,
     // category_name: 'CODE',
     category_id: 'ca05ca36-805c-4f67-a097-a45988ba82d7',
@@ -27,7 +27,7 @@ module.exports = [
   },
   {
     id: '7fc5ca14-1fec-4bf8-aba3-02a87880424e',
-    name: 'Write test cases',
+    name: 'Test cases',
     activity_count: 3,
     // category_name: 'CODE',
     category_id: 'ca05ca36-805c-4f67-a097-a45988ba82d7',

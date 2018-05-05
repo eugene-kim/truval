@@ -82,10 +82,7 @@ module.exports = [
     // Cheer up girlfriend
     id: 'f36c74b2-c798-4d8f-a8cb-d353ee3b2c44',
     start: '2017-10-21T04:00:00.000Z',
-    end: '2017-10-21T05:02:30.000Z',
-    is_complete: true,
-    duration: 3750,
-    total_duration: 6450,
+    is_complete: false,
     session_id: '997a5210-33d1-4198-a4a4-5f1ea477cc01',
     activity_type_id: '5ac9393e-76fd-4f32-923a-d97e6bea8db5',
   },

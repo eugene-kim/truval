@@ -13,7 +13,7 @@ export const closeAddActivityModal = () => ({
   type: CLOSE_ADD_ACTIVITY_MODAL,
 });
 
-export const setRunningActivityInstance = id => ({
+export const setLiveActivityInstance = id => ({
   type: SET_RUNNING_ACTIVITY_INSTANCE,
   payload: { id },
 });
