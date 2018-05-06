@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import styled from 'styled-components';
 import PropTypes from 'src/view/util/PropTypes';
+import {TouchableHighlight} from 'react-native';
 import {Text, TextInput, View} from 'styled-x';
 
 // Redux
@@ -29,14 +30,16 @@ const ActivityTypePill = ({activityType, category, handlePress}) => {
   // --------------------------------------------------
   const {color} = category;
 
-  const Container = styled.View`
+  const Container = styled(TouchableHighlight)`
+  `;
+  const Content = styled.View`
     flexDirection: row
     alignItems: center
     justifyContent: center
-    paddingVertical: 20
-    paddingHorizontal: 30
-    marginRight: 15
-    marginBottom: 18
+    paddingVertical: 10
+    paddingHorizontal: 20
+    marginRight: 7
+    marginBottom: 10
     backgroundColor: ${color}
     borderRadius: 100
   `;
@@ -76,16 +79,18 @@ const ActivityTypePill = ({activityType, category, handlePress}) => {
   }
 
   return (
-    <Container> 
-      {renderIcon(category)}
-      <ActivityTypeText>
-        <ActivityTypeName>
-          {activityType.name}
-        </ActivityTypeName>
-        <CategoryName>
-          {category.name.toUpperCase()}
-        </CategoryName>
-      </ActivityTypeText> 
+    <Container onPress={handlePress}>
+      <Content> 
+        {renderIcon(category)}
+        <ActivityTypeText>
+          <ActivityTypeName>
+            {activityType.name}
+          </ActivityTypeName>
+          <CategoryName>
+            {category.name.toUpperCase()}
+          </CategoryName>
+        </ActivityTypeText> 
+      </Content>
     </Container>
   );
 }
@@ -130,15 +135,16 @@ export default connect(
 
     return {
       handlePress: () => {
-        const endDatetime = new Datetime();
-        const endDatetimeString = endDatetime.toString();
+        const endDatetime = new Date();
+        const endDatetimeString = endDatetime.toISOString();
+        const duration = getDuration(start, endDatetimeString);
 
         // Update currently running instance with an `end` time.
         const updateActivityInstanceAction = updateActivityInstance({
           id: liveActivityInstance.id,
           propsToUpdate: {
             end: endDatetimeString,
-            duration: getDuration(start, endDatetimeString),
+            duration,
             isComplete: true,
           },
           client: gqlClient,
@@ -148,6 +154,7 @@ export default connect(
         const createActivityInstanceAction = createActivityInstance({
           activityInstance: {
             isComplete: false,
+            name: activityType.name,
             sessionId: session.id,
             start: endDatetimeString,
             activityTypeId: activityType.id,
@@ -156,9 +163,11 @@ export default connect(
           client: gqlClient,
         });
 
+        const closeAddActivityModalAction = closeAddActivityModal();
+
         dispatch(updateActivityInstanceAction);
         dispatch(createActivityInstanceAction);
-        dispatch(closeAddActivityModal());
+        dispatch(closeAddActivityModalAction);
       },
     }
   }

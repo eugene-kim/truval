@@ -1,6 +1,6 @@
 module.exports = [
   {
-    id: 'cb39dbb5-caa8-4323-93a5-13450b875887',  
+    id: 'cb39dbb5-caa8-4323-93a5-13450b875887',
     username: 'Huge Euge',
     email: 'hugeeuge@gmail.com',
     password: 'password',

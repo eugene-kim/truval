@@ -42,7 +42,9 @@ export default {
 
   app: {
     user: {
-      props: {},
+      props: {
+        id: 'cb39dbb5-caa8-4323-93a5-13450b875887',
+      },
       fetchStatus: '',
     },
     screenState: {

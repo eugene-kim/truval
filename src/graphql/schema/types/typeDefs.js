@@ -156,7 +156,6 @@ const typeDefs = `
 
       # Needed if a new ActivityType is created alongside the new ActivityInstance.
       categoryId: ID!,
-      userId: ID!,
 
       # Optional
 

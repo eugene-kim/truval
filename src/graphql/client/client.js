@@ -84,10 +84,14 @@ export default ({endpoint = 'http://localhost:3000/graphql', store} = {}) => {
 
         const {status} = response;
         const responseBody = await response.json();
+        const errorMessages = responseBody.errors && responseBody.errors.reduce((errorMessage, error) =>
+          errorMessage.concat(`${error.message}\n`),
+        '');
 
         invariant(
           status === 200,
-          `GraphQL operation failed! Status: ${status}\nReason:${responseBody}`,
+          `GraphQL operation failed!\nStatus: ${status}\nReasons:${errorMessages}\n
+          Mutation string: ${mutationString}`,
         );
 
         if (options.shouldNormalizeData) {

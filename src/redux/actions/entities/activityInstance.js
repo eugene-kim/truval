@@ -74,7 +74,9 @@ export const updateActivityInstance = ({id, propsToUpdate = {}, client}) => asyn
   const params = getGqlParamString({id, ...propsToUpdate});
   const updateActivityInstanceMutation = `
     mutation {
-      updateActivityInstance(${params})
+      updateActivityInstance(${params}) {
+        id
+      }
     }
   `;
 

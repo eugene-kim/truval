@@ -31,7 +31,7 @@ const AddActivityModal = ({session}) => {
   const PreviousActivitiesContainer = styled.View`
     flex: 1
     paddingTop: 35
-    paddingHorizontal: 17
+    paddingLeft: 17
   `;
 
   const PreviousActivitiesHeader = styled.Text`
