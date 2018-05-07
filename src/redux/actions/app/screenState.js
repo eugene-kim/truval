@@ -1,7 +1,7 @@
 import {
   OPEN_ADD_ACTIVITY_MODAL,
   CLOSE_ADD_ACTIVITY_MODAL,
-  SET_RUNNING_ACTIVITY_INSTANCE,
+  SET_LIVE_ACTIVITY_INSTANCE,
 } from '../types';
 
 
@@ -14,6 +14,6 @@ export const closeAddActivityModal = () => ({
 });
 
 export const setLiveActivityInstance = id => ({
-  type: SET_RUNNING_ACTIVITY_INSTANCE,
+  type: SET_LIVE_ACTIVITY_INSTANCE,
   payload: { id },
 });
