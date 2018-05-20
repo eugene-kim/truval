@@ -14,7 +14,7 @@ import { closeAddActivityModal } from 'src/redux/actions/app/screenState';
 import { getEntityById } from 'src/redux/selectors/entitySelectors';
 
 // Util
-import { getDuration } from 'src/libs/util/Datetime';
+import { getDuration, getCurrentISOString } from 'src/libs/util/Datetime';
 
 // Styles
 import Colors from 'src/view/styles/colors';
@@ -132,8 +132,7 @@ export default connect(
 
     return {
       handlePress: () => {
-        const endDatetime = new Date();
-        const endDatetimeString = endDatetime.toISOString();
+        const endDatetimeString = getCurrentISOString();
         const duration = getDuration(start, endDatetimeString);
 
         // Update currently running instance with an `end` time.

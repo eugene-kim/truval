@@ -12,8 +12,10 @@ import {
   getSessionActivityInstances,
 } from 'src/redux/selectors/entitySelectors';
 
-import { getAddActivityModalState } from 'src/redux/selectors/appSelectors';
-
+import {
+  getLiveActivityInstanceId,
+  getAddActivityModalState,
+} from 'src/redux/selectors/appSelectors';
 
 // Containers
 import { connect } from 'react-redux'
@@ -83,22 +85,21 @@ import Colors from 'src/view/styles/colors';
       return {}
     }
 
-    // Add methods to redux
-    const activeActivityInstanceId = 'c72cea78-2027-4615-a6a1-3daca28c9bba';
-
-    // TODO: Create a model or a selector so that this kind of retrieval is easy
-    const activeActivityInstance = getEntityById({
-      id: activeActivityInstanceId,
+    const liveActivityInstanceId = getLiveActivityInstanceId(state);
+    const liveActivityInstance = getEntityById({
+      id: liveActivityInstanceId,
       entityType: 'activityInstance',
       state,
     });
-    const {activityTypeId} = activeActivityInstance;
-    const activeActivityType = getEntityById({
+
+    
+    const {activityTypeId} = liveActivityInstance;
+    const liveActivityType = getEntityById({
       id: activityTypeId,
       entityType: 'activityType',
       state,
     });
-    const {categoryId} = activeActivityType;
+    const {categoryId} = liveActivityType;
     const activeCategory = getEntityById({
       id: categoryId,
       entityType: 'category',
@@ -108,8 +109,8 @@ import Colors from 'src/view/styles/colors';
     return {
       session: getEntityById({id: sessionId, entityType: 'session', state}),
       activityInstances: getSessionActivityInstances({state, sessionId}),
-      activeActivityInstance,
-      activeActivityType,
+      liveActivityInstance,
+      liveActivityType,
       activeCategory,
       isAddActivityModalOpen: getAddActivityModalState(state),
     }
@@ -121,13 +122,13 @@ class SessionScreen extends Component {
 
     // Not sure if I should make this required when it might not be
     // available on screen load.
-    session: PropTypes.object,
-    activeActivityInstance: PropTypes.object,
-    activeActivityType: PropTypes.object,
-    activeCategory: PropTypes.object,
+    session: PropTypes.session,
+    liveActivityInstance: PropTypes.activityInstance,
+    liveActivityType: PropTypes.activityType,
+    activeCategory: PropTypes.category,
 
     // TODO: Use a proper proptype later
-    activityInstances: PropTypes.array,
+    activityInstances: PropTypes.arrayOf(PropTypes.activityInstance),
     queryIsLoading: PropTypes.bool.isRequired,
 
     isAddActivityModalOpen: PropTypes.bool,
@@ -141,9 +142,9 @@ class SessionScreen extends Component {
       queryIsLoading,
       session,
       activityInstances,
-      activeActivityInstance,
+      liveActivityInstance,
       activeCategory,
-      activeActivityType,
+      liveActivityType,
       navigation,
       isAddActivityModalOpen,
     } = this.props;
@@ -202,14 +203,14 @@ class SessionScreen extends Component {
           <HeaderContainer>
             <SessionHeader
               session={session}
-              activityInstance={activeActivityInstance}
+              activityInstance={liveActivityInstance}
               category={activeCategory}
             />
           </HeaderContainer>
           <CurrentActivityContainer>
             <ActiveActivityView
-              activityType={activeActivityType}
-              activityInstance={activeActivityInstance}
+              activityType={liveActivityType}
+              activityInstance={liveActivityInstance}
               category={activeCategory}
             />
           </CurrentActivityContainer>
@@ -225,6 +226,7 @@ class SessionScreen extends Component {
               <ModalContainer>
                 <AddActivityModal
                   session={session}
+                  liveActivityInstance={liveActivityInstance}
                 />
               </ModalContainer>
             ) : null

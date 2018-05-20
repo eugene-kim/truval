@@ -63,8 +63,9 @@ const AddPreviousActivitiesList = ({session, activityTypes, liveActivityInstance
 // Props
 // --------------------------------------------------
 AddPreviousActivitiesList.propTypes = {
-  activityTypes: PropTypes.array,
-  session: PropTypes.object,
+  activityTypes: PropTypes.arrayOf(PropTypes.activityType),
+  session: PropTypes.session,
+  liveActivityInstance: PropTypes.activityInstance,
 };
 
 
@@ -78,15 +79,6 @@ export default connect(
     const activityTypes = Object.keys(activityTypeEntities).map(
       activityTypeEntityId => activityTypeEntities[activityTypeEntityId]
     );
-    const liveActivityInstanceId = getLiveActivityInstanceId(state);
-    const liveActivityInstance = getEntityById({
-      id: liveActivityInstanceId,
-      entityType: 'activityInstance',
-      state,
-    });
 
-    return {
-      activityTypes,
-      liveActivityInstance,
-    }
+    return { activityTypes };
   })(AddPreviousActivitiesList);

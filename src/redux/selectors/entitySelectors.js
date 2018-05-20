@@ -33,6 +33,13 @@ export const getNewActivityInstanceFetchStatus = state => getNewEntityFetchStatu
 
 export const getEntities = ({entityType, state}) => state.entities[entityType].entities;
 
+export const getEntitiesList = ({entityType, state}) =>
+  Object.keys(getEntities({entityType, state})).map(entityId => getEntityById({
+    id: entityId,
+    entityType,
+    state,
+  }));
+
 export const getEntityFetchStatuses = ({entityType, state}) => state.entities[entityType].fetchStatus;
 export const getEntityFetchStatus = ({id, entityType, state}) => getEntityFetchStatuses({entityType, state})[id];
 export const getNewEntityFetchStatus = ({entityType, state}) => state.entities[entityType].new.fetchStatus;

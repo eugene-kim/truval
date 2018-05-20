@@ -43,7 +43,7 @@ const NewActivitySubmitButton = ({ handlePress }) => {
   // Render
   // --------------------------------------------------
   return (
-    <Container>
+    <Container onPress={handlePress}>
       <Content>
         <ButtonText>
           {'ADD NEW'}

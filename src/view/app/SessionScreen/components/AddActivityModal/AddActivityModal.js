@@ -10,8 +10,10 @@ import TextStyles from 'src/view/styles/text/textStyles';
 import AddNewActivityForm from './components/AddNewActivityForm';
 import AddPreviousActivitiesList from './components/AddPreviousActivitiesList';
 
+import { GqlClientContext } from 'src/view/context/GqlClientContext';
 
-const AddActivityModal = ({session}) => {
+
+const AddActivityModal = ({session, liveActivityInstance}) => {
 
   // --------------------------------------------------
   // Styled Components
@@ -52,7 +54,16 @@ const AddActivityModal = ({session}) => {
         <NewActivityHeader>
           {'New'}
         </NewActivityHeader>
-        <AddNewActivityForm />
+        <GqlClientContext.Consumer>
+          {
+            gqlClient => (
+              <AddNewActivityForm
+                gqlClient={gqlClient}
+                session={session}
+              />
+            )
+          }
+        </GqlClientContext.Consumer>
       </NewActivityContainer>
       <PreviousActivitiesContainer>
         <PreviousActivitiesHeader>
@@ -60,6 +71,7 @@ const AddActivityModal = ({session}) => {
         </PreviousActivitiesHeader>
         <AddPreviousActivitiesList
           session={session}
+          liveActivityInstance={liveActivityInstance}
         />
       </PreviousActivitiesContainer>
     </Container>
@@ -71,7 +83,7 @@ const AddActivityModal = ({session}) => {
 // Props
 // --------------------------------------------------
 AddActivityModal.propTypes = {
-
+  liveActivityInstance: PropTypes.activityInstance,
 }
 
 
