@@ -15,6 +15,7 @@ import { closeAddActivityModal } from 'src/redux/actions/app/screenState';
 
 // Styles
 import Colors from 'src/view/styles/colors';
+import TextStyles from 'src/view/styles/text/textStyles';
 
 import { getCurrentISOString } from 'src/libs/util/Datetime';
 
@@ -46,7 +47,7 @@ const AddNewActivityForm = ({
 
   const ActivityNameContainer = styled.View`
     position: relative
-    marginBottom: 15
+    marginBottom: 20
   `;
 
   const ActivityNameInput = styled.TextInput`
@@ -57,8 +58,9 @@ const AddNewActivityForm = ({
   `;
 
   const ErrorText = styled.Text`
+    ${TextStyles.small(Colors.lightRed)}
     position: absolute
-    bottom: 0
+    bottom: -18
   `;
 
   // --------------------------------------------------
@@ -80,11 +82,11 @@ const AddNewActivityForm = ({
 
     // Validate activity name.
     if (!activityName) {
-      errors.activityName = 'Activity name is required.';
+      errors.activityName = 'Activity name is required to create a new activity.';
     } else if (activityName.length > activityNameMaxLength) {
       errors.activityName = `Activity name must be fewer than ${activityNameMaxLength} characters`;
     } else if (getActivityTypeByName(activityName)) {
-      errors.activityName = `This activity name already exists.'`;
+      errors.activityName = `This activity name already exists.`;
     }
 
     // TODO: Validate category.
@@ -114,9 +116,10 @@ const AddNewActivityForm = ({
                   onChangeText={text => formikProps.setFieldValue('activityName', text)}
                   value={formikProps.values.activityName}
                 />
-                {errors.activityName && (
+                {
+                  errors.activityName &&
                   <ErrorText>{errors.activityName}</ErrorText>
-                )}
+                }
               </ActivityNameContainer>
               <NewActivitySubmitButton
                 handlePress={formikProps.handleSubmit}

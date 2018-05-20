@@ -18,10 +18,17 @@ export default {
     lineHeight: 22
     color: ${color}
   `,
+  small: (color = defaultColor) => `
+    fontFamily: ${displayFontWeights.bold}
+    fontSize: 12
+    lineHeight: 16
+    color: ${color}
+  `,
   extraSmall: (color = defaultColor) => `
     fontFamily: ${displayFontWeights.bold}
     fontSize: 10
     lineHeight: 14
     color: ${color}
   `,
+
 }
