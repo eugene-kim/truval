@@ -38,6 +38,7 @@ const AddActivityModal = ({session}) => {
 
   const PreviousActivitiesContainer = styled.View`
     flex: 1
+    marginTop: 35
     paddingLeft: 17
   `;
 

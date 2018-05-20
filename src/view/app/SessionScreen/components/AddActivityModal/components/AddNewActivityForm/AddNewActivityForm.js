@@ -30,6 +30,8 @@ const AddNewActivityForm = ({}) => {
 
   const ActivityNameInput = styled.TextInput`
     height: 44
+    marginBottom: 15
+    borderRadius: 3
     borderWidth: 1
     borderColor: ${Colors.lightGray}
   `;
