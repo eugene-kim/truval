@@ -1,12 +1,20 @@
 import React, {Component} from 'react';
 import styled from 'styled-components';
 import PropTypes from 'src/view/util/PropTypes';
-import {Text, View} from 'styled-x';
+import {Text, TextInput, View} from 'styled-x';
 
 // Styles
 import Colors from 'src/view/styles/colors';
 
-const ComponentTemplate = ({}) => {
+const ActivityNameTextInput = props => {
+  
+  // --------------------------------------------------
+  // Props
+  // --------------------------------------------------
+  const {
+    setFieldValue,
+    ...otherProps
+  } = props;
 
   // --------------------------------------------------
   // Styled Components
@@ -16,6 +24,11 @@ const ComponentTemplate = ({}) => {
   // Render
   // --------------------------------------------------
   return (
+    <TextInput
+      name={'ActivityName'}
+      onChangeText={setFieldValue}
+      {...otherProps}
+    />
   );
 }
 
@@ -23,9 +36,9 @@ const ComponentTemplate = ({}) => {
 // --------------------------------------------------
 // Props
 // --------------------------------------------------
-ComponentTemplate.propTypes = {
+ActivityNameTextInput.propTypes = {
 
 }
 
 
-export default ComponentTemplate;
+export default ActivityNameTextInput;

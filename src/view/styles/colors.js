@@ -13,6 +13,7 @@ export default {
 
   white: '#FFFFFF',
   whiteGray: '#F7F7F7',
+  lightGray: '#C6C6C6',
   mediumGray: '#E3E3E3',
   darkerGray: '#8C8C8C',
 

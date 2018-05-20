@@ -22,7 +22,6 @@ import Datetime from 'src/libs/util/Datetime';
 const ActivityRow = ({category, activityType, activityInstance, isFirst}) => {
   const {start} = activityInstance;
   const date = Datetime(start);
-
   const {name} = activityType;
 
   // --------------------------------------------------
@@ -30,6 +29,14 @@ const ActivityRow = ({category, activityType, activityInstance, isFirst}) => {
   // --------------------------------------------------
 
   const Container = styled.View`
+
+    /*
+      Hardcoded to match the size of the CategoryCircle because
+      the rendering any more elements than VirtualizedList's initialNumToRender
+      prop results in incorrect rendering of elements. They get squished and 
+      don't play nicely with flex.
+    */
+    height: 50
     marginTop: ${isFirst ? 30 : 0}
     marginBottom: 35
   `;

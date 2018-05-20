@@ -31,7 +31,7 @@ const ActivityList = ({activityInstances}) => {
 }
 
 ActivityList.propTypes = {
-  activityInstances: PropTypes.array.isRequired,
+  activityInstances: PropTypes.arrayOf(PropTypes.activityInstance).isRequired,
 }
 
 

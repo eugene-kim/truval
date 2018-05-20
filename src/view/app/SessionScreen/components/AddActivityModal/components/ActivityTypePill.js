@@ -31,6 +31,7 @@ const ActivityTypePill = ({activityType, category, handlePress}) => {
   const {color} = category;
 
   const Container = styled(TouchableHighlight)`
+    borderRadius: 100
   `;
   const Content = styled.View`
     flexDirection: row
@@ -43,7 +44,7 @@ const ActivityTypePill = ({activityType, category, handlePress}) => {
     backgroundColor: ${color}
     borderRadius: 100
   `;
-  const ActivityTypeText = styled.View`
+  const ActivityTypeTextContent = styled.View`
     flex: 1
     flexDirection: column
     justifyContent: center
@@ -65,31 +66,27 @@ const ActivityTypePill = ({activityType, category, handlePress}) => {
   const renderIcon = category => {
     const {iconName, name} = category;
 
-    if (!iconName) {
-      return null;
-    }
-
-    return (
+    return iconName ? (
       <CategoryIcon
         name={iconName}
         size={25}
         color={Colors.white}
       />
-    );
+    ) : null;
   }
 
   return (
     <Container onPress={handlePress}>
       <Content> 
         {renderIcon(category)}
-        <ActivityTypeText>
+        <ActivityTypeTextContent>
           <ActivityTypeName>
             {activityType.name}
           </ActivityTypeName>
           <CategoryName>
             {category.name.toUpperCase()}
           </CategoryName>
-        </ActivityTypeText> 
+        </ActivityTypeTextContent> 
       </Content>
     </Container>
   );
