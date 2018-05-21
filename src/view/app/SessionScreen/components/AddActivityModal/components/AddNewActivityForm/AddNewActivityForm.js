@@ -21,6 +21,7 @@ import { getCurrentISOString } from 'src/libs/util/Datetime';
 
 // Components
 import NewActivitySubmitButton from './components/NewActivitySubmitButton';
+import ActivityNameTextInput from './components/ActivityNameTextInput';
 
 
 const AddNewActivityForm = ({
@@ -43,24 +44,6 @@ const AddNewActivityForm = ({
     flex: 1
     flexBasis: auto
     alignItems: stretch
-  `;
-
-  const ActivityNameContainer = styled.View`
-    position: relative
-    marginBottom: 20
-  `;
-
-  const ActivityNameInput = styled.TextInput`
-    height: 44
-    borderRadius: 3
-    borderWidth: 1
-    borderColor: ${Colors.lightGray}
-  `;
-
-  const ErrorText = styled.Text`
-    ${TextStyles.small(Colors.lightRed)}
-    position: absolute
-    bottom: -18
   `;
 
   // --------------------------------------------------
@@ -97,6 +80,7 @@ const AddNewActivityForm = ({
   // --------------------------------------------------
   // Render
   // --------------------------------------------------
+
   return (
     <Container>
       <Formik
@@ -106,21 +90,22 @@ const AddNewActivityForm = ({
         validateOnBlur={false}
         validateOnChange={false}
         render={formikProps => {
-          const {touched, errors, handleSubmit} = formikProps;
+          const {
+            touched,
+            values,
+            errors,
+            handleSubmit,
+            setFieldValue,
+          } = formikProps;
 
           return (
             <FormContainer>
-              <ActivityNameContainer>
-                <ActivityNameInput
-                  name={'activityName'}
-                  onChangeText={text => formikProps.setFieldValue('activityName', text)}
-                  value={formikProps.values.activityName}
-                />
-                {
-                  errors.activityName &&
-                  <ErrorText>{errors.activityName}</ErrorText>
-                }
-              </ActivityNameContainer>
+              <ActivityNameTextInput
+                fieldName={'activityName'}
+                fieldValue={values.activityName}
+                setFieldValue={setFieldValue}
+                errorMessage={errors.activityName}
+              />
               <NewActivitySubmitButton
                 handlePress={formikProps.handleSubmit}
               />
