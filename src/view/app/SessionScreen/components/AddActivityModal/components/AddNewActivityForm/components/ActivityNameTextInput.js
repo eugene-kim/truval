@@ -1,71 +1,83 @@
 import React, {Component} from 'react';
-import styled from 'styled-components';
+import styled from "styled-components";
 import PropTypes from 'src/view/util/PropTypes';
 import {Text, TextInput, View} from 'styled-x';
+import _ from 'src/libs/dash';
 
 // Styles
 import Colors from 'src/view/styles/colors';
 import TextStyles from 'src/view/styles/text/textStyles';
 
-const ActivityNameTextInput = props => {
-  
+
+/**
+ * Using a class component instead of a function to prevent re-rendering whenever
+ * a new `fieldValue` prop is passed in because the value will change every single
+ * time the user types into the TextInput. If the TextInput re-renders, then the 
+ * focus is taken out of the TextInput, which makes for a horrible UX.
+ */
+class ActivityNameTextInput extends Component {
+
   // --------------------------------------------------
   // Props
   // --------------------------------------------------
-  const {
-    setFieldValue,
-    fieldValue,
-    fieldName,
-    errorMessage,
-    ...otherProps
-  } = props;
+  static propTypes = {
+    setFieldValue: PropTypes.func.isRequired,
+    fieldName: PropTypes.string.isRequired,
+    fieldValue: PropTypes.string.isRequired,
+    errorMessage: PropTypes.string,
+  }
 
   // --------------------------------------------------
-  // Styled Components
-  // --------------------------------------------------
-  const Container = styled.View`
-    position: relative
-    marginBottom: 20
-  `;
+  // Lifecycle Methods
+  // --------------------------------------------------  
 
-  const ActivityNameInput = styled.TextInput`
-    height: 44
-    borderRadius: 3
-    borderWidth: 1
-    borderColor: ${Colors.lightGray}
-  `;
+  shouldComponentUpdate(nextProps) {
 
-  const ErrorText = styled.Text`
-    ${TextStyles.small(Colors.lightRed)}
-    position: absolute
-    bottom: -18
-  `;
+    // I'd use ES6's destructing assignment + spread properties,
+    // but I can't do that here since I'd be declaring two of
+    // the same variable, `fieldValue`.
+    const restNextProps = _.omit(nextProps, 'fieldValue');
+    const restCurrentProps = _.omit(this.props, 'fieldValue');
+
+    return !_.shallowEqual(restNextProps, restCurrentProps);
+  }
 
   // --------------------------------------------------
   // Render
   // --------------------------------------------------
-  return (
-    <Container>
-      <ActivityNameInput
-        name={'activityName'}
-        onChangeText={text => setFieldValue('activityName', text)}
-        value={fieldValue}
-      />
-      { errorMessage && <ErrorText>{errorMessage}</ErrorText> }
-    </Container>
-  );
-}
+  render() {
+    const { setFieldValue, fieldName, fieldValue, errorMessage } = this.props;
 
+    const Container = styled.View`
+      position: relative
+      marginBottom: 20
+    `;
 
-// --------------------------------------------------
-// Props
-// --------------------------------------------------
-ActivityNameTextInput.propTypes = {
-  setFieldValue: PropTypes.func.isRequired,
-  fieldName: PropTypes.string.isRequired,
-  fieldValue: PropTypes.string.isRequired,
-  errorMessage: PropTypes.string,
-}
+    const ActivityNameInput = styled.TextInput`
+      height: 44
+      borderRadius: 3
+      borderWidth: 1
+      borderColor: ${Colors.lightGray}
+    `;
+
+    const ErrorMessage = styled.Text`
+      ${TextStyles.small(Colors.lightRed)}
+      position: absolute
+      bottom: -18
+    `;
+
+    return (
+      <Container>
+        <ActivityNameInput
+          name={fieldName}
+          onChangeText={ text => setFieldValue(fieldName, text)}
+          value={fieldValue}
+        />
+        {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
+      </Container>
+    );
+  }
+};
 
 
 export default ActivityNameTextInput;

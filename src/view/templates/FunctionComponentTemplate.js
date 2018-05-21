@@ -6,6 +6,7 @@ import {Text, View} from 'styled-x';
 // Styles
 import Colors from 'src/view/styles/colors';
 
+
 const ComponentTemplate = ({}) => {
 
   // --------------------------------------------------

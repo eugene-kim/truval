@@ -91,20 +91,21 @@ const AddNewActivityForm = ({
         validateOnChange={false}
         render={formikProps => {
           const {
-            touched,
             values,
             errors,
             handleSubmit,
             setFieldValue,
           } = formikProps;
 
+          const activityNameFieldName = 'activityName';
+
           return (
             <FormContainer>
               <ActivityNameTextInput
-                fieldName={'activityName'}
-                fieldValue={values.activityName}
                 setFieldValue={setFieldValue}
-                errorMessage={errors.activityName}
+                fieldName={activityNameFieldName}
+                fieldValue={values[activityNameFieldName]}
+                errorMessage={errors[activityNameFieldName]}
               />
               <NewActivitySubmitButton
                 handlePress={formikProps.handleSubmit}
