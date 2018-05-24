@@ -153,7 +153,8 @@ const typeDefs = `
       name: String!,
       start: String!,
       sessionId: ID!,
-
+      userId: ID!
+      
       # Needed if a new ActivityType is created alongside the new ActivityInstance.
       categoryId: ID!,
 

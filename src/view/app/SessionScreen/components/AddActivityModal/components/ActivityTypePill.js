@@ -155,6 +155,10 @@ export default connect(
             start: endDatetimeString,
             activityTypeId: activityType.id,
             categoryId,
+            
+            // TODO: Hardcoded for testing purposes. Remove when you figure out what
+            // to do with authentication.
+            userId: 'cb39dbb5-caa8-4323-93a5-13450b875887',
           },
           client: gqlClient,
         });

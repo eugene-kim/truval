@@ -60,6 +60,7 @@ const AddActivityModal = ({session, liveActivityInstance}) => {
               <AddNewActivityForm
                 gqlClient={gqlClient}
                 session={session}
+                liveActivityInstance={liveActivityInstance}
               />
             )
           }

@@ -15,7 +15,7 @@ const datetime = dateString => {
   }
 };
 
-export const getCurrentISOString = () => Date().toISOString();
+export const getCurrentISOString = () => new Date().toISOString();
 
 /**
  * Returns the duration between two datetime strings in seconds.

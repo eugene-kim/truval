@@ -17,7 +17,7 @@ import { closeAddActivityModal } from 'src/redux/actions/app/screenState';
 import Colors from 'src/view/styles/colors';
 import TextStyles from 'src/view/styles/text/textStyles';
 
-import { getCurrentISOString } from 'src/libs/util/Datetime';
+import { getDuration, getCurrentISOString } from 'src/libs/util/Datetime';
 
 // Components
 import NewActivitySubmitButton from './components/NewActivitySubmitButton';
@@ -151,23 +151,29 @@ export default connect(
         const now = getCurrentISOString();
         const duration = getDuration(start, now);
 
-        const createActivityInstanceAction = createActivityInstance({
-          activityInstance: {
-            isComplete: false,
-            name: activityName,
-            sessionId: session.id,
-            start: now,
-            categoryId: category.id,
-          },
-          client: gqlClient,
-        });
-
         const updateActivityInstanceAction = updateActivityInstance({
           id: liveActivityInstance.id,
           propsToUpdate: {
             end: now,
             duration,
             isComplete: true,
+          },
+          client: gqlClient,
+        });
+
+        const createActivityInstanceAction = createActivityInstance({
+          activityInstance: {
+            isComplete: false,
+            name: activityName,
+            sessionId: session.id,
+            start: now,
+            // categoryId: category.id,
+            // TODO: Remove when finished testing.
+            categoryId: '51d017c1-57f1-401c-a16f-7f8142fb37d6',
+
+            // TODO: Hardcoded for testing purposes. Remove when you figure out what
+            // to do with authentication.
+            userId: 'cb39dbb5-caa8-4323-93a5-13450b875887',
           },
           client: gqlClient,
         });
