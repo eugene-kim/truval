@@ -38,6 +38,9 @@ const AddActivityModal = ({session, liveActivityInstance}) => {
 
   const PreviousActivitiesHeader = HeaderText.extend``;
 
+  // We only set paddingLeft here and set paddingRight in the actual
+  // FlatList so that the scrollbar that appears doesn't get in the
+  // way of the items.
   const PreviousActivitiesContainer = styled.View`
     flex: 1
     marginTop: 35

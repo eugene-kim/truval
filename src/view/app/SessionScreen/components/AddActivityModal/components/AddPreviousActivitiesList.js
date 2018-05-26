@@ -27,6 +27,7 @@ const AddPreviousActivitiesList = ({session, activityTypes, liveActivityInstance
   // --------------------------------------------------
 
   const List = styled.FlatList`
+    paddingRight: 17
   `;
 
   // --------------------------------------------------
