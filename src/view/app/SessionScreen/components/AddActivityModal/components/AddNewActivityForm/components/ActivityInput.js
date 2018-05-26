@@ -1,0 +1,77 @@
+import React, {Component} from 'react';
+import styled from 'styled-components';
+import PropTypes from 'src/view/util/PropTypes';
+import {Text, View} from 'styled-x';
+import _ from 'src/libs/dash';
+
+// Styles
+import Colors from 'src/view/styles/colors';
+import TextStyles from 'src/view/styles/text/textStyles';
+
+// Components
+import ActivityNameTextInput from './ActivityNameTextInput';
+
+
+class ActivityInput extends Component {
+
+  // --------------------------------------------------
+  // Props
+  // --------------------------------------------------
+  static propTypes = {
+    setFieldValue: PropTypes.func.isRequired,
+    values: PropTypes.object.isRequired,
+    maxNameLength: PropTypes.number,
+  };
+
+  static defaultProps = {
+    maxNameLength: 30,
+  };
+
+  // --------------------------------------------------
+  // Lifecycle Methods
+  // --------------------------------------------------
+
+  /**
+   * Only update when category value has changed.
+   */
+  shouldComponentUpdate(nextProps) {
+    const currentValues = this.props.values;
+    const nextValues = nextProps.values;
+
+    const currentCategoryValue = currentValues.category;
+    const nextCategoryValue = nextValues.category;
+
+    return !_.shallowEqual(currentCategoryValue, nextCategoryValue);
+  }
+
+  // --------------------------------------------------
+  // Render
+  // --------------------------------------------------
+  render() {
+    const {setFieldValue, values, maxNameLength} = this.props;
+
+    const Container = styled.View`
+      flexDirection: row
+      borderRadius: 3
+      borderWidth: 1
+      borderColor: ${Colors.lightGray}
+    `;
+
+    const activityNameFieldName = 'activityName';
+    const categoryFieldName = 'category';
+
+    return (
+      <Container>
+        <ActivityNameTextInput
+          setFieldValue={setFieldValue}
+          fieldName={activityNameFieldName}
+          fieldValue={values[activityNameFieldName]}
+          maxLength={maxNameLength}
+        />
+      </Container>
+    );
+  }
+}
+
+
+export default ActivityInput;

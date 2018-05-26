@@ -25,7 +25,6 @@ class ActivityNameTextInput extends Component {
     fieldName: PropTypes.string.isRequired,
     fieldValue: PropTypes.string.isRequired,
     maxLength: PropTypes.number,
-    errorMessage: PropTypes.string,
   };
 
   static defaultProps = {
@@ -51,45 +50,30 @@ class ActivityNameTextInput extends Component {
   // Render
   // --------------------------------------------------
   render() {
+    console.log('render() ActivityNameTextInput');
+
     const {
       setFieldValue,
       fieldName,
       fieldValue,
-      errorMessage,
       maxLength,
     } = this.props;
 
-    const Container = styled.View`
-      position: relative
-      marginBottom: 20
-    `;
-
     const ActivityNameInput = styled.TextInput`
+      flex: 1
       height: 44
-      borderRadius: 3
-      borderWidth: 1
-      borderColor: ${Colors.lightGray}
       paddingLeft: 10
       ${TextStyles.copy4()}
     `;
 
-    const ErrorMessage = styled.Text`
-      ${TextStyles.copy1(Colors.lightRed)}
-      position: absolute
-      bottom: -18
-    `;
-
     return (
-      <Container>
-        <ActivityNameInput
-          name={fieldName}
-          placeholder={'Name'}
-          onChangeText={ text => setFieldValue(fieldName, text)}
-          value={fieldValue}
-          maxLength={maxLength}
-        />
-        {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
-      </Container>
+      <ActivityNameInput
+        name={fieldName}
+        placeholder={'Name'}
+        onChangeText={ text => setFieldValue(fieldName, text)}
+        value={fieldValue}
+        maxLength={maxLength}
+      />
     );
   }
 };

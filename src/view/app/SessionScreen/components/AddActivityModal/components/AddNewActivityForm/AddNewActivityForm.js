@@ -21,7 +21,7 @@ import { getDuration, getCurrentISOString } from 'src/libs/util/Datetime';
 
 // Components
 import NewActivitySubmitButton from './components/NewActivitySubmitButton';
-import ActivityNameTextInput from './components/ActivityNameTextInput';
+import ActivityInput from './components/ActivityInput';
 
 
 const AddNewActivityForm = ({
@@ -88,23 +88,20 @@ const AddNewActivityForm = ({
         validateOnBlur={false}
         validateOnChange={false}
         render={formikProps => {
+
           const {
+            setFieldValue,
             values,
             errors,
             handleSubmit,
-            setFieldValue,
           } = formikProps;
-
-          const activityNameFieldName = 'activityName';
 
           return (
             <FormContainer>
-              <ActivityNameTextInput
+              <ActivityInput
                 setFieldValue={setFieldValue}
-                fieldName={activityNameFieldName}
-                fieldValue={values[activityNameFieldName]}
-                errorMessage={errors[activityNameFieldName]}
-                maxLength={activityNameMaxLength}
+                values={values}
+                maxNameLength={activityNameMaxLength}
               />
               <NewActivitySubmitButton
                 handlePress={formikProps.handleSubmit}
