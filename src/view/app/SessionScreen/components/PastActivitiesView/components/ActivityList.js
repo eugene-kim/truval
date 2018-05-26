@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
 import PropTypes from 'src/view/util/PropTypes';
 import styled from 'styled-components';
-import {Dimensions, Text, View, ScrollView, FlatList} from 'react-native';
+import {Text, TextInput, View} from 'styled-x';
+import {Dimensions, ScrollView, FlatList} from 'react-native';
 import _ from 'src/libs/dash';
 
 import ActivityRow from './ActivityRow';

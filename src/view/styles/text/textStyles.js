@@ -12,19 +12,25 @@ export default {
     lineHeight: 30
     color: ${color}
   `,
-  mediumBold: (color = defaultColor) => `
+  copy4: (color = defaultColor) => `
     fontFamily: ${displayFontWeights.bold}
     fontSize: 16
     lineHeight: 22
     color: ${color}
   `,
-  small: (color = defaultColor) => `
+  copy3: (color = defaultColor) => `
+    fontFamily: ${displayFontWeights.bold}
+    fontSize: 12
+    lineHeight: 18
+    color: ${color}
+  `,
+  copy2: (color = defaultColor) => `
     fontFamily: ${displayFontWeights.bold}
     fontSize: 12
     lineHeight: 16
     color: ${color}
   `,
-  extraSmall: (color = defaultColor) => `
+  copy1: (color = defaultColor) => `
     fontFamily: ${displayFontWeights.bold}
     fontSize: 10
     lineHeight: 14

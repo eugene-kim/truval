@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import styled from 'styled-components';
 import PropTypes from 'src/view/util/PropTypes';
 import {Text, TextInput, View} from 'styled-x';
+import {FlatList} from 'react-native';
 
 import { GqlClientContext } from 'src/view/context/GqlClientContext';
 
@@ -17,44 +18,44 @@ import { getLiveActivityInstanceId } from 'src/redux/selectors/appSelectors';
 import Colors from 'src/view/styles/colors';
 
 // Components
-import ActivityTypePill from './ActivityTypePill';
+import ActivityTypeListItem from './ActivityTypeListItem';
 
 const AddPreviousActivitiesList = ({session, activityTypes, liveActivityInstance}) => {
 
   // --------------------------------------------------
   // Styled Components
   // --------------------------------------------------
-  
-  const Container = styled.View`
-    flex: 1
-    flexDirection: row
-    flexWrap: wrap
-    overflow: scroll
+
+  const List = styled.FlatList`
   `;
 
   // --------------------------------------------------
   // Render
   // --------------------------------------------------
-  const activityPills = activityTypes.map(activityType => (
-    <GqlClientContext.Consumer
-      key={activityType.id}>
-      {
-        gqlClient => (
-          <ActivityTypePill
-            liveActivityInstance={liveActivityInstance}
-            activityType={activityType}
-            session={session}
-            gqlClient={gqlClient}
-          />
-        )
-      }
-    </GqlClientContext.Consumer>
-  ));
 
   return (
-    <Container>
-      {activityPills}
-    </Container>
+    <List
+      data={activityTypes}
+      renderItem={
+        ({item, index}) => (
+          <GqlClientContext.Consumer>
+            {
+              gqlClient => (
+                <ActivityTypeListItem
+                  liveActivityInstance={liveActivityInstance}
+                  activityType={item}
+                  session={session}
+                  gqlClient={gqlClient}
+                  isFirst={index === 0}
+                  isLast={index === activityTypes.length - 1}
+                />
+              )
+            }
+          </GqlClientContext.Consumer>
+        )
+      }
+      keyExtractor={item => item.id}
+    />
   );
 }
 
@@ -81,4 +82,5 @@ export default connect(
     );
 
     return { activityTypes };
-  })(AddPreviousActivitiesList);
+  }
+)(AddPreviousActivitiesList);

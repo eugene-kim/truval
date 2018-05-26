@@ -36,7 +36,7 @@ const NewActivitySubmitButton = ({ handlePress }) => {
 
   const ButtonText = styled.Text`
     flexBasis: auto
-    ${TextStyles.mediumBold(Colors.text.whiteGray)}
+    ${TextStyles.copy4(Colors.text.whiteGray)}
   `;
 
   // --------------------------------------------------

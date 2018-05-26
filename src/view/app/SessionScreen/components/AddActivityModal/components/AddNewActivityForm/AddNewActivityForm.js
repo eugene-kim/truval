@@ -49,6 +49,7 @@ const AddNewActivityForm = ({
   // --------------------------------------------------
   // Methods
   // --------------------------------------------------
+  const activityNameMaxLength = 30;
 
   /**
    * Formik doesn't pass in props to its validate() function, so
@@ -60,14 +61,11 @@ const AddNewActivityForm = ({
     const errors = {};
     const {activityName, category} = values;
 
-    // TODO: Figure out a proper length that renders nicely with ActivityTypePill.
-    const activityNameMaxLength = 300;
-
     // Validate activity name.
     if (!activityName) {
       errors.activityName = 'Activity name is required to create a new activity.';
     } else if (activityName.length > activityNameMaxLength) {
-      errors.activityName = `Activity name must be fewer than ${activityNameMaxLength} characters`;
+      errors.activityName = `Activity name must be fewer than ${activityNameMaxLength} characters.`;
     } else if (getActivityTypeByName(activityName)) {
       errors.activityName = `This activity name already exists.`;
     }
@@ -106,6 +104,7 @@ const AddNewActivityForm = ({
                 fieldName={activityNameFieldName}
                 fieldValue={values[activityNameFieldName]}
                 errorMessage={errors[activityNameFieldName]}
+                maxLength={activityNameMaxLength}
               />
               <NewActivitySubmitButton
                 handlePress={formikProps.handleSubmit}
