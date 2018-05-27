@@ -22,6 +22,7 @@ class ActivityInput extends Component {
     setFieldValue: PropTypes.func.isRequired,
     values: PropTypes.object.isRequired,
     maxNameLength: PropTypes.number,
+    style: PropTypes.object,
   };
 
   static defaultProps = {
@@ -62,7 +63,7 @@ class ActivityInput extends Component {
     const categoryFieldName = 'category';
 
     return (
-      <Container>
+      <Container style={this.props.style}>
         <ActivityNameTextInput
           setFieldValue={setFieldValue}
           fieldName={activityNameFieldName}

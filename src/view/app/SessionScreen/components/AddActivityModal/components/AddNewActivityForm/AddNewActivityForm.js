@@ -22,6 +22,7 @@ import { getDuration, getCurrentISOString } from 'src/libs/util/Datetime';
 // Components
 import NewActivitySubmitButton from './components/NewActivitySubmitButton';
 import ActivityInput from './components/ActivityInput';
+import AddActivityFormErrors from './components/AddActivityFormErrors';
 
 
 const AddNewActivityForm = ({
@@ -44,6 +45,14 @@ const AddNewActivityForm = ({
     flex: 1
     flexBasis: auto
     alignItems: stretch
+  `;
+
+  const Input = styled(ActivityInput)`
+    marginBottom: 5
+  `;
+
+  const Errors = styled(AddActivityFormErrors)`
+    marginBottom: 5
   `;
 
   // --------------------------------------------------
@@ -70,7 +79,10 @@ const AddNewActivityForm = ({
       errors.activityName = `This activity name already exists.`;
     }
 
-    // TODO: Validate category.
+    // Validate category.
+    if (!category) {
+      errors.category = 'You must choose an activity category.';
+    }
 
     return errors;
   }
@@ -98,11 +110,12 @@ const AddNewActivityForm = ({
 
           return (
             <FormContainer>
-              <ActivityInput
+              <Input
                 setFieldValue={setFieldValue}
                 values={values}
                 maxNameLength={activityNameMaxLength}
               />
+              <Errors errors={errors} />
               <NewActivitySubmitButton
                 handlePress={formikProps.handleSubmit}
               />
