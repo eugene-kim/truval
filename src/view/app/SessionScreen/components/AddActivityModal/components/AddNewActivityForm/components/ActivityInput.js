@@ -22,7 +22,7 @@ class ActivityInput extends Component {
     setFieldValue: PropTypes.func.isRequired,
     values: PropTypes.object.isRequired,
     maxNameLength: PropTypes.number,
-    style: PropTypes.object,
+    style: PropTypes.style,
   };
 
   static defaultProps = {

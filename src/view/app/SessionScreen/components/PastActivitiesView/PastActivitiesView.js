@@ -10,14 +10,14 @@ import Colors from 'src/view/styles/colors';
 import ActivityList from './components/ActivityList';
 
 
-const PastActivitiesView = ({activityInstances}) => {
+const PastActivitiesView = ({activityInstances, style}) => {
   const Container = styled.View`
     flex: 1
     flexDirection: column
     position: relative
     justifyContent: center
     alignItems: center
-    backgroundColor: ${Colors.white}
+    backgroundColor: ${Colors.whiteGray}
   `;
 
   const Line = styled.View`
@@ -28,7 +28,7 @@ const PastActivitiesView = ({activityInstances}) => {
   `;
 
   return (
-    <Container>
+    <Container style={style}>
       <Line />
       <ActivityList
         activityInstances={activityInstances}
@@ -39,6 +39,7 @@ const PastActivitiesView = ({activityInstances}) => {
 
 PastActivitiesView.propTypes = {
   activityInstances: PropTypes.array.isRequired,
+  style: PropTypes.style,
 }
 
 

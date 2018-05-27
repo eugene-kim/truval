@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import createPropTypeValidator from './createPropTypeValidator';
 import moment from 'moment';
+import stylePropType from 'react-style-proptype';
 
 /**
  * Add custom propTypes here. Our components should import this file instead of doing a
@@ -126,6 +127,8 @@ PropTypes.reduxStore = PropTypes.shape({
   dispatch: PropTypes.func.isRequired,
   getState: PropTypes.func.isRequired
 });
+
+PropTypes.style = stylePropType.supportingArrays;
 
 
 export default PropTypes;

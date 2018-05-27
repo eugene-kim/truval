@@ -26,8 +26,14 @@ const AddPreviousActivitiesList = ({session, activityTypes, liveActivityInstance
   // Styled Components
   // --------------------------------------------------
 
+  const Container = styled.View`
+    backgroundColor: ${Colors.white}
+    borderRadius: 8
+    borderWidth: 1
+    borderColor: ${Colors.lightGray}
+  `;
+
   const List = styled.FlatList`
-    paddingRight: 17
   `;
 
   // --------------------------------------------------
@@ -35,28 +41,30 @@ const AddPreviousActivitiesList = ({session, activityTypes, liveActivityInstance
   // --------------------------------------------------
 
   return (
-    <List
-      data={activityTypes}
-      renderItem={
-        ({item, index}) => (
-          <GqlClientContext.Consumer>
-            {
-              gqlClient => (
-                <ActivityTypeListItem
-                  liveActivityInstance={liveActivityInstance}
-                  activityType={item}
-                  session={session}
-                  gqlClient={gqlClient}
-                  isFirst={index === 0}
-                  isLast={index === activityTypes.length - 1}
-                />
-              )
-            }
-          </GqlClientContext.Consumer>
-        )
-      }
-      keyExtractor={item => item.id}
-    />
+    <Container>
+      <List
+        data={activityTypes}
+        renderItem={
+          ({item, index}) => (
+            <GqlClientContext.Consumer>
+              {
+                gqlClient => (
+                  <ActivityTypeListItem
+                    liveActivityInstance={liveActivityInstance}
+                    activityType={item}
+                    session={session}
+                    gqlClient={gqlClient}
+                    isFirst={index === 0}
+                    isLast={index === activityTypes.length - 1}
+                  />
+                )
+              }
+            </GqlClientContext.Consumer>
+          )
+        }
+        keyExtractor={item => item.id}
+      />
+    </Container>
   );
 }
 

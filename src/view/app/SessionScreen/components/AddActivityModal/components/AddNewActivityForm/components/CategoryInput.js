@@ -24,7 +24,7 @@ const CategoryInput = ({handlePress, setFieldValue, fieldName, fieldValue}) => {
     paddingRight: 5
     borderLeftWidth: 2
     borderLeftColor: ${Colors.lightGray}
-    backgroundColor: ${Colors.whiteGray}
+    backgroundColor: ${Colors.lightGray}
   `;
 
   const Content = styled.View`
@@ -34,7 +34,7 @@ const CategoryInput = ({handlePress, setFieldValue, fieldName, fieldValue}) => {
   `;
 
   const Label = styled.Text`
-    ${TextStyles.copy4Italic(Colors.lightGray)}
+    ${TextStyles.copy4Italic(Colors.whiteGray)}
   `;
 
   const CategoryName = styled.Text`
@@ -60,7 +60,7 @@ const CategoryInput = ({handlePress, setFieldValue, fieldName, fieldValue}) => {
         <Chevron
           name={'chevron-down'}
           size={21}
-          color={Colors.lightGray}
+          color={Colors.whiteGray}
         />
       </Content>
     </Container>
@@ -74,8 +74,10 @@ const CategoryInput = ({handlePress, setFieldValue, fieldName, fieldValue}) => {
 CategoryInput.propTypes = {
   handlePress: PropTypes.func.isRequired,
   setFieldValue: PropTypes.func.isRequired,
-  fieldName: PropTypes.func.isRequired,
-  fieldValue: PropTypes.func.isRequired,
+  fieldName: PropTypes.string.isRequired,
+
+  // Will be undefined if user hasn't selected a category.
+  fieldValue: PropTypes.object,
 }
 
 

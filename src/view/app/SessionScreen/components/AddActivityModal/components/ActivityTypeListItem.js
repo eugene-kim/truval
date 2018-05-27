@@ -46,8 +46,9 @@ const ActivityTypeListItem = ({
     flexDirection: row
     alignItems: center
     justifyContent: flex-start
-    paddingVertical: 16
-    borderBottomWidth: ${isLast ? 0 : 1}
+    paddingVertical: 10
+    paddingHorizontal: 17
+    borderBottomWidth: ${isLast ? 0 : 2}
     borderBottomColor: ${Colors.mediumGray}
   `;
 
@@ -56,7 +57,8 @@ const ActivityTypeListItem = ({
   `;
 
   const FillerCircle = styled(Circle)`
-    marginRight: 15
+    marginRight: 21
+    marginLeft: 6
   `;
 
   const ActivityTypeName = styled.Text`

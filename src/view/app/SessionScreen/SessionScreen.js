@@ -91,7 +91,6 @@ import Colors from 'src/view/styles/colors';
       entityType: 'activityInstance',
       state,
     });
-
     
     const {activityTypeId} = liveActivityInstance;
     const liveActivityType = getEntityById({
@@ -177,7 +176,7 @@ class SessionScreen extends Component {
       shadow-offset: 0px 3px;
       zIndex: 1
     `;
-    const PastActivitiesContainer = styled.View`
+    const PastActivities = styled(PastActivitiesView)`
       flex: 1
       zIndex: 0
     `;
@@ -214,11 +213,9 @@ class SessionScreen extends Component {
               category={activeCategory}
             />
           </CurrentActivityContainer>
-          <PastActivitiesContainer>
-            <PastActivitiesView
-              activityInstances={activityInstances}
-            />
-          </PastActivitiesContainer>
+          <PastActivities
+            activityInstances={activityInstances}
+          />
         </ContentContainer>
           {
             isAddActivityModalOpen ?

@@ -48,7 +48,7 @@ const AddNewActivityForm = ({
   `;
 
   const Input = styled(ActivityInput)`
-    marginBottom: 5
+    marginBottom: 12
   `;
 
   const Errors = styled(AddActivityFormErrors)`
@@ -76,12 +76,12 @@ const AddNewActivityForm = ({
     } else if (activityName.length > activityNameMaxLength) {
       errors.activityName = `Activity name must be fewer than ${activityNameMaxLength} characters.`;
     } else if (getActivityTypeByName(activityName)) {
-      errors.activityName = `This activity name already exists.`;
+      errors.activityName = `Activity name already exists.`;
     }
 
     // Validate category.
     if (!category) {
-      errors.category = 'You must choose an activity category.';
+      errors.category = 'Activity category must be selected.';
     }
 
     return errors;

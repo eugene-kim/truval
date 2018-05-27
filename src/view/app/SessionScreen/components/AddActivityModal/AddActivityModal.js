@@ -21,30 +21,28 @@ const AddActivityModal = ({session, liveActivityInstance}) => {
   const Container = styled.View`
     flex: 1
     backgroundColor: ${Colors.whiteGray}
-    paddingTop: 35
+    paddingTop: 14
     borderTopLeftRadius: 27
     borderTopRightRadius: 27
+    paddingHorizontal: 20
   `;
 
   const NewActivityContainer = styled.View`
-    paddingHorizontal: 17
   `;
 
-  const HeaderText = styled.Text`
+  const NewActivityHeader = styled.Text`
     ${TextStyles.display1()}
-    marginBottom: 15
+    marginBottom: 5
   `;
-  const NewActivityHeader = HeaderText.extend``;
 
-  const PreviousActivitiesHeader = HeaderText.extend``;
+  const PreviousActivitiesHeader = styled.Text`
+    ${TextStyles.display1()}
+    marginBottom: 5
+  `;
 
-  // We only set paddingLeft here and set paddingRight in the actual
-  // FlatList so that the scrollbar that appears doesn't get in the
-  // way of the items.
   const PreviousActivitiesContainer = styled.View`
     flex: 1
-    marginTop: 35
-    paddingLeft: 17
+    marginTop: 20
   `;
 
 
@@ -71,7 +69,7 @@ const AddActivityModal = ({session, liveActivityInstance}) => {
       </NewActivityContainer>
       <PreviousActivitiesContainer>
         <PreviousActivitiesHeader>
-          {'Previous'}
+          {'Add Previous'}
         </PreviousActivitiesHeader>
         <AddPreviousActivitiesList
           session={session}

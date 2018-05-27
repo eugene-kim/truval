@@ -50,8 +50,6 @@ class ActivityNameTextInput extends Component {
   // Render
   // --------------------------------------------------
   render() {
-    console.log('render() ActivityNameTextInput');
-
     const {
       setFieldValue,
       fieldName,
@@ -61,6 +59,7 @@ class ActivityNameTextInput extends Component {
 
     const ActivityNameInput = styled.TextInput`
       flex: 1
+      backgroundColor: ${Colors.white}
       height: 44
       paddingLeft: 10
       ${TextStyles.copy4()}

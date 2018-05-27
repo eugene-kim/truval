@@ -7,7 +7,7 @@ module.exports = [
     is_primary: true,
     color: '#3E416A',
     icon_font_family: 'MaterialCommunityIcons',
-    icon_name: 'code-braces',
+    // icon_name: 'code-braces',
     user_id: 'cb39dbb5-caa8-4323-93a5-13450b875887',
   },
   {

@@ -18,7 +18,7 @@ const AddActivityFormErrors = ({errors, style}) => {
 
   const Container = styled.View``;
   const ErrorMessage = styled.Text`
-    ${TextStyles.copy2(Colors.lightRed)}
+    ${TextStyles.copy3(Colors.lightRed)}
   `;
 
   // --------------------------------------------------
@@ -27,8 +27,8 @@ const AddActivityFormErrors = ({errors, style}) => {
   
   return errorTypes.length === 0 ? null : (
     <Container style={style}>
-      {errorTypes.map(errorTypes => (
-        <ErrorMessage>{errors[errorTypes]}</ErrorMessage>
+      {errorTypes.map((errorTypes, index) => (
+        <ErrorMessage key={index}>{`- ${errors[errorTypes]}`}</ErrorMessage>
       ))}
     </Container>
   );
@@ -40,7 +40,7 @@ const AddActivityFormErrors = ({errors, style}) => {
 // --------------------------------------------------
 AddActivityFormErrors.propTypes = {
   errors: PropTypes.object.isRequired,
-  style: PropTypes.object,
+  style: PropTypes.style,
 }
 
 

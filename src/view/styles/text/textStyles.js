@@ -26,7 +26,7 @@ export default {
   `,
   copy3: (color = defaultColor) => `
     fontFamily: ${displayFontWeights.bold}
-    fontSize: 12
+    fontSize: 14
     lineHeight: 18
     color: ${color}
   `,
