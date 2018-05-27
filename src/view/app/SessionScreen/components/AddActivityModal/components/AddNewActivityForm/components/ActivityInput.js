@@ -10,6 +10,7 @@ import TextStyles from 'src/view/styles/text/textStyles';
 
 // Components
 import ActivityNameTextInput from './ActivityNameTextInput';
+import CategoryInput from './CategoryInput';
 
 
 class ActivityInput extends Component {
@@ -67,6 +68,12 @@ class ActivityInput extends Component {
           fieldName={activityNameFieldName}
           fieldValue={values[activityNameFieldName]}
           maxLength={maxNameLength}
+        />
+        <CategoryInput
+          handlePress={() => {}}
+          setFieldValue={setFieldValue}
+          fieldName={categoryFieldName}
+          fieldValue={values[categoryFieldName]}
         />
       </Container>
     );

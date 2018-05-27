@@ -18,6 +18,12 @@ export default {
     lineHeight: 22
     color: ${color}
   `,
+  copy4Italic: (color = defaultColor) => `
+    fontFamily: ${displayFontWeights.boldItalic}
+    fontSize: 16
+    lineHeight: 22
+    color: ${color}
+  `,
   copy3: (color = defaultColor) => `
     fontFamily: ${displayFontWeights.bold}
     fontSize: 12
