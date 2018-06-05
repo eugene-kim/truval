@@ -23,6 +23,7 @@ import { getDuration, getCurrentISOString } from 'src/libs/util/Datetime';
 import NewActivitySubmitButton from './components/NewActivitySubmitButton';
 import ActivityInput from './components/ActivityInput';
 import AddActivityFormErrors from './components/AddActivityFormErrors';
+import SelectCategoryModal from '../SelectCategoryModal';
 
 
 const AddNewActivityForm = ({
@@ -55,6 +56,12 @@ const AddNewActivityForm = ({
     marginBottom: 5
   `;
 
+  const SelectCategoryContainer = styled.View`
+    flex: 1
+    backgroundColor: red
+    position: absolute
+  `;
+
   // --------------------------------------------------
   // Methods
   // --------------------------------------------------
@@ -81,7 +88,7 @@ const AddNewActivityForm = ({
 
     // Validate category.
     if (!category) {
-      errors.category = 'Activity category must be selected.';
+      errors.category = 'Activity must have a category.';
     }
 
     return errors;

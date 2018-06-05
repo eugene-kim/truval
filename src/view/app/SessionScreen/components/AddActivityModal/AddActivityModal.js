@@ -69,7 +69,7 @@ const AddActivityModal = ({session, liveActivityInstance}) => {
       </NewActivityContainer>
       <PreviousActivitiesContainer>
         <PreviousActivitiesHeader>
-          {'Add Previous'}
+          {'Previous'}
         </PreviousActivitiesHeader>
         <AddPreviousActivitiesList
           session={session}

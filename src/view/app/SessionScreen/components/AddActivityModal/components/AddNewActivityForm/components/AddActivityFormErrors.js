@@ -16,7 +16,10 @@ const AddActivityFormErrors = ({errors, style}) => {
   // Styled Components
   // --------------------------------------------------
 
-  const Container = styled.View``;
+  const Container = styled.View`
+    marginTop: -8
+  `;
+
   const ErrorMessage = styled.Text`
     ${TextStyles.copy3(Colors.lightRed)}
   `;

@@ -3,7 +3,7 @@ module.exports = [
   // User 1
   {
     id: 'ca05ca36-805c-4f67-a097-a45988ba82d7',
-    name: 'CODE',
+    name: 'Code',
     is_primary: true,
     color: '#3E416A',
     icon_font_family: 'MaterialCommunityIcons',
@@ -12,7 +12,7 @@ module.exports = [
   },
   {
     id: '083adb66-0288-4148-b0ca-ec61f99970a6',
-    name: 'EAT',
+    name: 'Eat',
     color: '#E9696A',
     icon_font_family: 'MaterialCommunityIcons',
     icon_name: 'food',
@@ -20,7 +20,7 @@ module.exports = [
   },
   {
     id: '51d017c1-57f1-401c-a16f-7f8142fb37d6',
-    name: 'POTTY',
+    name: 'Potty',
     color: '#BBD8CB',
     icon_font_family: 'MaterialCommunityIcons',
     icon_name: 'biohazard',
@@ -28,7 +28,7 @@ module.exports = [
   },
   {
     id: '8efe9651-7a62-4323-9eef-080a90157b93',
-    name: 'INTERNET',
+    name: 'Internet',
     color: '#4ACDDE',
     icon_font_family: 'MaterialCommunityIcons',
     icon_name: 'internet-explorer',
@@ -36,7 +36,7 @@ module.exports = [
   },
   {
     id: '7cce71bc-8d66-4c9a-b7ea-38dc2b5fe85e',
-    name: 'TRANSIT',
+    name: 'Transit',
     color: '#866981',
     icon_font_family: 'MaterialCommunityIcons',
     icon_name: 'transit-transfer',
@@ -44,7 +44,7 @@ module.exports = [
   },
   {
     id: 'ec12de8e-8437-4ab0-b0e4-d547c2ae2019',
-    name: 'MISC',
+    name: 'Misc',
     color: '#FCD66B',
     icon_font_family: 'MaterialCommunityIcons',
     icon_name: 'all-inclusive',
